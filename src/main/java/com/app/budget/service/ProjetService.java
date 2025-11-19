@@ -5,6 +5,9 @@ import com.app.budget.events.BeforeDeleteProjet;
 import com.app.budget.model.ProjetDTO;
 import com.app.budget.repos.ProjetRepository;
 import com.app.budget.util.NotFoundException;
+
+import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.util.List;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Sort;
@@ -23,9 +26,17 @@ public class ProjetService {
         this.publisher = publisher;
     }
 
-    public List<ProjetDTO> findAll() {
-        final List<Projet> projets = projetRepository.findAll(Sort.by("id"));
-        return projets.stream()
+    public List<ProjetDTO> findAll(String  libelle, LocalDate dateDebut, LocalDate dateFin) {
+        List<Projet>list=null;
+        if(libelle==null || dateDebut==null || dateFin==null){
+            list=projetRepository.findAll(Sort.by("id"));
+        }
+        if(libelle!=null && dateDebut!=null && dateFin!=null){
+            list=projetRepository.findByLibelleAndDateCreatedBetween(libelle,dateDebut.atStartOfDay().atOffset(ZoneOffset.UTC),
+                    dateFin.atStartOfDay().atOffset(ZoneOffset.UTC));
+        }
+        //final List<Projet> projets = projetRepository.findAll(Sort.by("id"));
+        return list.stream()
                 .map(projet -> mapToDTO(projet, new ProjetDTO()))
                 .toList();
     }
