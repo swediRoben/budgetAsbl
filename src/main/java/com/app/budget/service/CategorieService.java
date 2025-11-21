@@ -4,6 +4,7 @@ import com.app.budget.domain.Categorie;
 import com.app.budget.domain.Projet;
 import com.app.budget.events.BeforeDeleteProjet;
 import com.app.budget.model.CategorieDTO;
+import com.app.budget.model.ProjetDTO;
 import com.app.budget.repos.CategorieRepository;
 import com.app.budget.repos.ProjetRepository;
 import com.app.budget.util.NotFoundException;
@@ -19,11 +20,13 @@ public class CategorieService {
 
     private final CategorieRepository categorieRepository;
     private final ProjetRepository projetRepository;
+    private final ProjetService projetService;
 
     public CategorieService(final CategorieRepository categorieRepository,
-            final ProjetRepository projetRepository) {
+                            final ProjetRepository projetRepository, ProjetService projetService) {
         this.categorieRepository = categorieRepository;
         this.projetRepository = projetRepository;
+        this.projetService = projetService;
     }
 
     public List<CategorieDTO> findAll() {
@@ -58,18 +61,19 @@ public class CategorieService {
         categorieRepository.delete(categorie);
     }
 
-    private CategorieDTO mapToDTO(final Categorie categorie, final CategorieDTO categorieDTO) {
+    public CategorieDTO mapToDTO(final Categorie categorie, final CategorieDTO categorieDTO) {
         categorieDTO.setId(categorie.getId());
         categorieDTO.setCode(categorie.getCode());
         categorieDTO.setLibelle(categorie.getLibelle());
-        categorieDTO.setProjetId(categorie.getProjetId() == null ? null : categorie.getProjetId().getId());
+        categorieDTO.setProjet(categorie.getProjetId()!=null?projetService.mapToDTO(categorie.getProjetId(),new ProjetDTO()):null);
+        //categorieDTO.setProjetId(categorie.getProjetId() == null ? null : categorie.getProjetId().getId());
         return categorieDTO;
     }
 
     private Categorie mapToEntity(final CategorieDTO categorieDTO, final Categorie categorie) {
         categorie.setCode(categorieDTO.getCode());
         categorie.setLibelle(categorieDTO.getLibelle());
-        final Projet projetId = categorieDTO.getProjetId() == null ? null : projetRepository.findById(categorieDTO.getProjetId())
+        final Projet projetId = categorieDTO.getProjet() == null ? null : projetRepository.findById(categorieDTO.getProjet().getId())
                 .orElseThrow(() -> new NotFoundException("projetId not found"));
         categorie.setProjetId(projetId);
         return categorie;

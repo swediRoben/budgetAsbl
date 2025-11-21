@@ -28,6 +28,6 @@ public class ProjetDTO {
 
     private LocalDate dateFin;
 
-    private Long idprojet;
+    //private Long idprojet;
 
 }

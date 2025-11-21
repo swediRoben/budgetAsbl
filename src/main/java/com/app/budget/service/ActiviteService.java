@@ -2,6 +2,7 @@ package com.app.budget.service;
 
 import com.app.budget.domain.Activite;
 import com.app.budget.model.ActiviteDTO;
+import com.app.budget.model.CategorieDTO;
 import com.app.budget.repos.ActiviteRepository;
 import com.app.budget.util.NotFoundException;
 import java.util.List;
@@ -13,9 +14,11 @@ import org.springframework.stereotype.Service;
 public class ActiviteService {
 
     private final ActiviteRepository activiteRepository;
+    private final CategorieService categorieService;
 
-    public ActiviteService(final ActiviteRepository activiteRepository) {
+    public ActiviteService(final ActiviteRepository activiteRepository, CategorieService categorieService) {
         this.activiteRepository = activiteRepository;
+        this.categorieService = categorieService;
     }
 
     public List<ActiviteDTO> findAll() {
@@ -54,6 +57,7 @@ public class ActiviteService {
         activiteDTO.setId(activite.getId());
         activiteDTO.setCode(activite.getCode());
         activiteDTO.setLibelle(activite.getLibelle());
+        activiteDTO.setCategorie(activite.getCategorieId()!=null?categorieService.mapToDTO(activite.getCategorieId(),new CategorieDTO()):null);
         return activiteDTO;
     }
 

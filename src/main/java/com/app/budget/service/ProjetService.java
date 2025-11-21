@@ -67,13 +67,13 @@ public class ProjetService {
         projetRepository.delete(projet);
     }
 
-    private ProjetDTO mapToDTO(final Projet projet, final ProjetDTO projetDTO) {
+    public ProjetDTO mapToDTO(final Projet projet, final ProjetDTO projetDTO) {
         projetDTO.setId(projet.getId());
         projetDTO.setCode(projet.getCode());
         projetDTO.setLibelle(projet.getLibelle());
         projetDTO.setDateDebut(projet.getDateDebut());
         projetDTO.setDateFin(projet.getDateFin());
-        projetDTO.setIdprojet(projet.getIdprojet());
+       // projetDTO.setIdprojet(projet.getIdprojet());
         return projetDTO;
     }
 
@@ -82,7 +82,7 @@ public class ProjetService {
         projet.setLibelle(projetDTO.getLibelle());
         projet.setDateDebut(projetDTO.getDateDebut());
         projet.setDateFin(projetDTO.getDateFin());
-        projet.setIdprojet(projetDTO.getIdprojet());
+        //projet.setIdprojet(projetDTO.getIdprojet());
         return projet;
     }
 

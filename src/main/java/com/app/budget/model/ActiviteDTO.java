@@ -22,4 +22,6 @@ public class ActiviteDTO {
     @ActiviteLibelleUnique
     private String libelle;
 
+    private CategorieDTO categorie;
+
 }

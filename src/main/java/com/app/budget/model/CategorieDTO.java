@@ -22,6 +22,7 @@ public class CategorieDTO {
     @CategorieLibelleUnique
     private String libelle;
 
-    private Long projetId;
+    private  ProjetDTO Projet;
+    //private Long projetId;
 
 }
