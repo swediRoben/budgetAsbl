@@ -1,7 +1,10 @@
 package com.app.budget.service;
 
+import com.app.budget.domain.Categorie;
+import com.app.budget.domain.Exercice;
 import com.app.budget.domain.PlanFond;
-import com.app.budget.model.PlanFondDTO;
+import com.app.budget.domain.Projet;
+import com.app.budget.model.*;
 import com.app.budget.repos.PlanFondRepository;
 import com.app.budget.util.NotFoundException;
 import java.util.List;
@@ -13,13 +16,25 @@ import org.springframework.stereotype.Service;
 public class PlanFondService {
 
     private final PlanFondRepository planFondRepository;
+    private final CategorieService categorieService;
+    private final ProjetService projetService;
+    private final ExerciceService exerciceService;
 
-    public PlanFondService(final PlanFondRepository planFondRepository) {
+
+    public PlanFondService(final PlanFondRepository planFondRepository,
+                           CategorieService categorieService, ProjetService projetService, ExerciceService exerciceService) {
         this.planFondRepository = planFondRepository;
+        this.categorieService = categorieService;
+        this.projetService = projetService;
+        this.exerciceService = exerciceService;
     }
 
-    public List<PlanFondDTO> findAll() {
-        final List<PlanFond> planFonds = planFondRepository.findAll(Sort.by("id"));
+    public List<PlanFondDTO> findAll(Long projet,Long exercice) {
+        List<PlanFond> planFonds = null;
+if(projet==null&&exercice==null){
+    planFonds = planFondRepository.findAll(Sort.by("id"));
+}else {planFonds=planFondRepository.findByProjetId_IdOrExerciceId_Id(projet,exercice);}
+        //final List<PlanFond> planFonds = planFondRepository.findAll(Sort.by("id"));
         return planFonds.stream()
                 .map(planFond -> mapToDTO(planFond, new PlanFondDTO()))
                 .toList();
@@ -52,18 +67,22 @@ public class PlanFondService {
 
     private PlanFondDTO mapToDTO(final PlanFond planFond, final PlanFondDTO planFondDTO) {
         planFondDTO.setId(planFond.getId());
-        planFondDTO.setIdProjet(planFond.getIdProjet());
-        planFondDTO.setCategorie(planFond.getCategorie());
-        planFondDTO.setIdExercice(planFond.getIdExercice());
+        planFondDTO.setSourceFinacement(planFond.getSourceFinacementId()!=null?SourceMapper.getInstance().mapToDTO(planFond.getSourceFinacementId()) :null );
+        planFondDTO.setProjet(planFond.getProjetId()!=null?ProjetMapper.getInstance().mapToDTO(planFond.getProjetId()):null);
+        planFondDTO.setCategorie(planFond.getCategorieId()!=null?categorieService.mapToDTO(planFond.getCategorieId(),new CategorieDTO()):null);
+        planFondDTO.setExercice(planFond.getExerciceId()!=null?ExerciceMapper.getInstance().mapToDTO(planFond.getExerciceId()):null);
         planFondDTO.setMontant(planFond.getMontant());
         return planFondDTO;
     }
 
     private PlanFond mapToEntity(final PlanFondDTO planFondDTO, final PlanFond planFond) {
-        planFond.setIdProjet(planFondDTO.getIdProjet());
-        planFond.setCategorie(planFondDTO.getCategorie());
-        planFond.setIdExercice(planFondDTO.getIdExercice());
+
+        planFond.setProjetId(planFondDTO.getIdProjet()!=null? ProjetMapper.getInstance().mapToEntity(new ProjetDTO(planFondDTO.getIdProjet())) :null);
+        planFond.setCategorieId(planFondDTO.getIdCategorie()!=null?categorieService.
+                mapToEntity(new CategorieDTO(planFondDTO.getIdProjet()),new Categorie()):null);
+        planFond.setExerciceId(planFondDTO.getIdExercice()!=null?ExerciceMapper.getInstance().mapToEntity(new ExerciceDTO(planFondDTO.getIdExercice())):null);
         planFond.setMontant(planFondDTO.getMontant());
+        planFond.setSourceFinacementId(planFondDTO.getIdSource()!=null?SourceMapper.getInstance().mapToEntity(new SourceFinacementDTO(planFondDTO.getIdSource())) :null );
         return planFond;
     }
 

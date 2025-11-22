@@ -1,6 +1,8 @@
 package com.app.budget.service;
 
 import com.app.budget.domain.PlanComptable;
+import com.app.budget.model.ClasseDTO;
+import com.app.budget.model.ClasseMapper;
 import com.app.budget.model.PlanComptableDTO;
 import com.app.budget.repos.PlanComptableRepository;
 import com.app.budget.util.NotFoundException;
@@ -53,7 +55,10 @@ public class PlanComptableService {
     private PlanComptableDTO mapToDTO(final PlanComptable planComptable,
             final PlanComptableDTO planComptableDTO) {
         planComptableDTO.setId(planComptable.getId());
-        planComptableDTO.setClasse(planComptable.getClasse());
+        planComptableDTO.setClasse(planComptable.getClasse()!=null?
+                ClasseMapper.getInstance().mapToDTO(planComptable.getClasse()):null);
+        planComptableDTO.setClasseId(planComptable.getClasse()!=null?
+                planComptable.getClasse().getId():null);
         planComptableDTO.setLibelle(planComptable.getLibelle());
         planComptableDTO.setNumero(planComptable.getNumero());
         planComptableDTO.setSens(planComptable.getSens());
@@ -62,7 +67,9 @@ public class PlanComptableService {
 
     private PlanComptable mapToEntity(final PlanComptableDTO planComptableDTO,
             final PlanComptable planComptable) {
-        planComptable.setClasse(planComptableDTO.getClasse());
+        //planComptable.setClasse(planComptableDTO.getClasse());
+        planComptable.setClasse(planComptableDTO.getClasse()!=null||planComptableDTO.getClasseId()!=null?
+                ClasseMapper.getInstance().mapToEntity(new ClasseDTO(planComptableDTO.getClasseId())) : null);
         planComptable.setLibelle(planComptableDTO.getLibelle());
         planComptable.setNumero(planComptableDTO.getNumero());
         planComptable.setSens(planComptableDTO.getSens());

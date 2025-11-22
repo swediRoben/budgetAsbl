@@ -23,5 +23,11 @@ public class SourceFinacementDTO {
     private String libelle;
 
     private Long idTypeSourcefinancement;
+    private TypSourceFinancementDTO typSourceFinancement;
 
+    public SourceFinacementDTO(Long id) {
+        this.id = id;
+    }
+    public SourceFinacementDTO() {
+    }
 }

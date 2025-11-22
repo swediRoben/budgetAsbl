@@ -1,5 +1,6 @@
 package com.app.budget.model;
 
+import com.app.budget.domain.Classe;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -12,7 +13,7 @@ public class PlanComptableDTO {
 
     private Long id;
 
-    private Long classe;
+    private Long classeId;
 
     @NotNull
     @Size(max = 255)
@@ -27,5 +28,7 @@ public class PlanComptableDTO {
     @NotNull
     @Size(max = 255)
     private String sens;
+
+    private ClasseDTO classe;
 
 }

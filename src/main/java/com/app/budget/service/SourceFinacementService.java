@@ -1,6 +1,7 @@
 package com.app.budget.service;
 
 import com.app.budget.domain.SourceFinacement;
+import com.app.budget.model.SourceMapper;
 import com.app.budget.model.SourceFinacementDTO;
 import com.app.budget.repos.SourceFinacementRepository;
 import com.app.budget.util.NotFoundException;
@@ -21,27 +22,27 @@ public class SourceFinacementService {
     public List<SourceFinacementDTO> findAll() {
         final List<SourceFinacement> sourceFinacements = sourceFinacementRepository.findAll(Sort.by("id"));
         return sourceFinacements.stream()
-                .map(sourceFinacement -> mapToDTO(sourceFinacement, new SourceFinacementDTO()))
+                .map(sourceFinacement -> SourceMapper.getInstance().mapToDTO(sourceFinacement))
                 .toList();
     }
 
     public SourceFinacementDTO get(final Long id) {
         return sourceFinacementRepository.findById(id)
-                .map(sourceFinacement -> mapToDTO(sourceFinacement, new SourceFinacementDTO()))
+                .map(sourceFinacement -> SourceMapper.getInstance().mapToDTO(sourceFinacement))
                 .orElseThrow(NotFoundException::new);
     }
 
     public Long create(final SourceFinacementDTO sourceFinacementDTO) {
         final SourceFinacement sourceFinacement = new SourceFinacement();
-        mapToEntity(sourceFinacementDTO, sourceFinacement);
-        return sourceFinacementRepository.save(sourceFinacement).getId();
+        SourceMapper.getInstance().mapToEntity(sourceFinacementDTO);
+        return sourceFinacementRepository.save( SourceMapper.getInstance().mapToEntity(sourceFinacementDTO)).getId();
     }
 
     public void update(final Long id, final SourceFinacementDTO sourceFinacementDTO) {
         final SourceFinacement sourceFinacement = sourceFinacementRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
-        mapToEntity(sourceFinacementDTO, sourceFinacement);
-        sourceFinacementRepository.save(sourceFinacement);
+        SourceMapper.getInstance().mapToEntity(sourceFinacementDTO);
+        sourceFinacementRepository.save(SourceMapper.getInstance().mapToEntity(sourceFinacementDTO));
     }
 
     public void delete(final Long id) {
@@ -49,24 +50,6 @@ public class SourceFinacementService {
                 .orElseThrow(NotFoundException::new);
         sourceFinacementRepository.delete(sourceFinacement);
     }
-
-    private SourceFinacementDTO mapToDTO(final SourceFinacement sourceFinacement,
-            final SourceFinacementDTO sourceFinacementDTO) {
-        sourceFinacementDTO.setId(sourceFinacement.getId());
-        sourceFinacementDTO.setCode(sourceFinacement.getCode());
-        sourceFinacementDTO.setLibelle(sourceFinacement.getLibelle());
-        sourceFinacementDTO.setIdTypeSourcefinancement(sourceFinacement.getIdTypeSourcefinancement());
-        return sourceFinacementDTO;
-    }
-
-    private SourceFinacement mapToEntity(final SourceFinacementDTO sourceFinacementDTO,
-            final SourceFinacement sourceFinacement) {
-        sourceFinacement.setCode(sourceFinacementDTO.getCode());
-        sourceFinacement.setLibelle(sourceFinacementDTO.getLibelle());
-        sourceFinacement.setIdTypeSourcefinancement(sourceFinacementDTO.getIdTypeSourcefinancement());
-        return sourceFinacement;
-    }
-
     public boolean codeExists(final String code) {
         return sourceFinacementRepository.existsByCodeIgnoreCase(code);
     }

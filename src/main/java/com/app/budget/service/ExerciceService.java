@@ -2,6 +2,7 @@ package com.app.budget.service;
 
 import com.app.budget.domain.Exercice;
 import com.app.budget.model.ExerciceDTO;
+import com.app.budget.model.ExerciceMapper;
 import com.app.budget.repos.ExerciceRepository;
 import com.app.budget.util.NotFoundException;
 import java.time.LocalDate;
@@ -22,27 +23,27 @@ public class ExerciceService {
     public List<ExerciceDTO> findAll() {
         final List<Exercice> exercices = exerciceRepository.findAll(Sort.by("id"));
         return exercices.stream()
-                .map(exercice -> mapToDTO(exercice, new ExerciceDTO()))
+                .map(c-> ExerciceMapper.getInstance().mapToDTO(c))
                 .toList();
     }
 
     public ExerciceDTO get(final Long id) {
         return exerciceRepository.findById(id)
-                .map(exercice -> mapToDTO(exercice, new ExerciceDTO()))
+                .map(b-> ExerciceMapper.getInstance().mapToDTO(b))
                 .orElseThrow(NotFoundException::new);
     }
 
     public Long create(final ExerciceDTO exerciceDTO) {
         final Exercice exercice = new Exercice();
-        mapToEntity(exerciceDTO, exercice);
-        return exerciceRepository.save(exercice).getId();
+        ;
+        return exerciceRepository.save(ExerciceMapper.getInstance().mapToEntity(exerciceDTO)).getId();
     }
 
     public void update(final Long id, final ExerciceDTO exerciceDTO) {
         final Exercice exercice = exerciceRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
-        mapToEntity(exerciceDTO, exercice);
-        exerciceRepository.save(exercice);
+        ;
+        exerciceRepository.save(ExerciceMapper.getInstance().mapToEntity(exerciceDTO));
     }
 
     public void delete(final Long id) {
@@ -51,24 +52,7 @@ public class ExerciceService {
         exerciceRepository.delete(exercice);
     }
 
-    private ExerciceDTO mapToDTO(final Exercice exercice, final ExerciceDTO exerciceDTO) {
-        exerciceDTO.setId(exercice.getId());
-        exerciceDTO.setCode(exercice.getCode());
-        exerciceDTO.setLibelle(exercice.getLibelle());
-        exerciceDTO.setDateDebut(exercice.getDateDebut());
-        exerciceDTO.setDateFin(exercice.getDateFin());
-        exerciceDTO.setCloture(exercice.getCloture());
-        return exerciceDTO;
-    }
 
-    private Exercice mapToEntity(final ExerciceDTO exerciceDTO, final Exercice exercice) {
-        exercice.setCode(exerciceDTO.getCode());
-        exercice.setLibelle(exerciceDTO.getLibelle());
-        exercice.setDateDebut(exerciceDTO.getDateDebut());
-        exercice.setDateFin(exerciceDTO.getDateFin());
-        exercice.setCloture(exerciceDTO.getCloture());
-        return exercice;
-    }
 
     public boolean codeExists(final String code) {
         return exerciceRepository.existsByCodeIgnoreCase(code);

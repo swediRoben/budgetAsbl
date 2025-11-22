@@ -46,7 +46,7 @@ public class Categorie {
     @Column(nullable = false, unique = true)
     private String libelle;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "projet_id_id")
     private Projet projetId;
 

@@ -1,9 +1,11 @@
 package com.app.budget.service;
 
 import com.app.budget.domain.Activite;
+import com.app.budget.domain.Categorie;
 import com.app.budget.model.ActiviteDTO;
 import com.app.budget.model.CategorieDTO;
 import com.app.budget.repos.ActiviteRepository;
+import com.app.budget.repos.CategorieRepository;
 import com.app.budget.util.NotFoundException;
 import java.util.List;
 import org.springframework.data.domain.Sort;
@@ -15,14 +17,29 @@ public class ActiviteService {
 
     private final ActiviteRepository activiteRepository;
     private final CategorieService categorieService;
+    private final CategorieRepository categorieRepository;
 
-    public ActiviteService(final ActiviteRepository activiteRepository, CategorieService categorieService) {
+    public ActiviteService(final ActiviteRepository activiteRepository,
+                           CategorieService categorieService,
+                           CategorieRepository categorieRepository) {
         this.activiteRepository = activiteRepository;
         this.categorieService = categorieService;
+        this.categorieRepository = categorieRepository;
     }
 
-    public List<ActiviteDTO> findAll() {
-        final List<Activite> activites = activiteRepository.findAll(Sort.by("id"));
+    public List<ActiviteDTO> findAll(Long project,Long categorieId) {
+
+        //System.out.println("Ruragira   "+activiteRepository.findAllByCategorieId_ProjetId_Id(10029L).size());
+        List<Activite> activites=null;
+        if(project==null&&categorieId==null){
+            activites=activiteRepository.findAll(Sort.by("id"));
+        }else {
+            activites=activiteRepository.findAllByCategorieId_ProjetId_IdOrCategorieId_Id(project,categorieId);
+        }
+
+        /*final List<Activite> activites = project==null||categorieId==null?
+                activiteRepository.findAll(Sort.by("id")):
+                activiteRepository.findAllByCategorieIdProjetId_IdOrCategorieId_Id(project,categorieId);*/
         return activites.stream()
                 .map(activite -> mapToDTO(activite, new ActiviteDTO()))
                 .toList();
@@ -57,13 +74,23 @@ public class ActiviteService {
         activiteDTO.setId(activite.getId());
         activiteDTO.setCode(activite.getCode());
         activiteDTO.setLibelle(activite.getLibelle());
-        activiteDTO.setCategorie(activite.getCategorieId()!=null?categorieService.mapToDTO(activite.getCategorieId(),new CategorieDTO()):null);
+        CategorieDTO categorieDTO=activite.getCategorieId()!=null?categorieService.mapToDTO(activite.getCategorieId(),new CategorieDTO()):null;
+        activiteDTO.setProjet(categorieDTO!=null?categorieDTO.getProjet():null);
+        activiteDTO.setProjetId(categorieDTO!=null ?categorieDTO.getProjet().getId():null);
+        activiteDTO.setCategorieId(activite.getCategorieId()!=null?activite.getCategorieId().getId():null);
+        activiteDTO.setCategorie(activite.getCategorieId()!=null?
+                categorieService.mapToDTO(activite.getCategorieId(),new CategorieDTO()):null);
         return activiteDTO;
     }
 
     private Activite mapToEntity(final ActiviteDTO activiteDTO, final Activite activite) {
+        activite.setId(activiteDTO.getId());
         activite.setCode(activiteDTO.getCode());
         activite.setLibelle(activiteDTO.getLibelle());
+
+        activite.setCategorieId(activiteDTO.getCategorieId()!=null?categorieRepository.findById(activiteDTO.getCategorieId()).orElseThrow(
+                () -> new NotFoundException("CategorieId not found")
+        ):null);
         return activite;
     }
 

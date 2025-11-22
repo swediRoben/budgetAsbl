@@ -1,13 +1,7 @@
 package com.app.budget.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.time.OffsetDateTime;
 import lombok.Getter;
 import lombok.Setter;
@@ -43,8 +37,10 @@ public class SourceFinacement {
     @Column(nullable = false, unique = true)
     private String libelle;
 
-    @Column
-    private Long idTypeSourcefinancement;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "type_source_id")
+    private TypSourceFinancement typSourceFinancement;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

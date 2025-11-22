@@ -23,6 +23,10 @@ public class CategorieDTO {
     private String libelle;
 
     private  ProjetDTO Projet;
-    //private Long projetId;
+    private Long projetId;
 
+    public CategorieDTO(Long id) {
+        this.id = id;
+    }
+    public CategorieDTO() {}
 }

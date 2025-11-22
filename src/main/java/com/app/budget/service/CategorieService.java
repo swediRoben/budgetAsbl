@@ -5,6 +5,7 @@ import com.app.budget.domain.Projet;
 import com.app.budget.events.BeforeDeleteProjet;
 import com.app.budget.model.CategorieDTO;
 import com.app.budget.model.ProjetDTO;
+import com.app.budget.model.ProjetMapper;
 import com.app.budget.repos.CategorieRepository;
 import com.app.budget.repos.ProjetRepository;
 import com.app.budget.util.NotFoundException;
@@ -29,9 +30,13 @@ public class CategorieService {
         this.projetService = projetService;
     }
 
-    public List<CategorieDTO> findAll() {
+    public List<CategorieDTO> findAll(Long idProjet) {
+
+        final List<Categorie>categoriess=categorieRepository.findAllByProjetIdId(idProjet);
         final List<Categorie> categories = categorieRepository.findAll(Sort.by("id"));
-        return categories.stream()
+        return idProjet!= null?categoriess.stream()
+                .map(categorie -> mapToDTO(categorie, new CategorieDTO()))
+                .toList():categories.stream()
                 .map(categorie -> mapToDTO(categorie, new CategorieDTO()))
                 .toList();
     }
@@ -65,17 +70,21 @@ public class CategorieService {
         categorieDTO.setId(categorie.getId());
         categorieDTO.setCode(categorie.getCode());
         categorieDTO.setLibelle(categorie.getLibelle());
-        categorieDTO.setProjet(categorie.getProjetId()!=null?projetService.mapToDTO(categorie.getProjetId(),new ProjetDTO()):null);
+        categorieDTO.setProjet(categorie.getProjetId()!=null? ProjetMapper.getInstance().mapToDTO(categorie.getProjetId()) :null);
         //categorieDTO.setProjetId(categorie.getProjetId() == null ? null : categorie.getProjetId().getId());
         return categorieDTO;
     }
 
-    private Categorie mapToEntity(final CategorieDTO categorieDTO, final Categorie categorie) {
+    public Categorie mapToEntity(final CategorieDTO categorieDTO, final Categorie categorie) {
+
         categorie.setCode(categorieDTO.getCode());
         categorie.setLibelle(categorieDTO.getLibelle());
-        final Projet projetId = categorieDTO.getProjet() == null ? null : projetRepository.findById(categorieDTO.getProjet().getId())
+        final Projet projetId = categorieDTO.getProjetId() == null ?
+                ProjetMapper.getInstance().mapToEntity(new ProjetDTO(categorieDTO.getProjetId())) :
+                projetRepository.findById(categorieDTO.getProjetId())
                 .orElseThrow(() -> new NotFoundException("projetId not found"));
         categorie.setProjetId(projetId);
+
         return categorie;
     }
 

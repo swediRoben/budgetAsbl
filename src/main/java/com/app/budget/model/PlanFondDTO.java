@@ -16,9 +16,15 @@ public class PlanFondDTO {
 
     private Long idProjet;
 
-    private Long categorie;
+    private Long idCategorie;
 
     private Long idExercice;
+    private Long idSource;
+
+    private ProjetDTO projet;
+    private ExerciceDTO exercice;
+    private CategorieDTO categorie;
+    private SourceFinacementDTO sourceFinacement;
 
     @Digits(integer = 10, fraction = 2)
     @JsonFormat(shape = JsonFormat.Shape.STRING)

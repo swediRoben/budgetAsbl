@@ -1,13 +1,7 @@
 package com.app.budget.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import lombok.Getter;
@@ -38,14 +32,30 @@ public class PlanFond {
     )
     private Long id;
 
-    @Column
-    private Long idProjet;
+//    @Column
+//    private Long idProjet;
+//
+//    @Column
+//    private Long categorie;
+//
+//    @Column
+//    private Long idExercice;
 
-    @Column
-    private Long categorie;
+@ManyToOne(fetch = FetchType.EAGER)
+@JoinColumn(name = "exercice_id")
+private Exercice exerciceId;
 
-    @Column
-    private Long idExercice;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "projet_id")
+    private Projet projetId;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "categorie_id")
+    private Categorie categorieId;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "source_finacement_id")
+    private SourceFinacement sourceFinacementId;
 
     @Column(precision = 10, scale = 2)
     private BigDecimal montant;

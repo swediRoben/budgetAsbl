@@ -30,4 +30,9 @@ public class ProjetDTO {
 
     //private Long idprojet;
 
+    public ProjetDTO(Long id) {
+        this.id = id;
+    }
+
+    public ProjetDTO() {}
 }

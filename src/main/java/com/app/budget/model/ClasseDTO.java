@@ -17,4 +17,11 @@ public class ClasseDTO {
     @ClasseLibelleUnique
     private String libelle;
 
+    private String type;
+
+    public ClasseDTO(Long id) {
+        this.id = id;
+    }
+
+    public ClasseDTO() {}
 }

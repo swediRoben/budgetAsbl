@@ -37,7 +37,7 @@ public class Activite {
     @Column(nullable = false, unique = true)
     private String libelle;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "categorie_id")
     private Categorie categorieId;
 

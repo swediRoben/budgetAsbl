@@ -32,4 +32,10 @@ public class ExerciceDTO {
 
     private Boolean cloture;
 
+    public ExerciceDTO(Long id) {
+        this.id = id;
+    }
+
+    public ExerciceDTO() {
+    }
 }

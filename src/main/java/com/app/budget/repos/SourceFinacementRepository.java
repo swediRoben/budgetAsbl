@@ -8,6 +8,8 @@ public interface SourceFinacementRepository extends JpaRepository<SourceFinaceme
 
     boolean existsByCodeIgnoreCase(String code);
 
+    //List<SourceFinacement> findByTSourceFinacementsOrLi
+
     boolean existsByLibelleIgnoreCase(String libelle);
 
 }
