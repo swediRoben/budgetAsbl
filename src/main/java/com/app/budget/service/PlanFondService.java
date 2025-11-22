@@ -67,7 +67,7 @@ if(projet==null&&exercice==null){
 
     private PlanFondDTO mapToDTO(final PlanFond planFond, final PlanFondDTO planFondDTO) {
         planFondDTO.setId(planFond.getId());
-        planFondDTO.setSourceFinacement(planFond.getSourceFinacementId()!=null?SourceMapper.getInstance().mapToDTO(planFond.getSourceFinacementId()) :null );
+        planFondDTO.setClasse(planFond.getClasseId()!=null?ClasseMapper.getInstance().mapToDTO(planFond.getClasseId()) :null );
         planFondDTO.setProjet(planFond.getProjetId()!=null?ProjetMapper.getInstance().mapToDTO(planFond.getProjetId()):null);
         planFondDTO.setCategorie(planFond.getCategorieId()!=null?categorieService.mapToDTO(planFond.getCategorieId(),new CategorieDTO()):null);
         planFondDTO.setExercice(planFond.getExerciceId()!=null?ExerciceMapper.getInstance().mapToDTO(planFond.getExerciceId()):null);
@@ -79,10 +79,10 @@ if(projet==null&&exercice==null){
 
         planFond.setProjetId(planFondDTO.getIdProjet()!=null? ProjetMapper.getInstance().mapToEntity(new ProjetDTO(planFondDTO.getIdProjet())) :null);
         planFond.setCategorieId(planFondDTO.getIdCategorie()!=null?categorieService.
-                mapToEntity(new CategorieDTO(planFondDTO.getIdProjet()),new Categorie()):null);
+                mapToEntity(new CategorieDTO(planFondDTO.getIdCategorie()),new Categorie()):null);
         planFond.setExerciceId(planFondDTO.getIdExercice()!=null?ExerciceMapper.getInstance().mapToEntity(new ExerciceDTO(planFondDTO.getIdExercice())):null);
         planFond.setMontant(planFondDTO.getMontant());
-        planFond.setSourceFinacementId(planFondDTO.getIdSource()!=null?SourceMapper.getInstance().mapToEntity(new SourceFinacementDTO(planFondDTO.getIdSource())) :null );
+        planFond.setClasseId(planFondDTO.getIdClasse()!=null?ClasseMapper.getInstance().mapToEntity(new ClasseDTO(planFondDTO.getIdClasse())) :null );
         return planFond;
     }
 

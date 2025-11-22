@@ -78,6 +78,7 @@ public class CategorieService {
     public Categorie mapToEntity(final CategorieDTO categorieDTO, final Categorie categorie) {
 
         categorie.setCode(categorieDTO.getCode());
+        categorie.setId(categorieDTO.getId());
         categorie.setLibelle(categorieDTO.getLibelle());
         final Projet projetId = categorieDTO.getProjetId() == null ?
                 ProjetMapper.getInstance().mapToEntity(new ProjetDTO(categorieDTO.getProjetId())) :

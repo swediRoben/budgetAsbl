@@ -58,6 +58,7 @@ public class ClasseService {
     }
 
     private Classe mapToEntity(final ClasseDTO classeDTO, final Classe classe) {
+        classe.setId(classe.getId());
         classe.setLibelle(classeDTO.getLibelle());
         classe.setType(classeDTO.getType());
         return classe;
