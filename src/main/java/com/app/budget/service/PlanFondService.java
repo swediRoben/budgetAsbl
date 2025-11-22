@@ -4,6 +4,9 @@ import com.app.budget.domain.PlanFond;
 import com.app.budget.model.PlanFondDTO;
 import com.app.budget.repos.PlanFondRepository;
 import com.app.budget.util.NotFoundException;
+
+import jakarta.persistence.Column;
+
 import java.util.List;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -65,6 +68,13 @@ public class PlanFondService {
         planFond.setIdExercice(planFondDTO.getIdExercice());
         planFond.setMontant(planFondDTO.getMontant());
         return planFond;
+    }
+ 
+    public List<PlanFondDTO> findAll(Long exercice, Long projet) {
+        final List<PlanFond> planFonds = planFondRepository.findByIdExerciceAndIdProjet(exercice,projet);
+        return planFonds.stream()
+                .map(planFond -> mapToDTO(planFond, new PlanFondDTO()))
+                .toList();
     }
 
 }

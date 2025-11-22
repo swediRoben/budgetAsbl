@@ -15,11 +15,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 
 @RestController
 @RequestMapping(value = "/api/planActivites", produces = MediaType.APPLICATION_JSON_VALUE)
+@CrossOrigin(origins = "*")
 public class PlanActiviteResource {
 
     private final PlanActiviteService planActiviteService;
@@ -29,8 +32,8 @@ public class PlanActiviteResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<PlanActiviteDTO>> getAllPlanActivites() {
-        return ResponseEntity.ok(planActiviteService.findAll());
+    public ResponseEntity<List<PlanActiviteDTO>> getAllPlanActivites(@RequestParam(required = false) Long exercice,@RequestParam(required = false) Long projet,@RequestParam(required = false) Long categorie) {
+        return ResponseEntity.ok(planActiviteService.findAll(exercice,projet,categorie));
     }
 
     @GetMapping("/{id}")

@@ -40,6 +40,9 @@ public class Classe {
     @Column(nullable = false, unique = true)
     private String libelle;
 
+    @Column(nullable = true)
+    private String type;
+
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private OffsetDateTime dateCreated;

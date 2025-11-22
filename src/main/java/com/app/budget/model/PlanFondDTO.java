@@ -1,5 +1,5 @@
 package com.app.budget.model;
-
+ 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Digits;
@@ -20,6 +20,8 @@ public class PlanFondDTO {
 
     private Long idExercice;
 
+    private CategorieDTO categoriedata;
+    private ProjetDTO projet;
     @Digits(integer = 10, fraction = 2)
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @Schema(type = "string", example = "95.08")

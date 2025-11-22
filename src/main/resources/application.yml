@@ -1,11 +1,22 @@
+logging:
+  level:
+    org.springframework.jdbc.datasource: DEBUG
+    org.hibernate: INFO
+    org.hibernate.SQL: DEBUG
+
 spring:
   datasource:
-    url: ${JDBC_DATABASE_URL:jdbc:h2:mem:budget}
-    username: ${JDBC_DATABASE_USERNAME:sa}
-    password: ${JDBC_DATABASE_PASSWORD:}
+    url: jdbc:h2:file:d:/mes projets/mon projet/budgetAsbl/data/budget;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE
+    username: sa
+    password: sa
+    driver-class-name: org.h2.Driver
     hikari:
       connection-timeout: 30000
       maximum-pool-size: 10
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
   jpa:
     hibernate:
       ddl-auto: update

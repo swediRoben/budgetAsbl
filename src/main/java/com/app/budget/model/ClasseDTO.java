@@ -16,5 +16,6 @@ public class ClasseDTO {
     @Size(max = 255)
     @ClasseLibelleUnique
     private String libelle;
+    private String type;
 
 }

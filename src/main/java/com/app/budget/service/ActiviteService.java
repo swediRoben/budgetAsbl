@@ -71,4 +71,11 @@ public class ActiviteService {
         return activiteRepository.existsByLibelleIgnoreCase(libelle);
     }
 
+    public List<ActiviteDTO> findAll(Long projet, Long categorie) {
+        final List<Activite> activites = activiteRepository.findAll(Sort.by("id"));
+        return activites.stream()
+                .map(activite -> mapToDTO(activite, new ActiviteDTO()))
+                .toList();
+    }
+
 }

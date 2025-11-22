@@ -68,5 +68,13 @@ public class PlanfondProjetService {
         planfondProjet.setMontant(planfondProjetDTO.getMontant());
         return planfondProjet;
     }
+ 
+
+    public List<PlanfondProjetDTO> findAll(Long exercice) {
+        final List<PlanfondProjet> planfondProjets = planfondProjetRepository.findByIdExercice(exercice);
+        return planfondProjets.stream()
+                .map(planfondProjet -> mapToDTO(planfondProjet, new PlanfondProjetDTO()))
+                .toList();
+    }
 
 }

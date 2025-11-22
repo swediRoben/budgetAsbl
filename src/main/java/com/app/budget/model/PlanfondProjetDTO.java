@@ -19,6 +19,8 @@ public class PlanfondProjetDTO {
     private Long idExercice;
 
     private Long idSource;
+    
+    private ProjetDTO projet;
 
     @Digits(integer = 10, fraction = 2)
     @JsonFormat(shape = JsonFormat.Shape.STRING)

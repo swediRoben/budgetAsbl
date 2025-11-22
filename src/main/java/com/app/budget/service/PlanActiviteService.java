@@ -83,6 +83,13 @@ public class PlanActiviteService {
         planActivite.setPrixUnitaire(planActiviteDTO.getPrixUnitaire());
         planActivite.setMontant(planActiviteDTO.getMontant());
         return planActivite;
+    } 
+
+   public List<PlanActiviteDTO> findAll(Long exercice, Long projet, Long categorie) {
+        final List<PlanActivite> planActivites = planActiviteRepository.findData(exercice,projet,categorie);
+        return planActivites.stream()
+                .map(planActivite -> mapToDTO(planActivite, new PlanActiviteDTO()))
+                .toList();
     }
 
 }
