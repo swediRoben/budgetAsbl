@@ -9,4 +9,6 @@ import java.util.List;
 
 public interface PlanFondRepository extends JpaRepository<PlanFond, Long> {
     List<PlanFond> findByProjetId_IdOrExerciceId_Id(Long projetIdId, Long exerciceIdId);
+
+    List<PlanFond> findByProjetId_IdAndExerciceId_Id(Long projetIdId, Long exerciceIdId);
 }

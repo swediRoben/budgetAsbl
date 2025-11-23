@@ -21,9 +21,9 @@ public class PlanfondProjetMapper {
                 ExerciceMapper.getInstance().mapToDTO(planfondProjet.getExerciceId()):null);
         planfondProjetDTO.setSourceFinacement(planfondProjet.getSourceFinacement()!=null?
                 SourceMapper.getInstance().mapToDTO(planfondProjet.getSourceFinacement()):null);
-        planfondProjetDTO.setIdProjet(planfondProjet.getProjetId()!=null?planfondProjetDTO.getId():null);
-        planfondProjetDTO.setIdExercice(planfondProjet.getExerciceId()!=null?planfondProjetDTO.getId():null);
-        planfondProjetDTO.setIdSource(planfondProjet.getSourceFinacement()!=null?planfondProjetDTO.getId():null);
+        planfondProjetDTO.setIdProjet(planfondProjet.getProjetId()!=null?planfondProjetDTO.getProjet().getId():null);
+        planfondProjetDTO.setIdExercice(planfondProjet.getExerciceId()!=null?planfondProjetDTO.getExercice().getId():null);
+        planfondProjetDTO.setIdSource(planfondProjet.getSourceFinacement()!=null?planfondProjetDTO.getSourceFinacement().getId():null);
         planfondProjetDTO.setMontant(planfondProjet.getMontant());
         return planfondProjetDTO;
     }
