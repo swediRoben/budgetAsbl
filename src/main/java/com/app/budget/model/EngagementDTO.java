@@ -30,6 +30,8 @@ public class EngagementDTO {
     @Schema(type = "string", example = "40.08")
     private BigDecimal montantPrevision;
 
+    private Boolean validation;
+
     @Size(max = 255)
     private String motif;
 

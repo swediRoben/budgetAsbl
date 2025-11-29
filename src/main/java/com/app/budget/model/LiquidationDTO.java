@@ -35,7 +35,9 @@ public class LiquidationDTO {
     @Digits(integer = 10, fraction = 2)
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @Schema(type = "string", example = "18.08")
-    private BigDecimal montantLiquide;
+    private BigDecimal montantLiquide; 
+    
+    private Boolean validation;
 
     @Size(max = 255)
     private String status;

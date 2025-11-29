@@ -5,9 +5,14 @@ import com.app.budget.events.BeforeDeleteEngagement;
 import com.app.budget.model.EngagementDTO;
 import com.app.budget.repos.EngagementRepository;
 import com.app.budget.util.NotFoundException;
+
+import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.util.List;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable; 
 import org.springframework.stereotype.Service;
 
 
@@ -23,17 +28,33 @@ public class EngagementService {
         this.publisher = publisher;
     }
 
-    public List<EngagementDTO> findAll() {
-        final List<Engagement> engagements = engagementRepository.findAll(Sort.by("id"));
-        return engagements.stream()
-                .map(engagement -> mapToDTO(engagement, new EngagementDTO()))
+    public List<EngagementDTO> findAll(
+            Long projet,Long exercice,Long categorie,Long activite,
+            Boolean validation,OffsetDateTime debut,OffsetDateTime fin,
+            Integer page,Integer size
+    ) {
+        Pageable pageable = PageRequest.of(page != null ? page : 0, size != null ? size : 10);
+
+        Page<Engagement> engagementsPage = engagementRepository.findAllBy(
+                exercice, projet, activite,categorie, validation, debut, fin, pageable
+        );
+
+        List<EngagementDTO> dtos = engagementsPage.stream()
+                .map(e -> mapToDTO(e, new EngagementDTO()))
                 .toList();
+
+        return dtos; 
     }
+
 
     public EngagementDTO get(final Long id) {
         return engagementRepository.findById(id)
                 .map(engagement -> mapToDTO(engagement, new EngagementDTO()))
                 .orElseThrow(NotFoundException::new);
+    }
+
+  public BigDecimal getMontantEngage(Long exercice,Long projet) {
+        return engagementRepository.sumMontantNotAnnuler(exercice,projet);
     }
 
     public Long create(final EngagementDTO engagementDTO) {
