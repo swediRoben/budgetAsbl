@@ -5,6 +5,7 @@ import com.app.budget.service.EngagementService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 
+import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -37,6 +38,11 @@ public class EngagementResource {
         return ResponseEntity.ok(engagementService.findAll(projet,exercice,categire,activite,validation,debut,fin,page,size));
     }
 
+    @GetMapping("/montant")
+    public ResponseEntity<BigDecimal> getSommeEngager(@RequestParam Long projet,@RequestParam Long exercice) {
+        return ResponseEntity.ok(engagementService.getMontantEngage(exercice,projet));
+    }
+      
     @GetMapping("/{id}")
     public ResponseEntity<EngagementDTO> getEngagement(@PathVariable(name = "id") final Long id) {
         return ResponseEntity.ok(engagementService.get(id));
