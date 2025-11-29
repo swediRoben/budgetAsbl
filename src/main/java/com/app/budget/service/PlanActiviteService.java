@@ -4,6 +4,9 @@ import com.app.budget.domain.PlanActivite;
 import com.app.budget.model.PlanActiviteDTO;
 import com.app.budget.repos.PlanActiviteRepository;
 import com.app.budget.util.NotFoundException;
+
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -58,6 +61,7 @@ public class PlanActiviteService {
         planActiviteDTO.setIdCategorie(planActivite.getIdCategorie());
         planActiviteDTO.setIdActivite(planActivite.getIdActivite());
         planActiviteDTO.setIdSource(planActivite.getIdSource());
+        planActiviteDTO.setIdClasse(planActivite.getIdClasse());
         planActiviteDTO.setIdPlanComptable(planActivite.getIdPlanComptable());
         planActiviteDTO.setIdBeneficiaire(planActivite.getIdBeneficiaire());
         planActiviteDTO.setLigneBudgetaire(planActivite.getLigneBudgetaire());
@@ -65,6 +69,17 @@ public class PlanActiviteService {
         planActiviteDTO.setQuantite(planActivite.getQuantite());
         planActiviteDTO.setPrixUnitaire(planActivite.getPrixUnitaire());
         planActiviteDTO.setMontant(planActivite.getMontant());
+        planActiviteDTO.setDebut(planActivite.getDebut());
+        planActiviteDTO.setFin(planActivite.getFin());
+         planActiviteDTO.setProjet(planActivite.getProjet());
+            planActiviteDTO.setCategorie(planActivite.getCategorie());
+            planActiviteDTO.setActivite(planActivite.getActivite());
+            planActiviteDTO.setIdSource(planActivite.getSource().getId());
+            planActiviteDTO.setPlanComptable(planActivite.getPlanComptable());
+            planActiviteDTO.setClasse(planActivite.getClasse());
+            planActiviteDTO.setBeneficiaire(planActivite.getBeneficiaire());
+  
+
         return planActiviteDTO;
     }
 
@@ -82,7 +97,24 @@ public class PlanActiviteService {
         planActivite.setQuantite(planActiviteDTO.getQuantite());
         planActivite.setPrixUnitaire(planActiviteDTO.getPrixUnitaire());
         planActivite.setMontant(planActiviteDTO.getMontant());
+        planActivite.setDebut(planActiviteDTO.getDebut());
+        planActivite.setFin(planActiviteDTO.getFin());
         return planActivite;
+    }
+
+    public List<PlanActiviteDTO> findAll(Long projet, Long exercice, Long categorie, Long classe,Long bailleur) {
+        List<PlanActivite> planActivites = null;
+        List<PlanActiviteDTO> planActiviteDto = new ArrayList<>();
+        if(projet==null){
+            planActivites = Collections.emptyList();
+        }else{
+            planActivites=planActiviteRepository.findAllByAllData(exercice,projet,categorie,classe,bailleur);
+        }
+       planActivites.forEach(v -> {
+            planActiviteDto.add(mapToDTO(v, new PlanActiviteDTO()));
+        });
+        return planActiviteDto;
+
     }
 
 }

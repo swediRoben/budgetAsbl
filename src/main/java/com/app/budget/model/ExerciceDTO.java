@@ -30,6 +30,9 @@ public class ExerciceDTO {
     @ExerciceDateFinUnique
     private LocalDate dateFin;
 
+    
+    private Boolean preparation;
+    private Boolean execution;
     private Boolean cloture;
 
     public ExerciceDTO(Long id) {

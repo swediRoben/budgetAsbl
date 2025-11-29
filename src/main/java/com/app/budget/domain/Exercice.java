@@ -49,6 +49,9 @@ public class Exercice {
 
     @Column(unique = true)
     private LocalDate dateFin;
+    
+    private Boolean preparation;
+    private Boolean execution;
 
     @Column
     private Boolean cloture;

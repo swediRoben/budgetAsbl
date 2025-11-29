@@ -33,16 +33,22 @@ public class ExerciceService {
                 .orElseThrow(NotFoundException::new);
     }
 
-    public Long create(final ExerciceDTO exerciceDTO) {
-        final Exercice exercice = new Exercice();
-        ;
+    public Long create(final ExerciceDTO exerciceDTO) { 
+  
         return exerciceRepository.save(ExerciceMapper.getInstance().mapToEntity(exerciceDTO)).getId();
     }
 
     public void update(final Long id, final ExerciceDTO exerciceDTO) {
         final Exercice exercice = exerciceRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
-        ;
+       if (exerciceDTO.getCloture()) {
+          exerciceDTO.setPreparation(false);;  
+          exerciceDTO.setExecution(false);;  
+        }
+        if (exerciceDTO.getExecution()) {
+          exerciceDTO.setPreparation(false);;  
+          exerciceDTO.setCloture(false);;  
+        } 
         exerciceRepository.save(ExerciceMapper.getInstance().mapToEntity(exerciceDTO));
     }
 

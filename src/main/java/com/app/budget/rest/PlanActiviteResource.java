@@ -22,8 +22,8 @@ public class PlanActiviteResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<PlanActiviteDTO>> getAllPlanActivites() {
-        return ResponseEntity.ok(planActiviteService.findAll());
+    public ResponseEntity<List<PlanActiviteDTO>> getAllPlanActivites(@RequestParam Long projet, @RequestParam Long exercice, @RequestParam Long categorie,@RequestParam Long classe,@RequestParam Long bailleur) {
+        return ResponseEntity.ok(planActiviteService.findAll(projet,exercice,categorie,classe,bailleur));
     }
 
     @GetMapping("/{id}")

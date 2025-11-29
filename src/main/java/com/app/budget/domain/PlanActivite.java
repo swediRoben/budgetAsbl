@@ -3,9 +3,12 @@ package com.app.budget.domain;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne; 
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
@@ -39,40 +42,48 @@ public class PlanActivite {
     private Long id;
 
     @Column
-    private Long idExercice;
+    private Long idExercice; 
 
-    @Column
+    @Column(name = "id_projet")
     private Long idProjet;
 
-    @Column
+    @Column(name = "id_categorie")
     private Long idCategorie;
-
-    @Column
+ 
+    @Column(name = "id_activite")
     private Long idActivite;
 
-    @Column
+ 
+    @Column(name = "id_source")
     private Long idSource;
 
-    @Column
+    @Column(name = "id_plan_comptable")
     private Long idPlanComptable;
+    
+    @Column(name = "id_classe")
+    private Long idClasse;
 
-    @Column
+    @Column(name = "id_benefice")
     private Long idBeneficiaire;
 
-    @Column
+    @Column(name = "ligne_budgetaire")
     private String ligneBudgetaire;
 
-    @Column
+    @Column(name = "unite_mesure")
     private String uniteMesure;
 
     @Column
     private Long quantite;
-
-    @Column(precision = 10, scale = 2)
+ 
     private BigDecimal prixUnitaire;
-
-    @Column(precision = 10, scale = 2)
+ 
     private BigDecimal montant;
+
+    @Column(name = "date_debut")
+    private OffsetDateTime debut;
+
+    @Column(name = "date_fin")
+    private OffsetDateTime fin;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -81,5 +92,38 @@ public class PlanActivite {
     @LastModifiedDate
     @Column(nullable = false)
     private OffsetDateTime lastUpdated;
+
+
+@ManyToOne(fetch = FetchType.LAZY)
+@JoinColumn(name = "id_projet", referencedColumnName = "id", insertable = false, updatable = false)
+private Projet projet; 
+
+@ManyToOne(fetch = FetchType.LAZY)
+@JoinColumn(name = "id_categorie", referencedColumnName = "id", insertable = false, updatable = false)
+private Categorie categorie;
+ 
+
+@ManyToOne(fetch = FetchType.LAZY)
+@JoinColumn(name = "id_activite", referencedColumnName = "id", insertable = false, updatable = false)
+private Activite activite;
+
+@ManyToOne(fetch = FetchType.LAZY)
+@JoinColumn(name = "id_source", referencedColumnName = "id", insertable = false, updatable = false)
+private SourceFinacement source;
+ 
+
+@ManyToOne(fetch = FetchType.LAZY)
+@JoinColumn(name = "id_plan_comptable", referencedColumnName = "id", insertable = false, updatable = false)
+private PlanComptable planComptable; 
+
+@ManyToOne(fetch = FetchType.LAZY)
+@JoinColumn(name = "id_classe", referencedColumnName = "id", insertable = false, updatable = false)
+private Classe classe;
+ 
+@ManyToOne(fetch = FetchType.LAZY)
+@JoinColumn(name = "id_benefice", referencedColumnName = "id", insertable = false, updatable = false)
+private Beneficiaire beneficiaire;
+
+     
 
 }
