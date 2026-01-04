@@ -11,6 +11,8 @@ public class ExerciceMapper {
         exerciceDTO.setLibelle(exercice.getLibelle());
         exerciceDTO.setDateDebut(exercice.getDateDebut());
         exerciceDTO.setDateFin(exercice.getDateFin());
+        exerciceDTO.setPreparation(exercice.getPreparation());
+        exerciceDTO.setExecution(exercice.getExecution());
         exerciceDTO.setCloture(exercice.getCloture());
         return exerciceDTO;
     }
@@ -22,6 +24,8 @@ public class ExerciceMapper {
         exercice.setLibelle(exerciceDTO.getLibelle());
         exercice.setDateDebut(exerciceDTO.getDateDebut());
         exercice.setDateFin(exerciceDTO.getDateFin());
+        exercice.setPreparation(exerciceDTO.getPreparation());
+        exercice.setExecution(exerciceDTO.getExecution());
         exercice.setCloture(exerciceDTO.getCloture());
         return exercice;
     }

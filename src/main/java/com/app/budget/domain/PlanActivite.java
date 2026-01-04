@@ -94,33 +94,33 @@ public class PlanActivite {
     private OffsetDateTime lastUpdated;
 
 
-@ManyToOne(fetch = FetchType.LAZY)
+@ManyToOne(fetch = FetchType.EAGER)
 @JoinColumn(name = "id_projet", referencedColumnName = "id", insertable = false, updatable = false)
 private Projet projet; 
 
-@ManyToOne(fetch = FetchType.LAZY)
+@ManyToOne(fetch = FetchType.EAGER)
 @JoinColumn(name = "id_categorie", referencedColumnName = "id", insertable = false, updatable = false)
 private Categorie categorie;
  
 
-@ManyToOne(fetch = FetchType.LAZY)
+@ManyToOne(fetch = FetchType.EAGER)
 @JoinColumn(name = "id_activite", referencedColumnName = "id", insertable = false, updatable = false)
 private Activite activite;
 
-@ManyToOne(fetch = FetchType.LAZY)
+@ManyToOne(fetch = FetchType.EAGER)
 @JoinColumn(name = "id_source", referencedColumnName = "id", insertable = false, updatable = false)
 private SourceFinacement source;
  
 
-@ManyToOne(fetch = FetchType.LAZY)
+@ManyToOne(fetch = FetchType.EAGER)
 @JoinColumn(name = "id_plan_comptable", referencedColumnName = "id", insertable = false, updatable = false)
 private PlanComptable planComptable; 
 
-@ManyToOne(fetch = FetchType.LAZY)
+@ManyToOne(fetch = FetchType.EAGER)
 @JoinColumn(name = "id_classe", referencedColumnName = "id", insertable = false, updatable = false)
 private Classe classe;
  
-@ManyToOne(fetch = FetchType.LAZY)
+@ManyToOne(fetch = FetchType.EAGER)
 @JoinColumn(name = "id_benefice", referencedColumnName = "id", insertable = false, updatable = false)
 private Beneficiaire beneficiaire;
 

@@ -1,10 +1,7 @@
-package com.app.budget.model;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Digits;
-import jakarta.validation.constraints.Size;
+package com.app.budget.model; 
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,29 +10,27 @@ import lombok.Setter;
 @Setter
 public class EngagementDTO {
 
-    private Long id;
-
-    @Size(max = 255)
+    private Long id; 
     private String bonEngagement;
 
     private Long idExercice;
-
-    @Size(max = 255)
+    private Long idProjet;
     private String ligneBudgetaire;
-
     private Long idPlanFondActivite;
+    private Long idResponsable;
+    private Long idDevise;
+    private BigDecimal tauxDevise;
+    private BigDecimal montant;
+    private String objet;
 
-    @Digits(integer = 10, fraction = 2)
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
-    @Schema(type = "string", example = "40.08")
-    private BigDecimal montantPrevision;
-
+    private Boolean enAttente;
+    private OffsetDateTime dataEnAttente;
     private Boolean validation;
-
-    @Size(max = 255)
-    private String motif;
-
-    @Size(max = 255)
-    private String status;
+    private OffsetDateTime dataValidation;
+    private Boolean reception;
+    private OffsetDateTime dataReception;
+    private Boolean rejet;
+    private OffsetDateTime dataRejet;
+    private String observation; 
 
 }

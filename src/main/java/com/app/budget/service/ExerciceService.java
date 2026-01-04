@@ -34,20 +34,23 @@ public class ExerciceService {
     }
 
     public Long create(final ExerciceDTO exerciceDTO) { 
-  
+        exerciceDTO.setPreparation(false);
+          exerciceDTO.setExecution(false);
+          exerciceDTO.setCloture(false);
         return exerciceRepository.save(ExerciceMapper.getInstance().mapToEntity(exerciceDTO)).getId();
     }
 
     public void update(final Long id, final ExerciceDTO exerciceDTO) {
         final Exercice exercice = exerciceRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
+            exerciceDTO.setId(id);
        if (exerciceDTO.getCloture()) {
-          exerciceDTO.setPreparation(false);;  
-          exerciceDTO.setExecution(false);;  
+          exerciceDTO.setPreparation(false);
+          exerciceDTO.setExecution(false);
         }
-        if (exerciceDTO.getExecution()) {
-          exerciceDTO.setPreparation(false);;  
-          exerciceDTO.setCloture(false);;  
+        if (exerciceDTO.getExecution() && !exercice.getCloture()) {
+          exerciceDTO.setPreparation(false);
+          exerciceDTO.setCloture(false);
         } 
         exerciceRepository.save(ExerciceMapper.getInstance().mapToEntity(exerciceDTO));
     }

@@ -22,7 +22,7 @@ public class PlanActiviteResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<PlanActiviteDTO>> getAllPlanActivites(@RequestParam Long projet, @RequestParam Long exercice, @RequestParam Long categorie,@RequestParam Long classe,@RequestParam Long bailleur) {
+    public ResponseEntity<List<PlanActiviteDTO>> getAllPlanActivites(@RequestParam Long projet, @RequestParam Long exercice, @RequestParam(required = false) Long categorie,@RequestParam(required = false) Long classe,@RequestParam(required = false) Long bailleur) {
         return ResponseEntity.ok(planActiviteService.findAll(projet,exercice,categorie,classe,bailleur));
     }
 

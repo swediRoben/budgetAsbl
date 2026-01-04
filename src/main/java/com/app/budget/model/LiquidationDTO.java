@@ -1,10 +1,8 @@
 package com.app.budget.model;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Digits;
-import jakarta.validation.constraints.Size;
+ 
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,36 +10,28 @@ import lombok.Setter;
 @Getter
 @Setter
 public class LiquidationDTO {
-
-    private Long id;
-
-    private Long idEngagement;
-
-    @Size(max = 255)
-    private String bonEngagment;
+    private Long id; 
+    private Long engagementId;
+    private String bonEngagement;
 
     private Long idExercice;
-
-    @Size(max = 255)
+    private Long idProjet;
     private String ligneBudgetaire;
-
     private Long idPlanFondActivite;
+    private Long idResponsable;
+    private Long idDevise;
+    private BigDecimal tauxDevise;
+    private BigDecimal montant;
+    private String numeroPiece;
 
-    @Digits(integer = 10, fraction = 2)
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
-    @Schema(type = "string", example = "80.08")
-    private BigDecimal montantEngage;
-
-    @Digits(integer = 10, fraction = 2)
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
-    @Schema(type = "string", example = "18.08")
-    private BigDecimal montantLiquide; 
-    
+    private Boolean enAttente;
+    private OffsetDateTime dataEnAttente;
     private Boolean validation;
-
-    @Size(max = 255)
-    private String status;
-
-    private Long engagementId;
+    private OffsetDateTime dataValidation;
+    private Boolean reception;
+    private OffsetDateTime dataReception;
+    private Boolean rejet;
+    private OffsetDateTime dataRejet;
+    private String observation; 
 
 }

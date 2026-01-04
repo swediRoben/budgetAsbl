@@ -75,6 +75,7 @@ public class PlanActiviteService {
             planActiviteDTO.setCategorie(planActivite.getCategorie());
             planActiviteDTO.setActivite(planActivite.getActivite());
             planActiviteDTO.setIdSource(planActivite.getSource().getId());
+            planActiviteDTO.setSource(planActivite.getSource());
             planActiviteDTO.setPlanComptable(planActivite.getPlanComptable());
             planActiviteDTO.setClasse(planActivite.getClasse());
             planActiviteDTO.setBeneficiaire(planActivite.getBeneficiaire());
