@@ -28,14 +28,42 @@ public class EngagementResource {
     public ResponseEntity<List<EngagementDTO>> getAllEngagements(
        @RequestParam Long projet,
         @RequestParam Long exercice,
-        @RequestParam Long categire,
+        @RequestParam Long categore,
         @RequestParam Long activite,
         @RequestParam Boolean validation,
          @RequestParam OffsetDateTime debut,
         @RequestParam OffsetDateTime fin,
         @RequestParam Integer page, @RequestParam Integer size
     ) {
-        return ResponseEntity.ok(engagementService.findAll(projet,exercice,categire,activite,validation,debut,fin,page,size));
+        return ResponseEntity.ok(engagementService.findAllEntenteEtRetourner(projet,exercice,categore,activite,debut,fin,page,size));
+    }
+
+    @GetMapping("/traitement")
+    public ResponseEntity<List<EngagementDTO>> getAllEntenteEreceptionne(
+       @RequestParam Long projet,
+        @RequestParam Long exercice,
+        @RequestParam Long categore,
+        @RequestParam Long activite,
+        @RequestParam Boolean validation,
+         @RequestParam OffsetDateTime debut,
+        @RequestParam OffsetDateTime fin,
+        @RequestParam Integer page, @RequestParam Integer size
+    ) {
+        return ResponseEntity.ok(engagementService.findAllEntenteEtReceptioner(projet,exercice,categore,activite,debut,fin,page,size));
+    }
+
+    @GetMapping("/etat")
+    public ResponseEntity<List<EngagementDTO>> getAllValiderEtRejet(
+       @RequestParam Long projet,
+        @RequestParam Long exercice,
+        @RequestParam Long categore,
+        @RequestParam Long activite,
+        @RequestParam Boolean validation,
+         @RequestParam OffsetDateTime debut,
+        @RequestParam OffsetDateTime fin,
+        @RequestParam Integer page, @RequestParam Integer size
+    ) {
+        return ResponseEntity.ok(engagementService.findAllRejeterEtValider(projet,exercice,categore,activite,debut,fin,page,size));
     }
 
     @GetMapping("/montant")
@@ -52,20 +80,128 @@ public class EngagementResource {
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Long> createEngagement(
             @RequestBody @Valid final EngagementDTO engagementDTO) {
-        final Long createdId = engagementService.create(engagementDTO);
-        return new ResponseEntity<>(createdId, HttpStatus.CREATED);
+        final boolean createdId = engagementService.create(engagementDTO); 
+         if (createdId) {
+           return  new ResponseEntity<>(null, HttpStatus.CREATED); 
+        }else{
+           return  new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);  
+        }
+
+    }
+
+    
+      @PutMapping("/receptioner")
+    @ApiResponse(responseCode = "201")
+    public ResponseEntity<Long> receptioner(@PathVariable Long id) {
+         if (engagementService.checkRetourner(id)) {
+          return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
+        }
+        if (engagementService.checkRejeter(id)) {
+          return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
+        }
+           if (engagementService.checkValidation(id)) {
+          return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
+        }
+           if (engagementService.checkReceptioner(id)) {
+          return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
+        }
+        Boolean createdId = engagementService.reception(id);
+        if (createdId) {
+           return  new ResponseEntity<>(null, HttpStatus.CREATED); 
+        }else{
+           return  new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);  
+        }
+    }
+
+       @PutMapping("/valider")
+    @ApiResponse(responseCode = "201")
+    public ResponseEntity<Long> valider(@PathVariable Long id) {
+        if (engagementService.checkRetourner(id)) {
+          return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
+        }
+        if (engagementService.checkRejeter(id)) {
+          return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
+        }
+           if (engagementService.checkValidation(id)) {
+          return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
+        }
+        Boolean createdId = engagementService.validation(id);
+        if (createdId) {
+           return  new ResponseEntity<>(null, HttpStatus.CREATED); 
+        }else{
+           return  new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);  
+        }
+    }
+
+      @PutMapping("/rejeter")
+    @ApiResponse(responseCode = "201")
+    public ResponseEntity<Long> rejeter(@PathVariable Long id,@RequestBody String message) {
+         if (engagementService.checkRetourner(id)) {
+          return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
+        }
+        if (engagementService.checkRejeter(id)) {
+          return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
+        }
+             if (engagementService.checkValidation(id)) {
+          return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
+        }
+        Boolean createdId = engagementService.rejeter(id,message);
+        if (createdId) {
+           return  new ResponseEntity<>(null, HttpStatus.CREATED); 
+        }else{
+           return  new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);  
+        }
+    }
+
+      @PutMapping("/retourner")
+    @ApiResponse(responseCode = "201")
+    public ResponseEntity<Long> retourner(@PathVariable Long id,@RequestBody String message) {
+         if (!engagementService.checkReceptioner(id)) {
+          return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
+        }
+        if (engagementService.checkRejeter(id)) {
+          return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
+        }
+        Boolean createdId = engagementService.retourne(id,message);
+        if (createdId) {
+           return  new ResponseEntity<>(null, HttpStatus.CREATED); 
+        }else{
+           return  new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);  
+        }
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Long> updateEngagement(@PathVariable(name = "id") final Long id,
-            @RequestBody @Valid final EngagementDTO engagementDTO) {
-        engagementService.update(id, engagementDTO);
-        return ResponseEntity.ok(id);
+            @RequestBody @Valid final EngagementDTO engagementDTO) { 
+        if (engagementService.checkRejeter(id)) {
+          return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
+        }
+           if (engagementService.checkValidation(id)) {
+          return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
+        }
+           if (engagementService.checkReceptioner(id)) {
+          return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
+        }
+       Boolean createdId= engagementService.update(id, engagementDTO);
+         if (createdId) {
+           return  new ResponseEntity<>(null, HttpStatus.CREATED); 
+        }else{
+           return  new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);  
+        }
     }
 
     @DeleteMapping("/{id}")
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteEngagement(@PathVariable(name = "id") final Long id) {
+              if (engagementService.checkRejeter(id)) {
+          return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
+        }
+           if (engagementService.checkValidation(id)) {
+          return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
+        }
+           if (engagementService.checkReceptioner(id)) {
+          return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
+        }
         engagementService.delete(id);
         return ResponseEntity.noContent().build();
     }

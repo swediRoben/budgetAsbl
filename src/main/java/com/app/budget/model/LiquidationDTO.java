@@ -23,6 +23,7 @@ public class LiquidationDTO {
     private BigDecimal tauxDevise;
     private BigDecimal montant;
     private String numeroPiece;
+    private Integer typeDocement;
 
     private Boolean enAttente;
     private OffsetDateTime dataEnAttente;

@@ -15,8 +15,6 @@ import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 
@@ -52,27 +50,25 @@ public class Engagement {
 
     @Column(name = "id_planFond_activite")
     private Long idPlanFondActivite;
+    private Long idProjet; 
+    private Long idResponsable;
+    private Long idDevise;
+    private BigDecimal tauxDevise;
+    private BigDecimal montant;
+    private String objet;
 
-    @Column(precision = 10, scale = 2)
-    private BigDecimal montantPrevision;
-
-    @Column
-    private String motif;
-
-    @Column
-    private String status;
-    
+    private Boolean enAttente;
+    private OffsetDateTime dataEnAttente;
     private Boolean validation;
-
-    @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private OffsetDateTime dateCreated;
-
-    @LastModifiedDate
-    @Column(nullable = false)
-    private OffsetDateTime lastUpdated;
+    private OffsetDateTime dataValidation;
+    private Boolean reception;
+    private OffsetDateTime dataReception;
+    private Boolean retourner;
+    private OffsetDateTime dataRetourner;
+    private Boolean rejet;
+    private OffsetDateTime dataRejet;
+    private String observation;  
     
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_planFond_activite", referencedColumnName = "id", insertable = false, updatable = false)
     private PlanActivite planActivite; 

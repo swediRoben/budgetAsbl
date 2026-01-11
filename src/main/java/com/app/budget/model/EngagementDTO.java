@@ -29,6 +29,8 @@ public class EngagementDTO {
     private OffsetDateTime dataValidation;
     private Boolean reception;
     private OffsetDateTime dataReception;
+    private Boolean retourner;
+    private OffsetDateTime dataRetourner;
     private Boolean rejet;
     private OffsetDateTime dataRejet;
     private String observation; 
