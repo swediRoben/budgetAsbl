@@ -57,6 +57,10 @@ private Exercice exerciceId;
     @JoinColumn(name = "classe_id")
     private Classe classeId;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "reponsable_id")
+    private Fonctionnaire responsableId;
+
     @Column(precision = 10, scale = 2)
     private BigDecimal montant;
 

@@ -26,6 +26,11 @@ public class PlanFondResource {
         return ResponseEntity.ok(planFondService.findAll(projet, exercice));
     }
 
+     @GetMapping("/planfond_by_fonctionnaire")
+    public ResponseEntity<Object> getAllPlanFondsByFonctionnaire(@RequestParam(required = false)Long responsable, @RequestParam(required = false)Long projet, @RequestParam(required = false)Long exercice) {
+        return ResponseEntity.ok(planFondService.findAllByFonctionnaire(responsable,projet, exercice));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<PlanFondDTO> getPlanFond(@PathVariable(name = "id") final Long id) {
         return ResponseEntity.ok(planFondService.get(id));

@@ -1,16 +1,14 @@
 package com.app.budget.service;
 
 import com.app.budget.domain.Categorie;
-import com.app.budget.domain.Exercice;
+import com.app.budget.domain.Fonctionnaire;
 import com.app.budget.domain.PlanFond;
-import com.app.budget.domain.Projet;
 import com.app.budget.model.*;
 import com.app.budget.repos.PlanFondRepository;
 import com.app.budget.util.NotFoundException;
 
 import java.util.Collections;
 import java.util.List;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 
@@ -76,6 +74,8 @@ if(projet==null&&exercice==null){
         planFondDTO.setCategorie(planFond.getCategorieId()!=null?categorieService.mapToDTO(planFond.getCategorieId(),new CategorieDTO()):null);
         planFondDTO.setExercice(planFond.getExerciceId()!=null?ExerciceMapper.getInstance().mapToDTO(planFond.getExerciceId()):null);
         planFondDTO.setMontant(planFond.getMontant());
+        planFondDTO.setResponsableId(planFond.getResponsableId()!=null?planFond.getResponsableId().getId():null);
+        planFondDTO.setResponsable(planFond.getResponsableId());
         return planFondDTO;
     }
 
@@ -87,7 +87,21 @@ if(projet==null&&exercice==null){
         planFond.setExerciceId(planFondDTO.getIdExercice()!=null?ExerciceMapper.getInstance().mapToEntity(new ExerciceDTO(planFondDTO.getIdExercice())):null);
         planFond.setMontant(planFondDTO.getMontant());
         planFond.setClasseId(planFondDTO.getIdClasse()!=null?ClasseMapper.getInstance().mapToEntity(new ClasseDTO(planFondDTO.getIdClasse())) :null );
+        Fonctionnaire fonc=new Fonctionnaire();
+        fonc.setId(planFondDTO.getResponsableId());
+        planFond.setResponsableId(fonc);
         return planFond;
+    }
+
+    public List<PlanFondDTO> findAllByFonctionnaire(Long responsable, Long projet, Long exercice) {
+        List<PlanFond> planFonds = null;
+        if(projet==null&&exercice==null){
+            planFonds = Collections.emptyList();
+        }else { 
+            planFonds=planFondRepository.findByProjetExerciceResponsable(projet,exercice,responsable);}
+                return planFonds.stream()
+                        .map(planFond -> mapToDTO(planFond, new PlanFondDTO()))
+                        .toList();
     }
 
 }
