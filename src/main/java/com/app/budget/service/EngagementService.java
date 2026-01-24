@@ -6,7 +6,9 @@ import com.app.budget.model.EngagementDTO;
 import com.app.budget.repos.EngagementRepository;
 import com.app.budget.util.NotFoundException;
 
-import java.math.BigDecimal;
+import jakarta.transaction.Transactional;
+
+import java.math.BigDecimal; 
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -23,15 +25,14 @@ public class EngagementService {
 
     private final EngagementRepository engagementRepository;
     private final ApplicationEventPublisher publisher;
+    private final BonEngagementNumeroService numeroService; 
 
-    public EngagementService(final EngagementRepository engagementRepository,
-            final ApplicationEventPublisher publisher) {
+    public EngagementService(EngagementRepository engagementRepository, ApplicationEventPublisher publisher,
+            BonEngagementNumeroService numeroService) {
         this.engagementRepository = engagementRepository;
         this.publisher = publisher;
+        this.numeroService = numeroService;
     }
-
-
-    
 
     public List<EngagementDTO> findAllEntenteEtRetourner(
             Long projet,
@@ -110,10 +111,13 @@ public class EngagementService {
         return engagementRepository.sumMontantNotAnnuler(exercice,projet);
     }
 
+    @Transactional
     public boolean create(final EngagementDTO engagementDTO) {
-        try {
-            final Engagement engagement = new Engagement();
+        try {  
+         final Engagement engagement = new Engagement();
         mapToEntity(engagementDTO, engagement);
+         String numero = numeroService.generateNumero(OffsetDateTime.now());
+        engagement.setBonEngagement(numero);
         engagementRepository.save(engagement);
         return true;
         } catch (Exception e) {
