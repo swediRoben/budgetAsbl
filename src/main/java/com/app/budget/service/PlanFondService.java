@@ -74,8 +74,8 @@ if(projet==null&&exercice==null){
         planFondDTO.setCategorie(planFond.getCategorieId()!=null?categorieService.mapToDTO(planFond.getCategorieId(),new CategorieDTO()):null);
         planFondDTO.setExercice(planFond.getExerciceId()!=null?ExerciceMapper.getInstance().mapToDTO(planFond.getExerciceId()):null);
         planFondDTO.setMontant(planFond.getMontant());
-        planFondDTO.setResponsableId(planFond.getResponsableId()!=null?planFond.getResponsableId().getId():null);
-        planFondDTO.setResponsable(planFond.getResponsableId());
+        // planFondDTO.setResponsableId(planFond.getResponsableId()!=null?planFond.getResponsableId().getId():null);
+        // planFondDTO.setResponsable(planFond.getResponsableId());
         return planFondDTO;
     }
 
@@ -89,7 +89,7 @@ if(projet==null&&exercice==null){
         planFond.setClasseId(planFondDTO.getIdClasse()!=null?ClasseMapper.getInstance().mapToEntity(new ClasseDTO(planFondDTO.getIdClasse())) :null );
         Fonctionnaire fonc=new Fonctionnaire();
         fonc.setId(planFondDTO.getResponsableId());
-        planFond.setResponsableId(fonc);
+        // planFond.setResponsableId(fonc);
         return planFond;
     }
 
@@ -98,7 +98,7 @@ if(projet==null&&exercice==null){
         if(projet==null&&exercice==null){
             planFonds = Collections.emptyList();
         }else { 
-            planFonds=planFondRepository.findByProjetExerciceResponsable(projet,exercice,responsable);}
+            planFonds=planFondRepository.findByProjetExerciceResponsable(projet,exercice);}
                 return planFonds.stream()
                         .map(planFond -> mapToDTO(planFond, new PlanFondDTO()))
                         .toList();

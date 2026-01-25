@@ -42,14 +42,76 @@ public class EngagementResource {
     public ResponseEntity<List<EngagementDTO>> getAllEntenteEreceptionne(
        @RequestParam Long projet,
         @RequestParam Long exercice,
-        @RequestParam Long categore,
-        @RequestParam Long activite,
-        @RequestParam Boolean validation,
-         @RequestParam OffsetDateTime debut,
-        @RequestParam OffsetDateTime fin,
-        @RequestParam Integer page, @RequestParam Integer size
+        @RequestParam(required = false) Long categore,
+        @RequestParam(required = false) Long activite,
+        @RequestParam(required = false) Boolean validation,
+         @RequestParam(required = false) OffsetDateTime debut,
+        @RequestParam(required = false) OffsetDateTime fin,
+        @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size
     ) {
         return ResponseEntity.ok(engagementService.findAllEntenteEtReceptioner(projet,exercice,categore,activite,debut,fin,page,size));
+    }
+
+    @GetMapping("/valider")
+    public ResponseEntity<List<EngagementDTO>> getAllValider(
+       @RequestParam Long projet,
+        @RequestParam Long exercice,
+        @RequestParam(required = false) Long categorie,
+         @RequestParam(required = false) OffsetDateTime debut,
+        @RequestParam(required = false) OffsetDateTime fin,
+        @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size
+    ) {
+        return ResponseEntity.ok(engagementService.getAllValider(projet,exercice,categorie,debut,fin,page,size));
+    }
+
+    
+    @GetMapping("/rejeter")
+    public ResponseEntity<List<EngagementDTO>> getAllRejeter(
+       @RequestParam Long projet,
+        @RequestParam Long exercice,
+        @RequestParam(required = false) Long categorie,
+         @RequestParam(required = false) OffsetDateTime debut,
+        @RequestParam(required = false) OffsetDateTime fin,
+        @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size
+    ) {
+        return ResponseEntity.ok(engagementService.getAllRejeter(projet,exercice,categorie,debut,fin,page,size));
+    }
+
+        @GetMapping("/retourner")
+    public ResponseEntity<List<EngagementDTO>> getAllRetourner(
+       @RequestParam Long projet,
+        @RequestParam Long exercice,
+        @RequestParam(required = false) Long categorie,
+         @RequestParam(required = false) OffsetDateTime debut,
+        @RequestParam(required = false) OffsetDateTime fin,
+        @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size
+    ) {
+        return ResponseEntity.ok(engagementService.getAllRetourner(projet,exercice,categorie,debut,fin,page,size));
+    }
+
+    
+        @GetMapping("/receptionner")
+    public ResponseEntity<List<EngagementDTO>> getAllReceptionner(
+       @RequestParam Long projet,
+        @RequestParam Long exercice,
+        @RequestParam(required = false) Long categorie,
+         @RequestParam(required = false) OffsetDateTime debut,
+        @RequestParam(required = false) OffsetDateTime fin,
+        @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size
+    ) {
+        return ResponseEntity.ok(engagementService.getAllReceptionner(projet,exercice,categorie,debut,fin,page,size));
+    }
+
+       @GetMapping("/en_attante")
+    public ResponseEntity<List<EngagementDTO>> getAllAttenter(
+       @RequestParam Long projet,
+        @RequestParam Long exercice,
+        @RequestParam(required = false) Long categorie,
+         @RequestParam(required = false) OffsetDateTime debut,
+        @RequestParam(required = false) OffsetDateTime fin,
+        @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size
+    ) {
+        return ResponseEntity.ok(engagementService.getAllAttenter(projet,exercice,categorie,debut,fin,page,size));
     }
 
     @GetMapping("/etat")
@@ -67,8 +129,8 @@ public class EngagementResource {
     }
 
     @GetMapping("/montant")
-    public ResponseEntity<BigDecimal> getSommeEngager(@RequestParam Long projet,@RequestParam Long exercice) {
-        return ResponseEntity.ok(engagementService.getMontantEngage(exercice,projet));
+    public ResponseEntity<BigDecimal> getSommeEngager(@RequestParam Long exercice,@RequestParam Long ligne) {
+        return ResponseEntity.ok(engagementService.getMontantEngage(exercice,ligne));
     }
       
     @GetMapping("/{id}")

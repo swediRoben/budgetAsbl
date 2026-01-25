@@ -13,16 +13,17 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
-import lombok.Getter;
-import lombok.Setter;
+
+import lombok.Data; 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 
 @Entity
 @Table(name = "Engagements")
 @EntityListeners(AuditingEntityListener.class)
-@Getter
-@Setter
+@Data
 public class Engagement {
 
     @Id
@@ -50,8 +51,11 @@ public class Engagement {
 
     @Column(name = "id_planFond_activite")
     private Long idPlanFondActivite;
-    private Long idProjet; 
-    private Long idResponsable;
+    @Column(name = "id_projets")
+    private Long idProjet;
+    @Column(name = "id_responsable") 
+    private Long idResponsable; 
+    @Column(name = "id_devise") 
     private Long idDevise;
     private BigDecimal tauxDevise;
     private BigDecimal montant;
@@ -68,9 +72,25 @@ public class Engagement {
     private Boolean rejet;
     private OffsetDateTime dataRejet;
     private String observation;  
+
+    @Column(name = "date_created", nullable = false, updatable = false)
+     @CreatedDate
+     private OffsetDateTime dateCreated;
     
-    @ManyToOne(fetch = FetchType.LAZY)
+   @Column(name = "last_updated", nullable = false)
+   @LastModifiedDate
+   private OffsetDateTime lastUpdated;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_planFond_activite", referencedColumnName = "id", insertable = false, updatable = false)
     private PlanActivite planActivite; 
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_responsable", referencedColumnName = "id", insertable = false, updatable = false)
+    private Fonctionnaire responsable;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_devise", referencedColumnName = "id", insertable = false, updatable = false)
+    private Devise devise;
 
 }

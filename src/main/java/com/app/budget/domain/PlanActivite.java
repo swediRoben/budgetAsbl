@@ -28,7 +28,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 public class PlanActivite {
 
     @Id
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false,name = "id")
     @SequenceGenerator(
             name = "primary_sequence",
             sequenceName = "primary_sequence",
@@ -44,7 +44,7 @@ public class PlanActivite {
     @Column
     private Long idExercice; 
 
-    @Column(name = "id_projet")
+    @Column(name = "id_projets")
     private Long idProjet;
 
     @Column(name = "id_categorie")

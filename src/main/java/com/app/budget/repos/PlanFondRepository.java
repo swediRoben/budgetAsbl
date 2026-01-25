@@ -19,13 +19,11 @@ public interface PlanFondRepository extends JpaRepository<PlanFond, Long> {
     SELECT pf 
     FROM PlanFond pf 
     WHERE pf.projetId.id = :projet 
-      AND pf.exerciceId.id = :exercice 
-      AND pf.responsableId.id = :fonctionnaire
+      AND pf.exerciceId.id = :exercice  
 """)
 List<PlanFond> findByProjetExerciceResponsable(
     @Param("projet") Long projet, 
-    @Param("exercice") Long exercice, 
-    @Param("fonctionnaire") Long fonctionnaire
+    @Param("exercice") Long exercice
 );
 
  

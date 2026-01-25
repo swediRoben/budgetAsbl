@@ -90,14 +90,13 @@ public interface EngagementRepository extends JpaRepository<Engagement, Long> {
     );
  
 
-@Query("SELECT COALESCE(SUM(e.montant), 0) FROM Engagement e " +
+@Query("SELECT COALESCE(SUM(e.montant*e.tauxDevise), 0) FROM Engagement e " +
        "WHERE (:exercice IS NULL OR e.idExercice = :exercice) " +
-       "AND (:projet IS NULL OR e.planActivite.idProjet = :projet) " +
-       "AND (:projet IS NULL OR e.planActivite.idProjet = :projet) " +
-       "AND e.rejet = false")
+       "AND (:ligne IS NULL OR e.planActivite.id = :ligne) " +
+       "AND e.rejet = false ")
 BigDecimal sumMontantNotAnnuler(
         @Param("exercice") Long exercice,
-        @Param("projet") Long projet
+        @Param("ligne") Long ligne
 );
 
 Optional<Engagement> findByIdAndValidation(Long id, boolean b);
@@ -108,4 +107,85 @@ Optional<Engagement> findByIdAndReception(Long id, boolean b);
 
 Optional<Engagement> findByIdAndRetourner(Long id, boolean b);
 
+
+@Query("SELECT e FROM Engagement e " +
+           "WHERE (:exercice IS NULL OR e.idExercice = :exercice) " +
+           "AND (:projet IS NULL OR e.planActivite.idProjet = :projet) " + 
+           "AND (:categorie IS NULL OR e.planActivite.idCategorie = :categorie) " +  
+           "AND (e.validation=true) " +  
+           "AND (:debut IS NULL OR :fin IS NULL OR e.dataValidation BETWEEN :debut AND :fin)"
+        )
+Page<Engagement> getAllValider(
+            @Param("exercice") Long exercice,
+            @Param("projet") Long projet, 
+            @Param("categorie") Long categorie, 
+            @Param("debut") OffsetDateTime debut,
+            @Param("fin") OffsetDateTime fin,
+            Pageable pageable
+    );
+
+@Query("SELECT e FROM Engagement e " +
+           "WHERE (:exercice IS NULL OR e.idExercice = :exercice) " +
+           "AND (:projet IS NULL OR e.planActivite.idProjet = :projet) " + 
+           "AND (:categorie IS NULL OR e.planActivite.idCategorie = :categorie) " +
+           "AND (e.rejet=true) " + 
+          "AND (:debut IS NULL OR :fin IS NULL OR e.dataRejet BETWEEN :debut AND :fin)"
+        )
+Page<Engagement> getAllRejeter(
+            @Param("exercice") Long exercice,
+            @Param("projet") Long projet,
+            @Param("categorie") Long categorie, 
+            @Param("debut") OffsetDateTime debut,
+            @Param("fin") OffsetDateTime fin,
+            Pageable pageable
+    );
+
+
+@Query("SELECT e FROM Engagement e " +
+           "WHERE (:exercice IS NULL OR e.idExercice = :exercice) " +
+           "AND (:projet IS NULL OR e.planActivite.idProjet = :projet) " + 
+           "AND (:categorie IS NULL OR e.planActivite.idCategorie = :categorie) " + 
+           "AND (e.retourner=true  ) " + 
+           "AND (:debut IS NULL OR :fin IS NULL OR e.dataRetourner BETWEEN :debut AND :fin)"
+            )
+Page<Engagement> getAllRetourner(
+            @Param("exercice") Long exercice,
+            @Param("projet") Long projet, 
+            @Param("categorie") Long categorie, 
+            @Param("debut") OffsetDateTime debut,
+            @Param("fin") OffsetDateTime fin,
+            Pageable pageable
+    );
+
+@Query("SELECT e FROM Engagement e " +
+           "WHERE (:exercice IS NULL OR e.idExercice = :exercice) " +
+           "AND (:projet IS NULL OR e.planActivite.idProjet = :projet) " + 
+           "AND (:categorie IS NULL OR e.planActivite.idCategorie = :categorie) " + 
+           "AND (e.enAttente=true) " + 
+           "AND (:debut IS NULL OR :fin IS NULL OR e.dataEnAttente BETWEEN :debut AND :fin)"
+          )
+Page<Engagement> getAllAttenter(
+            @Param("exercice") Long exercice,
+            @Param("projet") Long projet, 
+            @Param("categorie") Long categorie, 
+            @Param("debut") OffsetDateTime debut,
+            @Param("fin") OffsetDateTime fin,
+            Pageable pageable
+    );
+
+@Query("SELECT e FROM Engagement e " +
+           "WHERE (:exercice IS NULL OR e.idExercice = :exercice) " +
+           "AND (:projet IS NULL OR e.planActivite.idProjet = :projet) " + 
+           "AND (:categorie IS NULL OR e.planActivite.idCategorie = :categorie) " + 
+           "AND (e.reception=true) " + 
+           "AND (:debut IS NULL OR :fin IS NULL OR e.dataReception BETWEEN :debut AND :fin)"
+          )
+Page<Engagement> getAllReceptionner(
+            @Param("exercice") Long exercice,
+            @Param("projet") Long projet, 
+            @Param("categorie") Long categorie, 
+            @Param("debut") OffsetDateTime debut,
+            @Param("fin") OffsetDateTime fin,
+            Pageable pageable
+    );  
 }

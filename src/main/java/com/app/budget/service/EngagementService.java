@@ -3,6 +3,7 @@ package com.app.budget.service;
 import com.app.budget.domain.Engagement;
 import com.app.budget.events.BeforeDeleteEngagement;
 import com.app.budget.model.EngagementDTO;
+import com.app.budget.model.PlanActiviteDTO;
 import com.app.budget.repos.EngagementRepository;
 import com.app.budget.util.NotFoundException;
 
@@ -107,8 +108,8 @@ public class EngagementService {
                 .orElseThrow(NotFoundException::new);
     }
 
-  public BigDecimal getMontantEngage(Long exercice,Long projet) {
-        return engagementRepository.sumMontantNotAnnuler(exercice,projet);
+  public BigDecimal getMontantEngage(Long exercice,Long ligne) {
+        return engagementRepository.sumMontantNotAnnuler(exercice,ligne);
     }
 
     @Transactional
@@ -265,7 +266,15 @@ public class EngagementService {
         engagementDTO.setIdProjet(engagement.getIdProjet());
         engagementDTO.setIdResponsable(engagement.getIdResponsable());
         engagementDTO.setObjet(engagement.getObjet());
-        engagementDTO.setObservation(engagement.getObservation()); 
+        engagementDTO.setDevise(engagement.getDevise());
+        engagementDTO.setObservation(engagement.getObservation());
+        if (engagement.getPlanActivite()!=null) {
+           PlanActiviteDTO plan=new PlanActiviteDTO();
+           plan.setId(engagement.getPlanActivite().getId());
+           plan.setActivite(engagement.getPlanActivite().getActivite());
+           engagementDTO.setPlanActivite(plan);
+        } 
+        engagementDTO.setResponsable(engagement.getResponsable()); 
         return engagementDTO;
     }
 
@@ -287,8 +296,90 @@ public class EngagementService {
         engagement.setIdProjet(engagementDTO.getIdProjet());
         engagement.setIdResponsable(engagementDTO.getIdResponsable());
         engagement.setObjet(engagementDTO.getObjet());
-        engagement.setObservation(engagementDTO.getObservation()); 
+        engagement.setObservation(engagementDTO.getObservation());  
         return engagement;
     }
+
+  
+ 
+    public List<EngagementDTO>  getAllAttenter(Long projet, Long exercice,Long categorie, OffsetDateTime debut, OffsetDateTime fin, Integer page,
+            Integer size) {
+              Pageable pageable = PageRequest.of(page != null ? page : 0, size != null ? size : size.MAX_VALUE);
+
+        Page<Engagement> engagementsPage = engagementRepository.getAllAttenter(
+                exercice, projet,categorie, debut, fin, pageable
+        );
+
+        List<EngagementDTO> dtos = engagementsPage.stream()
+                .map(e -> mapToDTO(e, new EngagementDTO()))
+                .toList();
+
+        return dtos; 
+  }
+
+
+
+    public  List<EngagementDTO> getAllReceptionner(Long projet, Long exercice,Long categorie, OffsetDateTime debut, OffsetDateTime fin, Integer page,
+            Integer size) {
+          Pageable pageable = PageRequest.of(page != null ? page : 0, size != null ? size : size.MAX_VALUE);
+
+        Page<Engagement> engagementsPage = engagementRepository.getAllReceptionner(
+                exercice, projet,categorie, debut, fin, pageable
+        );
+
+        List<EngagementDTO> dtos = engagementsPage.stream()
+                .map(e -> mapToDTO(e, new EngagementDTO()))
+                .toList();
+
+        return dtos; 
+    }
+
+    public  List<EngagementDTO> getAllRetourner(Long projet, Long exercice,Long categorie, OffsetDateTime debut, OffsetDateTime fin, Integer page,
+            Integer size) {
+       
+              Pageable pageable = PageRequest.of(page != null ? page : 0, size != null ? size : size.MAX_VALUE);
+
+        Page<Engagement> engagementsPage = engagementRepository.getAllRetourner(
+                exercice, projet,categorie, debut, fin, pageable
+        );
+
+        List<EngagementDTO> dtos = engagementsPage.stream()
+                .map(e -> mapToDTO(e, new EngagementDTO()))
+                .toList();
+
+        return dtos; 
+  }
+
+    public  List<EngagementDTO> getAllRejeter(Long projet, Long exercice,Long categorie, OffsetDateTime debut, OffsetDateTime fin, Integer page,
+            Integer size) {
+        
+              Pageable pageable = PageRequest.of(page != null ? page : 0, size != null ? size : size.MAX_VALUE);
+
+        Page<Engagement> engagementsPage = engagementRepository.getAllRejeter(
+                exercice, projet,categorie, debut, fin, pageable
+        );
+
+        List<EngagementDTO> dtos = engagementsPage.stream()
+                .map(e -> mapToDTO(e, new EngagementDTO()))
+                .toList();
+
+        return dtos; 
+  }
+
+    public List<EngagementDTO> getAllValider(Long projet, Long exercice,Long categorie, OffsetDateTime debut,OffsetDateTime fin, Integer page,
+            Integer size) {
+       
+              Pageable pageable = PageRequest.of(page != null ? page : 0, size != null ? size : size.MAX_VALUE);
+
+        Page<Engagement> engagementsPage = engagementRepository.getAllValider(
+                exercice, projet,categorie, debut, fin, pageable
+        );
+
+        List<EngagementDTO> dtos = engagementsPage.stream()
+                .map(e -> mapToDTO(e, new EngagementDTO()))
+                .toList();
+
+        return dtos; 
+  }
 
 }

@@ -2,6 +2,9 @@ package com.app.budget.model;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
+import com.app.budget.domain.Devise;
+import com.app.budget.domain.Fonctionnaire;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -33,6 +36,9 @@ public class EngagementDTO {
     private OffsetDateTime dataRetourner;
     private Boolean rejet;
     private OffsetDateTime dataRejet;
-    private String observation; 
+    private String observation;
+    private PlanActiviteDTO planActivite; 
+    private Fonctionnaire responsable;
+    private Devise devise; 
 
 }
