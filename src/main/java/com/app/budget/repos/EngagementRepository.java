@@ -194,7 +194,7 @@ Page<Engagement> getAllReceptionner(
            "WHERE (:exercice IS NULL OR e.idExercice = :exercice) " +
            "AND (:projet IS NULL OR e.planActivite.idProjet = :projet) " + 
            "AND (:ligne IS NULL OR e.planActivite.id = :ligne) " +  
-           "AND (e.validation=false) " )
+           "AND (e.validation=true) " )
 List<Engagement> getAllValiderInLiquidation(
          @Param("exercice") Long exercice,
             @Param("projet") Long projet, 
