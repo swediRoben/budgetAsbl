@@ -4,7 +4,8 @@ import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import com.app.budget.domain.Devise;
 import com.app.budget.domain.Fonctionnaire;
-  
+import com.app.budget.domain.PlanActivite;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,7 +26,7 @@ public class LiquidationDTO {
     private BigDecimal tauxDevise;
     private BigDecimal montant;
     private String objet;
-
+    
     private Boolean enAttente;
     private OffsetDateTime dataEnAttente;
     private Boolean validation;
@@ -39,4 +40,5 @@ public class LiquidationDTO {
     private String observation; 
     private Fonctionnaire responsable;
     private Devise devise;
+    private PlanActivite planActivite; 
 }
