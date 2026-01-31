@@ -18,8 +18,8 @@ public interface LiquidationRepository extends JpaRepository<Liquidation, Long> 
         @Query("SELECT e FROM Liquidation e " +
            "WHERE (:exercice IS NULL OR e.idExercice = :exercice) " +
            "AND (:projet IS NULL OR e.idProjet = :projet) " +
-           "AND (:activite IS NULL OR e.idActivite = :activite) " + 
-           "AND (:categorie IS NULL OR e.idCategorie = :categorie) " + 
+           "AND (:activite IS NULL OR e.planActivite.idActivite = :activite) " + 
+           "AND (:categorie IS NULL OR e.planActivite.idCategorie = :categorie) " + 
            "AND (e.enAttente=true OR e.retourner=true ) " + 
            "AND (:debut IS NULL OR e.dataEnAttente >= :debut) " +
            "AND (:fin IS NULL OR e.dataEnAttente <= :fin)")
@@ -36,8 +36,8 @@ public interface LiquidationRepository extends JpaRepository<Liquidation, Long> 
      @Query("SELECT e FROM Liquidation e " +
            "WHERE (:exercice IS NULL OR e.idExercice = :exercice) " +
            "AND (:projet IS NULL OR e.idProjet = :projet) " +
-           "AND (:activite IS NULL OR e.idActivite = :activite) " + 
-           "AND (:categorie IS NULL OR e.idCategorie = :categorie) " + 
+           "AND (:activite IS NULL OR e.planActivite.idActivite = :activite) " + 
+           "AND (:categorie IS NULL OR e.planActivite.idCategorie = :categorie) " + 
            "AND (e.enAttente=true OR e.reception=true ) " + 
            "AND (:debut IS NULL OR e.dataEnAttente >= :debut) " +
            "AND (:fin IS NULL OR e.dataEnAttente <= :fin)")
@@ -55,8 +55,8 @@ public interface LiquidationRepository extends JpaRepository<Liquidation, Long> 
      @Query("SELECT e FROM Liquidation e " +
            "WHERE (:exercice IS NULL OR e.idExercice = :exercice) " +
            "AND (:projet IS NULL OR e.idProjet = :projet) " +
-           "AND (:activite IS NULL OR e.idActivite = :activite) " + 
-           "AND (:categorie IS NULL OR e.idCategorie = :categorie) " + 
+           "AND (:activite IS NULL OR e.planActivite.idActivite = :activite) " + 
+           "AND (:categorie IS NULL OR e.planActivite.idCategorie = :categorie) " + 
            "AND (e.validation=true OR e.rejet=true ) " + 
            "AND (:debut IS NULL OR e.dataEnAttente >= :debut) " +
            "AND (:fin IS NULL OR e.dataEnAttente <= :fin)")
@@ -73,8 +73,8 @@ public interface LiquidationRepository extends JpaRepository<Liquidation, Long> 
          @Query("SELECT e FROM Liquidation e " +
            "WHERE (:exercice IS NULL OR e.idExercice = :exercice) " +
            "AND (:projet IS NULL OR e.idProjet = :projet) " +
-           "AND (:activite IS NULL OR e.idActivite = :activite) " + 
-           "AND (:categorie IS NULL OR e.idCategorie = :categorie) " + 
+           "AND (:activite IS NULL OR e.planActivite.idActivite = :activite) " + 
+           "AND (:categorie IS NULL OR e.planActivite.idCategorie = :categorie) " + 
            "AND (e.validation=true) " + 
            "AND (:debut IS NULL OR e.dataEnAttente >= :debut) " +
            "AND (:fin IS NULL OR e.dataEnAttente <= :fin)")
@@ -95,7 +95,7 @@ public interface LiquidationRepository extends JpaRepository<Liquidation, Long> 
        "AND e.rejet = false ")
 BigDecimal sumMontantNotAnnuler(
         @Param("exercice") Long exercice,
-        @Param("ligne") Long engagement
+        @Param("engagement") Long engagement
 );
 
 Optional<Liquidation> findByIdAndValidation(Long id, boolean b);
@@ -110,7 +110,7 @@ Optional<Liquidation> findByIdAndRetourner(Long id, boolean b);
 @Query("SELECT e FROM Liquidation e " +
            "WHERE (:exercice IS NULL OR e.idExercice = :exercice) " +
            "AND (:projet IS NULL OR e.idProjet = :projet) " + 
-           "AND (:categorie IS NULL OR e.idCategorie = :categorie) " +  
+           "AND (:categorie IS NULL OR e.planActivite.idCategorie = :categorie) " +  
            "AND (e.validation=true) " +  
            "AND (:debut IS NULL OR :fin IS NULL OR e.dataValidation BETWEEN :debut AND :fin)"
         )
@@ -126,7 +126,7 @@ Page<Liquidation> getAllValider(
 @Query("SELECT e FROM Liquidation e " +
            "WHERE (:exercice IS NULL OR e.idExercice = :exercice) " +
            "AND (:projet IS NULL OR e.idProjet = :projet) " + 
-           "AND (:categorie IS NULL OR e.idCategorie = :categorie) " +
+           "AND (:categorie IS NULL OR e.planActivite.idCategorie = :categorie) " +
            "AND (e.rejet=true) " + 
           "AND (:debut IS NULL OR :fin IS NULL OR e.dataRejet BETWEEN :debut AND :fin)"
         )
@@ -143,7 +143,7 @@ Page<Liquidation> getAllRejeter(
 @Query("SELECT e FROM Liquidation e " +
            "WHERE (:exercice IS NULL OR e.idExercice = :exercice) " +
            "AND (:projet IS NULL OR e.idProjet = :projet) " + 
-           "AND (:categorie IS NULL OR e.idCategorie = :categorie) " + 
+           "AND (:categorie IS NULL OR e.planActivite.idCategorie = :categorie) " + 
            "AND (e.retourner=true  ) " + 
            "AND (:debut IS NULL OR :fin IS NULL OR e.dataRetourner BETWEEN :debut AND :fin)"
             )
@@ -159,7 +159,7 @@ Page<Liquidation> getAllRetourner(
 @Query("SELECT e FROM Liquidation e " +
            "WHERE (:exercice IS NULL OR e.idExercice = :exercice) " +
            "AND (:projet IS NULL OR e.idProjet = :projet) " + 
-           "AND (:categorie IS NULL OR e.idCategorie = :categorie) " + 
+           "AND (:categorie IS NULL OR e.planActivite.idCategorie = :categorie) " + 
            "AND (e.enAttente=true) " + 
            "AND (:debut IS NULL OR :fin IS NULL OR e.dataEnAttente BETWEEN :debut AND :fin)"
           )
@@ -175,7 +175,7 @@ Page<Liquidation> getAllAttenter(
 @Query("SELECT e FROM Liquidation e " +
            "WHERE (:exercice IS NULL OR e.idExercice = :exercice) " +
            "AND (:projet IS NULL OR e.idProjet = :projet) " + 
-           "AND (:categorie IS NULL OR e.idCategorie = :categorie) " + 
+           "AND (:categorie IS NULL OR e.planActivite.idCategorie = :categorie) " + 
            "AND (e.reception=true) " + 
            "AND (:debut IS NULL OR :fin IS NULL OR e.dataReception BETWEEN :debut AND :fin)"
           )

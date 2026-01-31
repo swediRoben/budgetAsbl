@@ -51,13 +51,13 @@ public class Liquidation {
     @Column
     private Long idExercice;
 
-  @Column(name = "id_projets")
+    @Column(name = "id_projets")
     private Long idProjet;
     
-  @Column(name = "id_categorie")
-  private Long idCategorie;
-  @Column(name = "id_activite")
-  private Long idActivite;
+    @Column(name = "id_categorie")
+    private Long idCategorie;
+    @Column(name = "id_planFond_activite")
+    private Long idPlanFondActivite;
     @Column(name = "id_responsable") 
     private Long idResponsable; 
     @Column(name = "id_devise") 
@@ -94,4 +94,8 @@ public class Liquidation {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_devise", referencedColumnName = "id", insertable = false, updatable = false)
     private Devise devise;
+
+     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_planFond_activite", referencedColumnName = "id", insertable = false, updatable = false)
+    private PlanActivite planActivite; 
 }

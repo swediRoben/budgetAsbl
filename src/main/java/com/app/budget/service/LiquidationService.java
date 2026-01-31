@@ -256,7 +256,7 @@ public class LiquidationService {
         LiquidationDTO.setTauxDevise(Liquidation.getTauxDevise());
         LiquidationDTO.setIdProjet(Liquidation.getIdProjet());
         LiquidationDTO.setIdCategorie(Liquidation.getIdCategorie());
-        LiquidationDTO.setIdActivite(Liquidation.getIdActivite());
+        LiquidationDTO.setIdPlanFondActivite(Liquidation.getIdPlanFondActivite());
         LiquidationDTO.setIdResponsable(Liquidation.getIdResponsable());
         LiquidationDTO.setObjet(Liquidation.getObjet());
         LiquidationDTO.setDevise(Liquidation.getDevise());
@@ -286,7 +286,7 @@ public class LiquidationService {
         Liquidation.setObjet(LiquidationDTO.getObjet());
         Liquidation.setObservation(LiquidationDTO.getObservation());   
         Liquidation.setIdCategorie(LiquidationDTO.getIdCategorie());
-        Liquidation.setIdActivite(LiquidationDTO.getIdActivite());
+        Liquidation.setIdPlanFondActivite(LiquidationDTO.getIdPlanFondActivite());
         return Liquidation;
     }
 

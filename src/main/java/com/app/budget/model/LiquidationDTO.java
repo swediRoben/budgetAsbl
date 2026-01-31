@@ -19,7 +19,7 @@ public class LiquidationDTO {
     private Long idExercice; 
     private Long idProjet; 
     private Long idCategorie; 
-    private Long idActivite;
+    private Long idPlanFondActivite;
     private Long idResponsable;  
     private Long idDevise;
     private BigDecimal tauxDevise;

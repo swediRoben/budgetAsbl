@@ -71,7 +71,7 @@ public class Engagement {
     private OffsetDateTime dataRetourner;
     private Boolean rejet;
     private OffsetDateTime dataRejet;
-    private String observation;  
+    private String observation;   
 
     @Column(name = "date_created", nullable = false, updatable = false)
      @CreatedDate
