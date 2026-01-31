@@ -5,6 +5,7 @@ import com.app.budget.domain.Engagement;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -187,5 +188,15 @@ Page<Engagement> getAllReceptionner(
             @Param("debut") OffsetDateTime debut,
             @Param("fin") OffsetDateTime fin,
             Pageable pageable
-    );  
+    );
+
+@Query("SELECT e FROM Engagement e " +
+           "WHERE (:exercice IS NULL OR e.idExercice = :exercice) " +
+           "AND (:projet IS NULL OR e.planActivite.idProjet = :projet) " + 
+           "AND (:ligne IS NULL OR e.planActivite.id = :ligne) " +  
+           "AND (e.validation=false) " )
+List<Engagement> getAllValiderInLiquidation(
+         @Param("exercice") Long exercice,
+            @Param("projet") Long projet, 
+            @Param("ligne") Long ligne);  
 }

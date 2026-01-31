@@ -41,34 +41,44 @@ public class Liquidation {
     )
     private Long id;
 
-    @Column
+    @Column(name = "engagement_id") 
     private Long idEngagement;
 
     @Column
     private String bonEngagment;
+    private String piece;
 
     @Column
     private Long idExercice;
 
-    @Column
-    private String ligneBudgetaire;
+  @Column(name = "id_projets")
+    private Long idProjet;
+    
+  @Column(name = "id_categorie")
+  private Long idCategorie;
+  @Column(name = "id_activite")
+  private Long idActivite;
+    @Column(name = "id_responsable") 
+    private Long idResponsable; 
+    @Column(name = "id_devise") 
+    private Long idDevise;
+    private BigDecimal tauxDevise;
+    private BigDecimal montant;
+    private String objet;
 
-    @Column
-    private Long idPlanFondActivite;
-
-    @Column(precision = 10, scale = 2)
-    private BigDecimal montantEngage;
-
-    @Column(precision = 10, scale = 2)
-    private BigDecimal montantLiquide;
-
-    @Column
-    private String status;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "engagement_id_id")
-    private Engagement engagementId;
-
+    private Boolean enAttente;
+    private OffsetDateTime dataEnAttente;
+    private Boolean validation;
+    private OffsetDateTime dataValidation;
+    private Boolean reception;
+    private OffsetDateTime dataReception;
+    private Boolean retourner;
+    private OffsetDateTime dataRetourner;
+    private Boolean rejet;
+    private OffsetDateTime dataRejet;
+    private String observation; 
+    
+  
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private OffsetDateTime dateCreated;
@@ -76,5 +86,12 @@ public class Liquidation {
     @LastModifiedDate
     @Column(nullable = false)
     private OffsetDateTime lastUpdated;
+ 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_responsable", referencedColumnName = "id", insertable = false, updatable = false)
+    private Fonctionnaire responsable;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_devise", referencedColumnName = "id", insertable = false, updatable = false)
+    private Devise devise;
 }

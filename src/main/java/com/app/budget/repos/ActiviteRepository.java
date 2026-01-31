@@ -1,9 +1,6 @@
 package com.app.budget.repos;
 
-import com.app.budget.domain.Activite;
-import com.app.budget.domain.Categorie;
-import com.app.budget.domain.Projet;
-import org.springframework.data.domain.Pageable;
+import com.app.budget.domain.Activite; 
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

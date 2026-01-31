@@ -64,6 +64,16 @@ public class EngagementResource {
         return ResponseEntity.ok(engagementService.getAllValider(projet,exercice,categorie,debut,fin,page,size));
     }
 
+
+    @GetMapping("/engagementvaliderliquidation")
+    public ResponseEntity<List<EngagementDTO>> getAllValiderInLiquidation(
+       @RequestParam Long projet,
+        @RequestParam Long exercice,
+        @RequestParam(required = false) Long ligne)
+    {
+        return ResponseEntity.ok(engagementService.getAllValiderInLiquidation(projet,exercice,ligne));
+    }
+
     
     @GetMapping("/rejeter")
     public ResponseEntity<List<EngagementDTO>> getAllRejeter(

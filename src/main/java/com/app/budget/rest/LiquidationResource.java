@@ -1,56 +1,272 @@
-// package com.app.budget.rest;
+package com.app.budget.rest;
 
-// import com.app.budget.model.LiquidationDTO;
-// import com.app.budget.service.LiquidationService;
-// import io.swagger.v3.oas.annotations.responses.ApiResponse;
-// import jakarta.validation.Valid;
-// import java.util.List;
-// import org.springframework.http.HttpStatus;
-// import org.springframework.http.MediaType;
-// import org.springframework.http.ResponseEntity;
-// import org.springframework.web.bind.annotation.*;
+import com.app.budget.model.LiquidationDTO;
+import com.app.budget.service.LiquidationService;
 
-// @CrossOrigin("*")
-// @RestController
-// @RequestMapping(value = "/api/liquidations", produces = MediaType.APPLICATION_JSON_VALUE)
-// public class LiquidationResource {
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.validation.Valid;
 
-//     private final LiquidationService liquidationService;
+import java.math.BigDecimal;
+import java.time.OffsetDateTime;
+import java.util.List;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-//     public LiquidationResource(final LiquidationService liquidationService) {
-//         this.liquidationService = liquidationService;
-//     }
+@CrossOrigin("*")
+@RestController
+@RequestMapping(value = "/api/liquidations", produces = MediaType.APPLICATION_JSON_VALUE)
+public class LiquidationResource {
 
-//     @GetMapping
-//     public ResponseEntity<List<LiquidationDTO>> getAllLiquidations() {
-//         return ResponseEntity.ok(liquidationService.findAll());
-//     }
+    private final LiquidationService liquidationService;
 
-//     @GetMapping("/{id}")
-//     public ResponseEntity<LiquidationDTO> getLiquidation(@PathVariable(name = "id") final Long id) {
-//         return ResponseEntity.ok(liquidationService.get(id));
-//     }
+    public LiquidationResource(final LiquidationService liquidationService) {
+        this.liquidationService = liquidationService;
+    }
 
-//     @PostMapping
-//     @ApiResponse(responseCode = "201")
-//     public ResponseEntity<Long> createLiquidation(
-//             @RequestBody @Valid final LiquidationDTO liquidationDTO) {
-//         final Long createdId = liquidationService.create(liquidationDTO);
-//         return new ResponseEntity<>(createdId, HttpStatus.CREATED);
-//     }
+    @GetMapping
+    public ResponseEntity<List<LiquidationDTO>> getAllLiquidations(
+       @RequestParam Long projet,
+        @RequestParam Long exercice,
+        @RequestParam Long categore,
+        @RequestParam Long activite,
+        @RequestParam Boolean validation,
+         @RequestParam OffsetDateTime debut,
+        @RequestParam OffsetDateTime fin,
+        @RequestParam Integer page, @RequestParam Integer size
+    ) {
+        return ResponseEntity.ok(liquidationService.findAllEntenteEtRetourner(projet,exercice,categore,activite,debut,fin,page,size));
+    }
 
-//     @PutMapping("/{id}")
-//     public ResponseEntity<Long> updateLiquidation(@PathVariable(name = "id") final Long id,
-//             @RequestBody @Valid final LiquidationDTO liquidationDTO) {
-//         liquidationService.update(id, liquidationDTO);
-//         return ResponseEntity.ok(id);
-//     }
+    @GetMapping("/traitement")
+    public ResponseEntity<List<LiquidationDTO>> getAllEntenteEreceptionne(
+       @RequestParam Long projet,
+        @RequestParam Long exercice,
+        @RequestParam(required = false) Long categore,
+        @RequestParam(required = false) Long activite,
+        @RequestParam(required = false) Boolean validation,
+         @RequestParam(required = false) OffsetDateTime debut,
+        @RequestParam(required = false) OffsetDateTime fin,
+        @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size
+    ) {
+        return ResponseEntity.ok(liquidationService.findAllEntenteEtReceptioner(projet,exercice,categore,activite,debut,fin,page,size));
+    }
 
-//     @DeleteMapping("/{id}")
-//     @ApiResponse(responseCode = "204")
-//     public ResponseEntity<Void> deleteLiquidation(@PathVariable(name = "id") final Long id) {
-//         liquidationService.delete(id);
-//         return ResponseEntity.noContent().build();
-//     }
+    @GetMapping("/valider")
+    public ResponseEntity<List<LiquidationDTO>> getAllValider(
+       @RequestParam Long projet,
+        @RequestParam Long exercice,
+        @RequestParam(required = false) Long categorie,
+         @RequestParam(required = false) OffsetDateTime debut,
+        @RequestParam(required = false) OffsetDateTime fin,
+        @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size
+    ) {
+        return ResponseEntity.ok(liquidationService.getAllValider(projet,exercice,categorie,debut,fin,page,size));
+    }
 
-// }
+    
+    @GetMapping("/rejeter")
+    public ResponseEntity<List<LiquidationDTO>> getAllRejeter(
+       @RequestParam Long projet,
+        @RequestParam Long exercice,
+        @RequestParam(required = false) Long categorie,
+         @RequestParam(required = false) OffsetDateTime debut,
+        @RequestParam(required = false) OffsetDateTime fin,
+        @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size
+    ) {
+        return ResponseEntity.ok(liquidationService.getAllRejeter(projet,exercice,categorie,debut,fin,page,size));
+    }
+
+        @GetMapping("/retourner")
+    public ResponseEntity<List<LiquidationDTO>> getAllRetourner(
+       @RequestParam Long projet,
+        @RequestParam Long exercice,
+        @RequestParam(required = false) Long categorie,
+         @RequestParam(required = false) OffsetDateTime debut,
+        @RequestParam(required = false) OffsetDateTime fin,
+        @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size
+    ) {
+        return ResponseEntity.ok(liquidationService.getAllRetourner(projet,exercice,categorie,debut,fin,page,size));
+    }
+
+    
+        @GetMapping("/receptionner")
+    public ResponseEntity<List<LiquidationDTO>> getAllReceptionner(
+       @RequestParam Long projet,
+        @RequestParam Long exercice,
+        @RequestParam(required = false) Long categorie,
+         @RequestParam(required = false) OffsetDateTime debut,
+        @RequestParam(required = false) OffsetDateTime fin,
+        @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size
+    ) {
+        return ResponseEntity.ok(liquidationService.getAllReceptionner(projet,exercice,categorie,debut,fin,page,size));
+    }
+
+       @GetMapping("/en_attante")
+    public ResponseEntity<List<LiquidationDTO>> getAllAttenter(
+       @RequestParam Long projet,
+        @RequestParam Long exercice,
+        @RequestParam(required = false) Long categorie,
+         @RequestParam(required = false) OffsetDateTime debut,
+        @RequestParam(required = false) OffsetDateTime fin,
+        @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size
+    ) {
+        return ResponseEntity.ok(liquidationService.getAllAttenter(projet,exercice,categorie,debut,fin,page,size));
+    }
+
+    @GetMapping("/etat")
+    public ResponseEntity<List<LiquidationDTO>> getAllValiderEtRejet(
+       @RequestParam Long projet,
+        @RequestParam Long exercice,
+        @RequestParam Long categore,
+        @RequestParam Long activite,
+        @RequestParam Boolean validation,
+         @RequestParam OffsetDateTime debut,
+        @RequestParam OffsetDateTime fin,
+        @RequestParam Integer page, @RequestParam Integer size
+    ) {
+        return ResponseEntity.ok(liquidationService.findAllRejeterEtValider(projet,exercice,categore,activite,debut,fin,page,size));
+    }
+
+    @GetMapping("/montant")
+    public ResponseEntity<BigDecimal> getMontantLiquider(@RequestParam Long exercice,@RequestParam Long engagement) {
+        return ResponseEntity.ok(liquidationService.getMontantLiquider(exercice,engagement));
+    }
+      
+    @GetMapping("/{id}")
+    public ResponseEntity<LiquidationDTO> getLiquidation(@PathVariable(name = "id") final Long id) {
+        return ResponseEntity.ok(liquidationService.get(id));
+    }
+
+    @PostMapping
+    @ApiResponse(responseCode = "201")
+    public ResponseEntity<Long> createLiquidation(
+            @RequestBody @Valid final LiquidationDTO LiquidationDTO) {
+        final boolean createdId = liquidationService.create(LiquidationDTO); 
+         if (createdId) {
+           return  new ResponseEntity<>(null, HttpStatus.CREATED); 
+        }else{
+           return  new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);  
+        }
+
+    }
+
+    
+      @PutMapping("/receptioner")
+    @ApiResponse(responseCode = "201")
+    public ResponseEntity<Long> receptioner(@PathVariable Long id) {
+         if (liquidationService.checkRetourner(id)) {
+          return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
+        }
+        if (liquidationService.checkRejeter(id)) {
+          return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
+        }
+           if (liquidationService.checkValidation(id)) {
+          return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
+        }
+           if (liquidationService.checkReceptioner(id)) {
+          return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
+        }
+        Boolean createdId = liquidationService.reception(id);
+        if (createdId) {
+           return  new ResponseEntity<>(null, HttpStatus.CREATED); 
+        }else{
+           return  new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);  
+        }
+    }
+
+       @PutMapping("/valider")
+    @ApiResponse(responseCode = "201")
+    public ResponseEntity<Long> valider(@PathVariable Long id) {
+        if (liquidationService.checkRetourner(id)) {
+          return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
+        }
+        if (liquidationService.checkRejeter(id)) {
+          return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
+        }
+           if (liquidationService.checkValidation(id)) {
+          return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
+        }
+        Boolean createdId = liquidationService.validation(id);
+        if (createdId) {
+           return  new ResponseEntity<>(null, HttpStatus.CREATED); 
+        }else{
+           return  new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);  
+        }
+    }
+
+      @PutMapping("/rejeter")
+    @ApiResponse(responseCode = "201")
+    public ResponseEntity<Long> rejeter(@PathVariable Long id,@RequestBody String message) {
+         if (liquidationService.checkRetourner(id)) {
+          return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
+        }
+        if (liquidationService.checkRejeter(id)) {
+          return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
+        }
+             if (liquidationService.checkValidation(id)) {
+          return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
+        }
+        Boolean createdId = liquidationService.rejeter(id,message);
+        if (createdId) {
+           return  new ResponseEntity<>(null, HttpStatus.CREATED); 
+        }else{
+           return  new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);  
+        }
+    }
+
+      @PutMapping("/retourner")
+    @ApiResponse(responseCode = "201")
+    public ResponseEntity<Long> retourner(@PathVariable Long id,@RequestBody String message) {
+         if (!liquidationService.checkReceptioner(id)) {
+          return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
+        }
+        if (liquidationService.checkRejeter(id)) {
+          return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
+        }
+        Boolean createdId = liquidationService.retourne(id,message);
+        if (createdId) {
+           return  new ResponseEntity<>(null, HttpStatus.CREATED); 
+        }else{
+           return  new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);  
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Long> updateLiquidation(@PathVariable(name = "id") final Long id,
+            @RequestBody @Valid final LiquidationDTO LiquidationDTO) { 
+        if (liquidationService.checkRejeter(id)) {
+          return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
+        }
+           if (liquidationService.checkValidation(id)) {
+          return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
+        }
+           if (liquidationService.checkReceptioner(id)) {
+          return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
+        }
+       Boolean createdId= liquidationService.update(id, LiquidationDTO);
+         if (createdId) {
+           return  new ResponseEntity<>(null, HttpStatus.CREATED); 
+        }else{
+           return  new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);  
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    @ApiResponse(responseCode = "204")
+    public ResponseEntity<Void> deleteLiquidation(@PathVariable(name = "id") final Long id) {
+              if (liquidationService.checkRejeter(id)) {
+          return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
+        }
+           if (liquidationService.checkValidation(id)) {
+          return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
+        }
+           if (liquidationService.checkReceptioner(id)) {
+          return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
+        }
+        liquidationService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+}

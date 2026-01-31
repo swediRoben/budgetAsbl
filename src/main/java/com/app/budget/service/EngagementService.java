@@ -382,4 +382,15 @@ public class EngagementService {
         return dtos; 
   }
 
+    public List<EngagementDTO> getAllValiderInLiquidation(Long projet, Long exercice, Long ligne) {
+        List<Engagement> engagementsPage = engagementRepository.getAllValiderInLiquidation(
+                exercice, projet,ligne);
+
+        List<EngagementDTO> dtos = engagementsPage.stream()
+                .map(e -> mapToDTO(e, new EngagementDTO()))
+                .toList();
+
+        return dtos; 
+
+   }
 }
