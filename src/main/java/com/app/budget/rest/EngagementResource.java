@@ -1,6 +1,7 @@
 package com.app.budget.rest;
 
 import com.app.budget.model.EngagementDTO;
+import com.app.budget.model.ObservationDto;
 import com.app.budget.service.EngagementService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
@@ -207,7 +208,7 @@ public class EngagementResource {
 
       @PutMapping("/rejeter")
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<Long> rejeter(@PathVariable Long id,@RequestBody String message) {
+    public ResponseEntity<Long> rejeter(@PathVariable Long id,@RequestBody ObservationDto message) {
          if (engagementService.checkRetourner(id)) {
           return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
         }
@@ -217,7 +218,7 @@ public class EngagementResource {
              if (engagementService.checkValidation(id)) {
           return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
         }
-        Boolean createdId = engagementService.rejeter(id,message);
+        Boolean createdId = engagementService.rejeter(id,message.getObservation());
         if (createdId) {
            return  new ResponseEntity<>(null, HttpStatus.CREATED); 
         }else{
@@ -227,14 +228,14 @@ public class EngagementResource {
 
       @PutMapping("/retourner")
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<Long> retourner(@PathVariable Long id,@RequestBody String message) {
+    public ResponseEntity<Long> retourner(@PathVariable Long id,@RequestBody ObservationDto message) {
          if (!engagementService.checkReceptioner(id)) {
           return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
         }
         if (engagementService.checkRejeter(id)) {
           return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
         }
-        Boolean createdId = engagementService.retourne(id,message);
+        Boolean createdId = engagementService.retourne(id,message.getObservation());
         if (createdId) {
            return  new ResponseEntity<>(null, HttpStatus.CREATED); 
         }else{

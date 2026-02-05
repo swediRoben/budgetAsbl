@@ -1,6 +1,7 @@
 package com.app.budget.rest;
 
 import com.app.budget.model.LiquidationDTO;
+import com.app.budget.model.ObservationDto;
 import com.app.budget.service.LiquidationService;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -198,7 +199,7 @@ public class LiquidationResource {
 
       @PutMapping("/rejeter")
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<Long> rejeter(@PathVariable Long id,@RequestBody String message) {
+    public ResponseEntity<Long> rejeter(@PathVariable Long id,@RequestBody ObservationDto message) {
          if (liquidationService.checkRetourner(id)) {
           return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
         }
@@ -208,7 +209,7 @@ public class LiquidationResource {
              if (liquidationService.checkValidation(id)) {
           return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
         }
-        Boolean createdId = liquidationService.rejeter(id,message);
+        Boolean createdId = liquidationService.rejeter(id,message.getObservation());
         if (createdId) {
            return  new ResponseEntity<>(null, HttpStatus.CREATED); 
         }else{
@@ -218,14 +219,14 @@ public class LiquidationResource {
 
       @PutMapping("/retourner")
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<Long> retourner(@PathVariable Long id,@RequestBody String message) {
+    public ResponseEntity<Long> retourner(@PathVariable Long id,@RequestBody ObservationDto message) {
          if (!liquidationService.checkReceptioner(id)) {
           return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
         }
         if (liquidationService.checkRejeter(id)) {
           return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
         }
-        Boolean createdId = liquidationService.retourne(id,message);
+        Boolean createdId = liquidationService.retourne(id,message.getObservation());
         if (createdId) {
            return  new ResponseEntity<>(null, HttpStatus.CREATED); 
         }else{
