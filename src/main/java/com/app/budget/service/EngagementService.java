@@ -230,7 +230,7 @@ public class EngagementService {
          engagement.setEnAttente(false);
          engagement.setRetourner(true);
          engagement.setReception(false); 
-         engagement.setDataRejet(OffsetDateTime.now());
+         engagement.setDataRetourner(OffsetDateTime.now());
          engagement.setObservation(message);
         engagementRepository.save(engagement);
         return true;
@@ -256,10 +256,12 @@ public class EngagementService {
         engagementDTO.setDataReception(engagement.getDataReception());
         engagementDTO.setDataValidation(engagement.getDataValidation()); 
         engagementDTO.setDataRejet(engagement.getDataRejet());
+        engagementDTO.setDataRetourner(engagement.getDataRetourner());
         engagementDTO.setEnAttente(engagement.getEnAttente());
         engagementDTO.setValidation(engagement.getValidation());
         engagementDTO.setReception(engagement.getReception());
         engagementDTO.setRejet(engagement.getRejet());
+        engagementDTO.setRetourner(engagement.getRetourner());
         engagementDTO.setMontant(engagement.getMontant());
         engagementDTO.setIdDevise(engagement.getIdDevise());
         engagementDTO.setTauxDevise(engagement.getTauxDevise());

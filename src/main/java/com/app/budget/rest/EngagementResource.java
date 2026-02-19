@@ -163,9 +163,9 @@ public class EngagementResource {
     }
 
     
-      @PutMapping("/receptioner")
+      @PutMapping("/receptioner/{id}")
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<Long> receptioner(@PathVariable Long id) {
+    public ResponseEntity<Long> receptioner(@PathVariable("id") Long id) {
          if (engagementService.checkRetourner(id)) {
           return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
         }
@@ -186,9 +186,9 @@ public class EngagementResource {
         }
     }
 
-       @PutMapping("/valider")
+       @PutMapping("/valider/{id}")
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<Long> valider(@PathVariable Long id) {
+    public ResponseEntity<Long> valider(@PathVariable("id") Long id) {
         if (engagementService.checkRetourner(id)) {
           return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
         }
@@ -206,9 +206,9 @@ public class EngagementResource {
         }
     }
 
-      @PutMapping("/rejeter")
+      @PutMapping("/rejeter/{id}")
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<Long> rejeter(@PathVariable Long id,@RequestBody ObservationDto message) {
+    public ResponseEntity<Long> rejeter(@PathVariable("id") Long id,@RequestBody ObservationDto message) {
          if (engagementService.checkRetourner(id)) {
           return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
         }
@@ -226,9 +226,9 @@ public class EngagementResource {
         }
     }
 
-      @PutMapping("/retourner")
+      @PutMapping("/retourner/{id}")
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<Long> retourner(@PathVariable Long id,@RequestBody ObservationDto message) {
+    public ResponseEntity<Long> retourner(@PathVariable("id") Long id,@RequestBody ObservationDto message) {
          if (!engagementService.checkReceptioner(id)) {
           return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
         }
