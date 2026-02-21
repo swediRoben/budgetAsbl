@@ -223,7 +223,7 @@ public class LiquidationService {
          Liquidation.setEnAttente(false);
          Liquidation.setRetourner(true);
          Liquidation.setReception(false); 
-         Liquidation.setDataRejet(OffsetDateTime.now());
+         Liquidation.setDataRetourner(OffsetDateTime.now());
          Liquidation.setObservation(message);
         liquidationRepository.save(Liquidation);
         return true;
@@ -247,10 +247,12 @@ public class LiquidationService {
         LiquidationDTO.setDataEnAttente(Liquidation.getDataEnAttente());
         LiquidationDTO.setDataReception(Liquidation.getDataReception());
         LiquidationDTO.setDataValidation(Liquidation.getDataValidation()); 
+        LiquidationDTO.setDataRetourner(Liquidation.getDataRetourner()); 
         LiquidationDTO.setDataRejet(Liquidation.getDataRejet());
         LiquidationDTO.setEnAttente(Liquidation.getEnAttente());
         LiquidationDTO.setValidation(Liquidation.getValidation());
         LiquidationDTO.setReception(Liquidation.getReception());
+        LiquidationDTO.setRetourner(Liquidation.getRetourner());
         LiquidationDTO.setRejet(Liquidation.getRejet());
         LiquidationDTO.setMontant(Liquidation.getMontant());
         LiquidationDTO.setIdDevise(Liquidation.getIdDevise()); 
