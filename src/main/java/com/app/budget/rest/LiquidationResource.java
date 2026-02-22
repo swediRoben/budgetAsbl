@@ -220,9 +220,7 @@ public class LiquidationResource {
       @PutMapping("/retourner/{id}")
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Long> retourner(@PathVariable("id") Long id,@RequestBody ObservationDto message) {
-         if (!liquidationService.checkReceptioner(id)) {
-          return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
-        }
+     
         if (liquidationService.checkRejeter(id)) {
           return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);   
         }
