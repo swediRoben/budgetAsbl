@@ -10,10 +10,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-
 @Configuration
-@EntityScan("com.app.budget.domain")
-@EnableJpaRepositories("com.app.budget.repos")
+@EntityScan(basePackages = {"com.app.budget.domain", "com.app.budget.tresorerie.entity"})
+@EnableJpaRepositories(basePackages = {"com.app.budget.repos", "com.app.budget.tresorerie.repository"})
 @EnableTransactionManagement
 @EnableJpaAuditing(dateTimeProviderRef = "auditingDateTimeProvider")
 public class DomainConfig {
@@ -22,5 +21,4 @@ public class DomainConfig {
     public DateTimeProvider dateTimeProvider() {
         return () -> Optional.of(OffsetDateTime.now());
     }
-
 }

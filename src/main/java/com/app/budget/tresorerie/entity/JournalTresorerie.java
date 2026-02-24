@@ -3,6 +3,7 @@ package com.app.budget.tresorerie.entity;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
+import com.app.budget.constate.ModePaiement; 
 import com.app.budget.constate.Typemouvement;
 import com.app.budget.domain.Classe;
 import com.app.budget.domain.Devise;
@@ -34,6 +35,12 @@ public class JournalTresorerie {
 
     @Enumerated(EnumType.STRING)
     private Typemouvement typemouvement;
+    private String numroCheque;
+
+    @Enumerated(EnumType.STRING)
+    private ModePaiement modepaiement;
+
+
     private BigDecimal taux;
     private BigDecimal montant;
     private String objet;

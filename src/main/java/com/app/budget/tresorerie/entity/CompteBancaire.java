@@ -1,4 +1,7 @@
-package com.app.budget.tresorerie.entity;
+package com.app.budget.tresorerie.entity; 
+import com.app.budget.constate.TypeCompte;
+import com.app.budget.domain.SourceFinacement;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,4 +25,11 @@ public class CompteBancaire {
     private Banque banque;
 
     private Long idComteComptable;
+
+     @Enumerated(EnumType.STRING)
+    private TypeCompte typeCompte;
+        
+    @ManyToOne
+    @JoinColumn(name = "id_sourceFinacement")
+    private SourceFinacement sourceFinacement;
 }

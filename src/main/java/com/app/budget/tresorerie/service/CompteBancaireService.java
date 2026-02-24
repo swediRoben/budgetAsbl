@@ -2,6 +2,7 @@ package com.app.budget.tresorerie.service;
  
 import org.springframework.stereotype.Service;
 
+import com.app.budget.repos.SourceFinacementRepository;
 import com.app.budget.tresorerie.dto.CompteBancaireDto;
 import com.app.budget.tresorerie.entity.Banque;
 import com.app.budget.tresorerie.entity.CompteBancaire;
@@ -16,10 +17,13 @@ public class CompteBancaireService {
 
     private final CompteBancaireRepository compteRepository;
     private final BanqueRepository banqueRepository;
+    private final SourceFinacementRepository sourceFinacementRepository; 
 
-    public CompteBancaireService(CompteBancaireRepository compteRepository, BanqueRepository banqueRepository) {
+    public CompteBancaireService(CompteBancaireRepository compteRepository, BanqueRepository banqueRepository,
+            SourceFinacementRepository sourceFinacementRepository) {
         this.compteRepository = compteRepository;
         this.banqueRepository = banqueRepository;
+        this.sourceFinacementRepository = sourceFinacementRepository;
     }
 
     // CREATE
@@ -28,7 +32,9 @@ public class CompteBancaireService {
         compte.setNumero(dto.getNumero());
         compte.setIdDevise(dto.getIdDevise());
         compte.setIdComteComptable(dto.getIdComteComptable());
-
+    if (dto.getSourceFinacementId() != null) {
+        compte.setSourceFinacement(sourceFinacementRepository.findById(dto.getSourceFinacementId()).orElse(null));
+        }
         if(dto.getIdBanque() != null){
             Banque banque = banqueRepository.findById(dto.getIdBanque())
                     .orElseThrow(() -> new RuntimeException("Banque non trouvée"));
@@ -62,6 +68,10 @@ public class CompteBancaireService {
         compte.setNumero(dto.getNumero());
         compte.setIdDevise(dto.getIdDevise());
         compte.setIdComteComptable(dto.getIdComteComptable());
+           
+        if (dto.getSourceFinacementId() != null) {
+        compte.setSourceFinacement(sourceFinacementRepository.findById(dto.getSourceFinacementId()).orElse(null));
+        }
 
         if(dto.getIdBanque() != null){
             Banque banque = banqueRepository.findById(dto.getIdBanque())
@@ -85,6 +95,7 @@ public class CompteBancaireService {
         dto.setIdDevise(c.getIdDevise());
         dto.setIdBanque(c.getBanque() != null ? c.getBanque().getId() : null);
         dto.setIdComteComptable(c.getIdComteComptable());
+         dto.setSourceFinacementId(c.getSourceFinacement() != null ? c.getSourceFinacement().getId() : null);
         return dto;
     }
 }

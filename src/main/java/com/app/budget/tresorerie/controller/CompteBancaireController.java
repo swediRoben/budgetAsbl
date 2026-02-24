@@ -7,6 +7,7 @@ import com.app.budget.tresorerie.service.CompteBancaireService;
 import java.util.List;
 
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/api/compte-comptables")
 public class CompteBancaireController {
 

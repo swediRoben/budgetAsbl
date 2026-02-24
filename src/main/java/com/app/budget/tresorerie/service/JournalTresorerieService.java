@@ -118,6 +118,8 @@ public class JournalTresorerieService {
         e.setMontant(dto.getMontant());
         e.setObjet(dto.getObjet());
         e.setDate(dto.getDate());
+        e.setNumroCheque(dto.getNumroCheque());
+        e.setModepaiement(dto.getModepaiement());
 
         if (dto.getBanqueId() != null) {
             e.setBanque(banqueRepository.findById(dto.getBanqueId()).orElse(null));
@@ -163,6 +165,8 @@ public class JournalTresorerieService {
                 .montant(e.getMontant())
                 .objet(e.getObjet())
                 .date(e.getDate())
+                .numroCheque(e.getNumroCheque())
+                .modepaiement(e.getModepaiement())
                 .banqueId(e.getBanque() != null ? e.getBanque().getId() : null)
                 .planComptableId(e.getPlanComptable() != null ? e.getPlanComptable().getId() : null)
                 .classeId(e.getClasse() != null ? e.getClasse().getId() : null)

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.app.budget.tresorerie.dto.JournalTresorerieDto;
 import com.app.budget.tresorerie.service.JournalTresorerieService;
@@ -19,10 +20,10 @@ import com.app.budget.tresorerie.service.JournalTresorerieService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody; 
 import lombok.RequiredArgsConstructor;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api/journal-tresorerie")
-@RequiredArgsConstructor
-@Validated
+@RequiredArgsConstructor 
 public class JournalTresorerieController {
 
     private final JournalTresorerieService service;

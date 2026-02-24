@@ -1,26 +1,26 @@
 package com.app.budget.tresorerie.service;
  
-import org.springframework.stereotype.Service;
 
 import com.app.budget.domain.PlanComptable;
 import com.app.budget.repos.PlanComptableRepository;
 import com.app.budget.tresorerie.dto.BanqueDTO;
 import com.app.budget.tresorerie.entity.Banque; 
-import com.app.budget.tresorerie.repository.BanqueRepository; 
+import com.app.budget.tresorerie.repository.BanqueRepository;
+
+import lombok.AllArgsConstructor;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.stereotype.Service;
+
 @Service
+@AllArgsConstructor
 public class BanqueService {
 
     private final BanqueRepository banqueRepository;
-    private final PlanComptableRepository compteRepository;
-
-    public BanqueService(BanqueRepository banqueRepository, PlanComptableRepository compteRepository) {
-        this.banqueRepository = banqueRepository;
-        this.compteRepository = compteRepository;
-    }
+    private final PlanComptableRepository compteRepository; 
+     
 
     // CREATE
     public BanqueDTO create(BanqueDTO dto) {

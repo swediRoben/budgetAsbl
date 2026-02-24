@@ -3,6 +3,7 @@ package com.app.budget.tresorerie.dto;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
+import com.app.budget.constate.ModePaiement;
 import com.app.budget.constate.Typemouvement;
 
 import lombok.AllArgsConstructor;
@@ -34,4 +35,6 @@ public class JournalTresorerieDto {
     private Long liquidationId;
     private Long planActiviteId;
     private Long sourceFinacementId;
+    private ModePaiement modepaiement;
+    private String numroCheque;
 }

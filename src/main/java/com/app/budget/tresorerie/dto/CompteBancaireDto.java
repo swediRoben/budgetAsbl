@@ -11,4 +11,5 @@ public class CompteBancaireDto {
     private Long idDevise;
     private Long idBanque;
     private Long idComteComptable;
+    private Long sourceFinacementId;
 }
