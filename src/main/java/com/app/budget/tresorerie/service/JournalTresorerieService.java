@@ -3,6 +3,8 @@ package com.app.budget.tresorerie.service;
 import java.time.OffsetDateTime;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,7 @@ import com.app.budget.repos.PlanComptableRepository;
 import com.app.budget.repos.SourceFinacementRepository;
 import com.app.budget.rest.PlanComptableResource;
 import com.app.budget.tresorerie.dto.JournalTresorerieDto;
+import com.app.budget.tresorerie.dto.JournalTresorerieFilter;
 import com.app.budget.tresorerie.entity.JournalTresorerie;
 import com.app.budget.tresorerie.repository.BanqueRepository;
 import com.app.budget.tresorerie.repository.CompteBancaireRepository;
@@ -71,6 +74,17 @@ public class JournalTresorerieService {
     }
 }
 
+
+  public Page<JournalTresorerie> search(
+            JournalTresorerieFilter filter,
+            Pageable pageable
+    ) {
+        Specification<JournalTresorerie> spec =
+                JournalTresorerieSpecification.withFilter(filter);
+
+        return repository.findAll(spec, pageable)
+        ;
+    }
     // ================= GET BY ID =================
     @Transactional
     public JournalTresorerieDto getById(Long id) {
