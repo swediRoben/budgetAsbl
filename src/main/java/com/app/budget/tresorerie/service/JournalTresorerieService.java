@@ -6,12 +6,15 @@ import java.util.List;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.app.budget.domain.Liquidation;
+import com.app.budget.model.LiquidationDTO;
 import com.app.budget.repos.ClasseRepository;
 import com.app.budget.repos.DeviseRepository;
 import com.app.budget.repos.LiquidationRepository;
 import com.app.budget.repos.PlanActiviteRepository;
 import com.app.budget.repos.PlanComptableRepository;
 import com.app.budget.repos.SourceFinacementRepository;
+import com.app.budget.rest.PlanComptableResource;
 import com.app.budget.tresorerie.dto.JournalTresorerieDto;
 import com.app.budget.tresorerie.entity.JournalTresorerie;
 import com.app.budget.tresorerie.repository.BanqueRepository;
@@ -21,12 +24,11 @@ import com.app.budget.tresorerie.repository.JournalTresorerieSpecification;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
- 
+
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class JournalTresorerieService {
-
     private final JournalTresorerieRepository repository;
     private final BanqueRepository banqueRepository;
     private final PlanComptableRepository planComptableRepository;
@@ -110,9 +112,8 @@ public class JournalTresorerieService {
 
     private void mapToEntity(JournalTresorerieDto dto, JournalTresorerie e) {
 
-        e.setNumero(dto.getNumero());
-        e.setIdExercice(dto.getIdExercice());
-        e.setTypebudget(dto.getTypebudget());
+        e.setReference(dto.getReference());
+        e.setIdExercice(dto.getIdExercice()); 
         e.setTypemouvement(dto.getTypemouvement());
         e.setTaux(dto.getTaux());
         e.setMontant(dto.getMontant());
@@ -157,9 +158,8 @@ public class JournalTresorerieService {
     private JournalTresorerieDto toDto(JournalTresorerie e) {
         return JournalTresorerieDto.builder()
                 .id(e.getId())
-                .numero(e.getNumero())
-                .idExercice(e.getIdExercice())
-                .typebudget(e.getTypebudget())
+                .reference(e.getReference())
+                .idExercice(e.getIdExercice()) 
                 .typemouvement(e.getTypemouvement())
                 .taux(e.getTaux())
                 .montant(e.getMontant())
@@ -175,6 +175,48 @@ public class JournalTresorerieService {
                 .liquidationId(e.getLiquidation() != null ? e.getLiquidation().getId() : null)
                 .planActiviteId(e.getPlanActivite() != null ? e.getPlanActivite().getId() : null)
                 .sourceFinacementId(e.getSourceFinacement() != null ? e.getSourceFinacement().getId() : null)
+                
+                .banque(e.getBanque() != null ? e.getBanque() : null)
+                .planComptable(e.getPlanComptable() != null ? e.getPlanComptable() : null)
+                .classe(e.getClasse() != null ? e.getClasse(): null)
+                .devise(e.getDevise() != null ? e.getDevise() : null)
+                .compteBancaire(e.getCompteBancaire() != null ? e.getCompteBancaire() : null)
+                .liquidation(e.getLiquidation() != null ? mapToDTO(e.getLiquidation(), new LiquidationDTO()) : null)
+                .planActivite(e.getPlanActivite() != null ? e.getPlanActivite() : null)
+                .sourceFinacement(e.getSourceFinacement() != null ? e.getSourceFinacement() : null)
+                
                 .build();
     }
+    
+        private LiquidationDTO mapToDTO(final Liquidation Liquidation, final LiquidationDTO LiquidationDTO) {
+        LiquidationDTO.setId(Liquidation.getId());
+        LiquidationDTO.setBonEngagment(Liquidation.getBonEngagment());
+        LiquidationDTO.setIdEngagement(Liquidation.getIdEngagement());
+        LiquidationDTO.setPiece(Liquidation.getPiece());
+        LiquidationDTO.setIdExercice(Liquidation.getIdExercice()); 
+        LiquidationDTO.setDataEnAttente(Liquidation.getDataEnAttente());
+        LiquidationDTO.setDataReception(Liquidation.getDataReception());
+        LiquidationDTO.setDataValidation(Liquidation.getDataValidation()); 
+        LiquidationDTO.setDataRetourner(Liquidation.getDataRetourner()); 
+        LiquidationDTO.setDataRejet(Liquidation.getDataRejet());
+        LiquidationDTO.setEnAttente(Liquidation.getEnAttente());
+        LiquidationDTO.setValidation(Liquidation.getValidation());
+        LiquidationDTO.setReception(Liquidation.getReception());
+        LiquidationDTO.setRetourner(Liquidation.getRetourner());
+        LiquidationDTO.setRejet(Liquidation.getRejet());
+        LiquidationDTO.setMontant(Liquidation.getMontant());
+        LiquidationDTO.setIdDevise(Liquidation.getIdDevise()); 
+        LiquidationDTO.setTauxDevise(Liquidation.getTauxDevise());
+        LiquidationDTO.setIdProjet(Liquidation.getIdProjet());
+        LiquidationDTO.setIdCategorie(Liquidation.getIdCategorie());
+        LiquidationDTO.setIdPlanFondActivite(Liquidation.getIdPlanFondActivite());
+        LiquidationDTO.setPlanActivite(Liquidation.getPlanActivite());
+        LiquidationDTO.setIdResponsable(Liquidation.getIdResponsable());
+        LiquidationDTO.setObjet(Liquidation.getObjet());
+        LiquidationDTO.setDevise(Liquidation.getDevise());
+        LiquidationDTO.setObservation(Liquidation.getObservation());  
+        LiquidationDTO.setResponsable(Liquidation.getResponsable()); 
+        return LiquidationDTO;
+    }
+
 }

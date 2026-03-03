@@ -26,12 +26,12 @@ public class JournalTresorerie {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String numero;
+    private String reference;
 
     private Long idExercice;
 
-
-    private Boolean typebudget;
+    private Long projetId;
+    private Long categorieId; 
 
     @Enumerated(EnumType.STRING)
     private Typemouvement typemouvement;
