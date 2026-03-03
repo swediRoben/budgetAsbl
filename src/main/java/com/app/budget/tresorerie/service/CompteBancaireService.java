@@ -8,7 +8,9 @@ import com.app.budget.tresorerie.entity.Banque;
 import com.app.budget.tresorerie.entity.CompteBancaire;
 import com.app.budget.tresorerie.repository.BanqueRepository;
 import com.app.budget.tresorerie.repository.CompteBancaireRepository;
+import com.app.budget.tresorerie.repository.JournalTresorerieRepository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,12 +20,15 @@ public class CompteBancaireService {
     private final CompteBancaireRepository compteRepository;
     private final BanqueRepository banqueRepository;
     private final SourceFinacementRepository sourceFinacementRepository; 
+    private final JournalTresorerieRepository journalTresorerieRepository;
 
     public CompteBancaireService(CompteBancaireRepository compteRepository, BanqueRepository banqueRepository,
-            SourceFinacementRepository sourceFinacementRepository) {
+            SourceFinacementRepository sourceFinacementRepository,
+            JournalTresorerieRepository journalTresorerieRepository) {
         this.compteRepository = compteRepository;
         this.banqueRepository = banqueRepository;
         this.sourceFinacementRepository = sourceFinacementRepository;
+        this.journalTresorerieRepository = journalTresorerieRepository;
     }
 
     // CREATE
@@ -31,7 +36,8 @@ public class CompteBancaireService {
         CompteBancaire compte = new CompteBancaire();
         compte.setNumero(dto.getNumero());
         compte.setIdDevise(dto.getIdDevise());
-        compte.setIdComteComptable(dto.getIdComteComptable());
+        compte.setIdComteComptable(dto.getIdComteComptable()); 
+        compte.setTypeCompte(dto.getTypeCompte()); 
     if (dto.getSourceFinacementId() != null) {
         compte.setSourceFinacement(sourceFinacementRepository.findById(dto.getSourceFinacementId()).orElse(null));
         }
@@ -68,7 +74,7 @@ public class CompteBancaireService {
         compte.setNumero(dto.getNumero());
         compte.setIdDevise(dto.getIdDevise());
         compte.setIdComteComptable(dto.getIdComteComptable());
-           
+        compte.setTypeCompte(dto.getTypeCompte());  
         if (dto.getSourceFinacementId() != null) {
         compte.setSourceFinacement(sourceFinacementRepository.findById(dto.getSourceFinacementId()).orElse(null));
         }
@@ -95,7 +101,11 @@ public class CompteBancaireService {
         dto.setIdDevise(c.getIdDevise());
         dto.setIdBanque(c.getBanque() != null ? c.getBanque().getId() : null);
         dto.setIdComteComptable(c.getIdComteComptable());
+        dto.setTypeCompte(c.getTypeCompte());
          dto.setSourceFinacementId(c.getSourceFinacement() != null ? c.getSourceFinacement().getId() : null);
-        return dto;
+         BigDecimal somme=journalTresorerieRepository.sommeCompteByIdComptebancaire(c.getId());
+        BigDecimal montant=somme!=null?somme:BigDecimal.ZERO;
+         dto.setMontant(montant); 
+         return dto;
     }
 }

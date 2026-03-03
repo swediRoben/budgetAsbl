@@ -1,5 +1,9 @@
 package com.app.budget.tresorerie.dto;
 
+import java.math.BigDecimal;
+
+import com.app.budget.constate.TypeCompte;
+
 import lombok.*;
 
 @Data
@@ -12,4 +16,6 @@ public class CompteBancaireDto {
     private Long idBanque;
     private Long idComteComptable;
     private Long sourceFinacementId;
+    private BigDecimal montant;
+    private TypeCompte typeCompte;
 }

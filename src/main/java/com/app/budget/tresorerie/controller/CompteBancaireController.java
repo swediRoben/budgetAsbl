@@ -8,7 +8,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/api/compte-comptables")
+@RequestMapping("/api/compte-bancaires")
 public class CompteBancaireController {
 
     private final CompteBancaireService compteService;
