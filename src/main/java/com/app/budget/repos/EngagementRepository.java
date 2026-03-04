@@ -201,12 +201,13 @@ List<Engagement> getAllValiderInLiquidation(
             @Param("ligne") Long ligne); 
             
 
- @Query("SELECT e.planActivite AS planactivite, COALESCE(SUM(e.montant*e.tauxDevise), 0) AS somme FROM Engagement e " +
-           "WHERE (:exercice IS NULL OR e.idExercice = :exercice) " +
-           "AND (:projet IS NULL OR e.planActivite.idProjet = :projet) " + 
-           "AND (:categorie IS NULL OR e.planActivite.idCategorie = :categorie) " + 
-           "AND (e.validation=true) "+
-           "ORDER BY e.idPlanFondActivite , GROUP BY e.idPlanFondActivite") 
+ @Query("SELECT e.planActivite AS planactivite, COALESCE(SUM(e.montant * e.tauxDevise), 0) AS somme  FROM Engagement e " +
+       " WHERE (:exercice IS NULL OR e.idExercice = :exercice) "+
+  " AND (:projet IS NULL OR e.planActivite.idProjet = :projet) "+
+  " AND (:categorie IS NULL OR e.planActivite.idCategorie = :categorie) "+
+  " AND (e.validation = true) "+
+  " GROUP BY e.idPlanFondActivite, e.planActivite "+
+  " ORDER BY e.idPlanFondActivite") 
 List<RapportGlobalExecutionInterface> rapporGeneral(
             @Param("exercice") Long exercice,
             @Param("projet") Long projet, 
