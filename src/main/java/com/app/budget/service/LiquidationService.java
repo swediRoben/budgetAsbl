@@ -1,7 +1,7 @@
 package com.app.budget.service;
  
 import com.app.budget.domain.Liquidation; 
-import com.app.budget.model.LiquidationDTO;  
+import com.app.budget.model.LiquidationDTO; 
 import com.app.budget.repos.LiquidationRepository;
 import com.app.budget.util.NotFoundException;
 
@@ -9,6 +9,7 @@ import jakarta.transaction.Transactional;
 
 import java.math.BigDecimal; 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -328,6 +329,7 @@ public class LiquidationService {
 
         return dtos; 
     }
+ 
 
     public  List<LiquidationDTO> getAllRetourner(Long projet, Long exercice,Long categorie, OffsetDateTime debut, OffsetDateTime fin, Integer page,
             Integer size) {

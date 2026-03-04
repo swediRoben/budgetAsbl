@@ -2,6 +2,7 @@ package com.app.budget.rest;
 
 import com.app.budget.model.EngagementDTO;
 import com.app.budget.model.ObservationDto;
+import com.app.budget.model.RapportGlobalExecution;
 import com.app.budget.service.EngagementService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
@@ -279,4 +280,12 @@ public class EngagementResource {
         return ResponseEntity.noContent().build();
     }
 
+        @GetMapping("/rapportGeneral")
+    public ResponseEntity<List<RapportGlobalExecution>> getAllRapportGeneral(
+       @RequestParam Long projet,
+        @RequestParam Long exercice,
+        @RequestParam Long categore
+    ) {
+        return ResponseEntity.ok(engagementService.rapportGlobalExecution(projet,exercice,categore));
+    }
 }

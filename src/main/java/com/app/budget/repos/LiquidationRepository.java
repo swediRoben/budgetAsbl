@@ -1,6 +1,7 @@
 package com.app.budget.repos;
 
 import com.app.budget.domain.Liquidation;
+
 import org.springframework.data.jpa.repository.JpaRepository;  
  
 
@@ -186,6 +187,16 @@ Page<Liquidation> getAllReceptionner(
             @Param("debut") OffsetDateTime debut,
             @Param("fin") OffsetDateTime fin,
             Pageable pageable
-    );  
+    ); 
+    
+
+ @Query("SELECT COALESCE(SUM(e.montant*e.tauxDevise), 0) FROM Liquidation e " +
+           "WHERE (:exercice IS NULL OR e.idExercice = :exercice) " +
+           "AND (:activite IS NULL OR e.planActivite.idActivite = :activite) " +
+           "AND (e.validation=true) ") 
+BigDecimal rapporGeneralLiquidation(
+            @Param("exercice") Long exercice,
+            @Param("activite") Long activite
+    );
 }
 

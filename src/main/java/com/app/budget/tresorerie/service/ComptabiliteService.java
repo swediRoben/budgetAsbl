@@ -3,12 +3,14 @@ package com.app.budget.tresorerie.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.app.budget.constate.TypeJournal;
 import com.app.budget.domain.PlanComptable;
 import com.app.budget.tresorerie.entity.Comptabilite;
 import com.app.budget.tresorerie.entity.LigneComptable;
 import com.app.budget.tresorerie.repository.ComptabiliteRepository;
 
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -122,5 +124,33 @@ public class ComptabiliteService {
         public BigDecimal getTotalProduits() { return totalProduits; }
         public BigDecimal getResultat() { return resultat; }
     }
+
+    public boolean jounaliser(List<Long> ids) {
+        ids.forEach(v->{
+          Optional<Comptabilite> c = comptabiliteRepository.findById(v);
+          if (c.isPresent()) {
+            c.get().setType(TypeJournal.JOURNAL);
+            comptabiliteRepository.save(c.get());
+          }
+        });
+        return true;
+    }
+
+     public boolean annuler(List<Long> ids) {
+        ids.forEach(v->{
+          Optional<Comptabilite> c = comptabiliteRepository.findById(v);
+          if (c.isPresent()) {
+            c.get().setType(TypeJournal.ANNULER);
+            comptabiliteRepository.save(c.get());
+          }
+        });
+        return true;
+    }
+
+     public List<Comptabilite> findAll(Long idExercice, TypeJournal type, String reference, OffsetDateTime debut,
+            OffsetDateTime fin) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'findAll'");
+     }
 
 }

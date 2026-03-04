@@ -1,7 +1,7 @@
 package com.app.budget.repos;
 
 import com.app.budget.domain.Engagement;
- 
+import com.app.budget.model.RapportGlobalExecutionInterface;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -198,5 +198,19 @@ Page<Engagement> getAllReceptionner(
 List<Engagement> getAllValiderInLiquidation(
          @Param("exercice") Long exercice,
             @Param("projet") Long projet, 
-            @Param("ligne") Long ligne);  
+            @Param("ligne") Long ligne); 
+            
+
+ @Query("SELECT e.planActivite AS planactivite, COALESCE(SUM(e.montant*e.tauxDevise), 0) AS somme FROM Engagement e " +
+           "WHERE (:exercice IS NULL OR e.idExercice = :exercice) " +
+           "AND (:projet IS NULL OR e.planActivite.idProjet = :projet) " + 
+           "AND (:categorie IS NULL OR e.planActivite.idCategorie = :categorie) " + 
+           "AND (e.validation=true) "+
+           "ORDER BY e.idPlanFondActivite , GROUP BY e.idPlanFondActivite") 
+List<RapportGlobalExecutionInterface> rapporGeneral(
+            @Param("exercice") Long exercice,
+            @Param("projet") Long projet, 
+            @Param("categorie") Long categorie
+    );
+
 }

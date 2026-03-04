@@ -1,14 +1,20 @@
 package com.app.budget.tresorerie.service;
 
+import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.app.budget.constate.TypeJournal;
+import com.app.budget.constate.Typemouvement;
 import com.app.budget.domain.Liquidation;
+import com.app.budget.domain.PlanComptable;
 import com.app.budget.model.LiquidationDTO;
 import com.app.budget.repos.ClasseRepository;
 import com.app.budget.repos.DeviseRepository;
@@ -19,8 +25,11 @@ import com.app.budget.repos.SourceFinacementRepository;
 import com.app.budget.rest.PlanComptableResource;
 import com.app.budget.tresorerie.dto.JournalTresorerieDto;
 import com.app.budget.tresorerie.dto.JournalTresorerieFilter;
+import com.app.budget.tresorerie.entity.Comptabilite;
 import com.app.budget.tresorerie.entity.JournalTresorerie;
+import com.app.budget.tresorerie.entity.LigneComptable;
 import com.app.budget.tresorerie.repository.BanqueRepository;
+import com.app.budget.tresorerie.repository.ComptabiliteRepository;
 import com.app.budget.tresorerie.repository.CompteBancaireRepository;
 import com.app.budget.tresorerie.repository.JournalTresorerieRepository;
 import com.app.budget.tresorerie.repository.JournalTresorerieSpecification;
@@ -41,13 +50,16 @@ public class JournalTresorerieService {
     private final LiquidationRepository liquidationRepository;
     private final PlanActiviteRepository planActiviteRepository;
     private final SourceFinacementRepository sourceFinacementRepository;
+    private final ComptabiliteRepository comptabiliteRepository;
 
     // ================= CREATE =================
     public JournalTresorerieDto create(JournalTresorerieDto dto) {
         JournalTresorerie entity = new JournalTresorerie();
          validateReferences(dto);
         mapToEntity(dto, entity);
-        return toDto(repository.save(entity));
+        JournalTresorerie journal=repository.save(entity);
+        saveComptabilite(journal);
+        return toDto(journal);
     }
 
     // ================= UPDATE =================
@@ -74,6 +86,17 @@ public class JournalTresorerieService {
     }
 }
 
+ private void CheckIfComptabiliser(Long idJournal){
+   Optional<Comptabilite> c= comptabiliteRepository.findByIdtresorerie(idJournal);
+   if (c.isPresent() && c.get().getType()==TypeJournal.JOURNAL) {
+     throw new RuntimeException("Ce déjà été comptilisée");
+   }else{
+    c.get().setType(TypeJournal.ANNULER);
+    comptabiliteRepository.save(c.get());
+   }
+ }
+
+
 
   public Page<JournalTresorerie> search(
             JournalTresorerieFilter filter,
@@ -95,6 +118,7 @@ public class JournalTresorerieService {
 
     // ================= DELETE =================
     public void delete(Long id) {
+        CheckIfComptabiliser(id);
         if (!repository.existsById(id)) {
             throw new RuntimeException("JournalTresorerie introuvable");
         }
@@ -247,6 +271,67 @@ public class JournalTresorerieService {
         LiquidationDTO.setObservation(Liquidation.getObservation());  
         LiquidationDTO.setResponsable(Liquidation.getResponsable()); 
         return LiquidationDTO;
+    }
+
+    private boolean saveComptabilite(JournalTresorerie l){
+        Comptabilite c=new Comptabilite();
+        c.setBanque(l.getBanque());
+        c.setCompteBancaire(l.getCompteBancaire());
+        c.setDate(l.getDate());
+        c.setIdExerice(l.getIdExercice());
+        c.setObjet(l.getObjet());
+        c.setIdtresorerie(l.getId());
+        c.setType(TypeJournal.BROUILLARD);
+        c.setReference(l.getReference());
+        
+       if (l.getTypemouvement()==Typemouvement.CREDIT) {
+           List<LigneComptable> list=new ArrayList<>();
+        LigneComptable li=new LigneComptable();
+        li.setCompte(l.getPlanComptable());
+        li.setCredit(BigDecimal.ZERO);
+        li.setDebit(l.getMontant());
+        li.setId(null);
+        li.setLibelle(l.getPlanComptable().getLibelle()); 
+        li.setEcriture(c);
+        list.add(li);
+
+        LigneComptable bv=new LigneComptable();
+        PlanComptable p=new PlanComptable();
+        p.setId(l.getCompteBancaire().getIdComteComptable());
+        bv.setCompte(p);
+        bv.setCredit(l.getMontant());
+        bv.setDebit(BigDecimal.ZERO);
+        bv.setId(null);
+        bv.setLibelle(l.getPlanComptable().getLibelle()); 
+        bv.setEcriture(c);
+        list.add(bv);
+        c.setLignes(list);
+       }else {
+           List<LigneComptable> list=new ArrayList<>();
+        LigneComptable li=new LigneComptable();
+        li.setCompte(l.getPlanComptable());
+        li.setCredit(l.getMontant());
+        li.setDebit(BigDecimal.ZERO);
+        li.setId(null);
+        li.setLibelle(l.getPlanComptable().getLibelle()); 
+        li.setEcriture(c);
+        list.add(li);
+
+        LigneComptable bv=new LigneComptable();
+        PlanComptable p=new PlanComptable();
+        p.setId(l.getCompteBancaire().getIdComteComptable());
+        bv.setCompte(p);
+        bv.setCredit(BigDecimal.ZERO);
+        bv.setDebit(l.getMontant());
+        bv.setId(null);
+        bv.setLibelle(l.getPlanComptable().getLibelle()); 
+        bv.setEcriture(c);
+        list.add(bv);
+        c.setLignes(list);
+       }
+
+        comptabiliteRepository.save(c);
+        return true;
     }
 
 }

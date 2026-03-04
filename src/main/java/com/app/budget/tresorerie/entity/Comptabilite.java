@@ -42,11 +42,14 @@ public class Comptabilite {
     @ManyToOne
     @JoinColumn(name = "id_compte_bancaire")
     private CompteBancaire compteBancaire;
+    
+    private Long idtresorerie;
 
     private Long idExerice;
 
     @Enumerated(EnumType.STRING)
     private TypeJournal type;
+    private String reference;
 
     @OneToMany(mappedBy = "ecriture", cascade = CascadeType.ALL)
     private List<LigneComptable> lignes = new ArrayList<>();
