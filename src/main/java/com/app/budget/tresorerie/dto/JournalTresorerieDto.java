@@ -41,7 +41,7 @@ public class JournalTresorerieDto {
     private Long deviseId;
     private Long compteBancaireId;
     private Long liquidationId;
-    private Long planActiviteId;
+    private Long idPlanFondActivite;
     private Long sourceFinacementId;
     private ModePaiement modepaiement;
     private String numroCheque; 

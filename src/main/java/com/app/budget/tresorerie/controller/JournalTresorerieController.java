@@ -7,18 +7,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.*; 
 
 import com.app.budget.tresorerie.dto.JournalTresorerieDto;
 import com.app.budget.tresorerie.dto.JournalTresorerieFilter;
 import com.app.budget.tresorerie.entity.JournalTresorerie;
-import com.app.budget.tresorerie.service.JournalTresorerieService;
-
-import io.swagger.v3.oas.annotations.parameters.RequestBody; 
+import com.app.budget.tresorerie.service.JournalTresorerieService; 
 import lombok.RequiredArgsConstructor;
-
-@CrossOrigin("*")
+ 
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/api/journal-tresorerie")
 @RequiredArgsConstructor 
 public class JournalTresorerieController {
@@ -27,7 +25,7 @@ public class JournalTresorerieController {
 
     // ================= CREATE =================
     @PostMapping
-    public JournalTresorerieDto create(@RequestBody JournalTresorerieDto dto) {
+    public JournalTresorerieDto create(@RequestBody JournalTresorerieDto dto) { 
         return service.create(dto);
     }
 

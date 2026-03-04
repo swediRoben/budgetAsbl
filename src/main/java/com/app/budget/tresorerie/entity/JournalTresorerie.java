@@ -67,12 +67,12 @@ public class JournalTresorerie {
     private CompteBancaire compteBancaire;
     
     @ManyToOne
-    @JoinColumn(name = "id_liquidation")
+    @JoinColumn(name = "id_liquidation",nullable = true)
     private Liquidation liquidation;
 
  
     @ManyToOne
-    @JoinColumn(name = "id_planActivite")
+    @JoinColumn(name = "id_planActivite",nullable = true)
     private PlanActivite planActivite;
     
     @ManyToOne

@@ -126,48 +126,62 @@ public class JournalTresorerieService {
 
     private void mapToEntity(JournalTresorerieDto dto, JournalTresorerie e) {
 
-        e.setReference(dto.getReference());
-        e.setIdExercice(dto.getIdExercice()); 
-        e.setTypemouvement(dto.getTypemouvement());
-        e.setTaux(dto.getTaux());
-        e.setMontant(dto.getMontant());
-        e.setObjet(dto.getObjet());
-        e.setDate(dto.getDate());
-        e.setNumroCheque(dto.getNumroCheque());
-        e.setModepaiement(dto.getModepaiement());
+    // ❌ supprimer si update possible
+    // e.setId(null);
 
-        if (dto.getBanqueId() != null) {
-            e.setBanque(banqueRepository.findById(dto.getBanqueId()).orElse(null));
-        }
+    e.setReference(dto.getReference());
+    e.setIdExercice(dto.getIdExercice());
+    e.setTypemouvement(dto.getTypemouvement());
+    e.setTaux(dto.getTaux());
+    e.setMontant(dto.getMontant());
+    e.setObjet(dto.getObjet());
+    e.setDate(dto.getDate());
+    e.setProjetId( dto.getProjetId() == null ? null :dto.getProjetId() );
+    e.setCategorieId( dto.getCategorieId() == null ? null :dto.getCategorieId() );
+    e.setNumroCheque(dto.getNumroCheque());
+    e.setModepaiement(dto.getModepaiement());
 
-        if (dto.getPlanComptableId() != null) {
-            e.setPlanComptable(planComptableRepository.findById(dto.getPlanComptableId()).orElse(null));
-        }
+    // ✅ pattern sécurisé
+    e.setBanque(
+        dto.getBanqueId() == null ? null :
+        banqueRepository.findById(dto.getBanqueId()).orElse(null)
+    );
 
-        if (dto.getClasseId() != null) {
-            e.setClasse(classeRepository.findById(dto.getClasseId()).orElse(null));
-        }
+    e.setPlanComptable(
+        dto.getPlanComptableId() == null ? null :
+        planComptableRepository.findById(dto.getPlanComptableId()).orElse(null)
+    );
 
-        if (dto.getDeviseId() != null) {
-            e.setDevise(deviseRepository.findById(dto.getDeviseId()).orElse(null));
-        }
+    e.setClasse(
+        dto.getClasseId() == null ? null :
+        classeRepository.findById(dto.getClasseId()).orElse(null)
+    );
 
-        if (dto.getCompteBancaireId() != null) {
-            e.setCompteBancaire(compteBancaireRepository.findById(dto.getCompteBancaireId()).orElse(null));
-        }
+    e.setDevise(
+        dto.getDeviseId() == null ? null :
+        deviseRepository.findById(dto.getDeviseId()).orElse(null)
+    );
 
-        if (dto.getLiquidationId() != null) {
-            e.setLiquidation(liquidationRepository.findById(dto.getLiquidationId()).orElse(null));
-        }
+    e.setCompteBancaire(
+        dto.getCompteBancaireId() == null ? null :
+        compteBancaireRepository.findById(dto.getCompteBancaireId()).orElse(null)
+    );
 
-        if (dto.getPlanActiviteId() != null) {
-            e.setPlanActivite(planActiviteRepository.findById(dto.getPlanActiviteId()).orElse(null));
-        }
+    e.setLiquidation(
+        dto.getLiquidationId() == null ? null :
+        liquidationRepository.findById(dto.getLiquidationId()).orElse(null)
+    );
 
-        if (dto.getSourceFinacementId() != null) {
-            e.setSourceFinacement(sourceFinacementRepository.findById(dto.getSourceFinacementId()).orElse(null));
-        }
-    }
+    e.setPlanActivite(
+        dto.getIdPlanFondActivite() == null ? null :
+        planActiviteRepository.findById(dto.getIdPlanFondActivite()).orElse(null)
+    );
+
+    e.setSourceFinacement(
+        dto.getSourceFinacementId() == null ? null :
+        sourceFinacementRepository.findById(dto.getSourceFinacementId()).orElse(null)
+    );
+}
 
     private JournalTresorerieDto toDto(JournalTresorerie e) {
         return JournalTresorerieDto.builder()
@@ -179,6 +193,8 @@ public class JournalTresorerieService {
                 .montant(e.getMontant())
                 .objet(e.getObjet())
                 .date(e.getDate())
+                .projetId(e.getProjetId() == null ? null :e.getProjetId())
+                .categorieId( e.getCategorieId() == null ? null :e.getCategorieId() )
                 .numroCheque(e.getNumroCheque())
                 .modepaiement(e.getModepaiement())
                 .banqueId(e.getBanque() != null ? e.getBanque().getId() : null)
@@ -187,7 +203,7 @@ public class JournalTresorerieService {
                 .deviseId(e.getDevise() != null ? e.getDevise().getId() : null)
                 .compteBancaireId(e.getCompteBancaire() != null ? e.getCompteBancaire().getId() : null)
                 .liquidationId(e.getLiquidation() != null ? e.getLiquidation().getId() : null)
-                .planActiviteId(e.getPlanActivite() != null ? e.getPlanActivite().getId() : null)
+                .idPlanFondActivite(e.getPlanActivite() != null ? e.getPlanActivite().getId() : null)
                 .sourceFinacementId(e.getSourceFinacement() != null ? e.getSourceFinacement().getId() : null)
                 
                 .banque(e.getBanque() != null ? e.getBanque() : null)
