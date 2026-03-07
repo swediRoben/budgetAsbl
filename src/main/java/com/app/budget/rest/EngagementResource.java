@@ -282,9 +282,9 @@ public class EngagementResource {
 
         @GetMapping("/rapportGeneral")
     public ResponseEntity<List<RapportGlobalExecution>> getAllRapportGeneral(
-       @RequestParam Long projet,
-        @RequestParam Long exercice,
-        @RequestParam Long categore
+       @RequestParam(required = false) Long projet,
+        @RequestParam(required = false)  Long exercice,
+        @RequestParam(required = false) Long categore
     ) {
         return ResponseEntity.ok(engagementService.rapportGlobalExecution(projet,exercice,categore));
     }
