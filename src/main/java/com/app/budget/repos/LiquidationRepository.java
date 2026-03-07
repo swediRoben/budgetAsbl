@@ -192,7 +192,7 @@ Page<Liquidation> getAllReceptionner(
 
  @Query("SELECT COALESCE(SUM(e.montant*e.tauxDevise), 0) FROM Liquidation e " +
            "WHERE (:exercice IS NULL OR e.idExercice = :exercice) " +
-           "AND (:activite IS NULL OR e.planActivite.idActivite = :activite) " +
+           "AND (:activite IS NULL OR e.planActivite.id = :activite) " +
            "AND (e.validation=true) ") 
 BigDecimal rapporGeneralLiquidation(
             @Param("exercice") Long exercice,
