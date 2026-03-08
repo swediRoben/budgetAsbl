@@ -75,13 +75,11 @@ public class ComptabiliteService {
         BigDecimal totalCharges = BigDecimal.ZERO;
         BigDecimal totalProduits = BigDecimal.ZERO;
 
-        for (Map.Entry<PlanComptable, BalanceCompte> entry : balance.entrySet()) {
-            PlanComptable compte = entry.getKey();
-            BalanceCompte bal = entry.getValue();
-
-            if (compte.getClasse().getType().equals("Dépense")) {
+        for (Map.Entry<PlanComptable, BalanceCompte> entry : balance.entrySet()) { 
+            BalanceCompte bal = entry.getValue(); 
+            if (entry.getKey().getClasse()!=null && entry.getKey().getClasse().getType().equals("Dépense")) {
                 totalCharges = totalCharges.add(bal.getDebit().subtract(bal.getCredit()));
-            } else if (compte.getClasse().getType().equals("Recette")) {
+            } else if (entry.getKey().getClasse()!=null && entry.getKey().getClasse().getType().equals("Recette")) {
                 totalProduits = totalProduits.add(bal.getCredit().subtract(bal.getDebit()));
             }
         }

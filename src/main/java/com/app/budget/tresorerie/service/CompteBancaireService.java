@@ -2,6 +2,7 @@ package com.app.budget.tresorerie.service;
  
 import org.springframework.stereotype.Service;
 
+import com.app.budget.constate.Typemouvement;
 import com.app.budget.repos.SourceFinacementRepository;
 import com.app.budget.tresorerie.dto.CompteBancaireDto;
 import com.app.budget.tresorerie.entity.Banque;
@@ -103,9 +104,12 @@ public class CompteBancaireService {
         dto.setIdComteComptable(c.getIdComteComptable());
         dto.setTypeCompte(c.getTypeCompte());
          dto.setSourceFinacementId(c.getSourceFinacement() != null ? c.getSourceFinacement().getId() : null);
-         BigDecimal somme=journalTresorerieRepository.sommeCompteByIdComptebancaire(c.getId());
-        BigDecimal montant=somme!=null?somme:BigDecimal.ZERO;
-         dto.setMontant(montant); 
+         BigDecimal sommeDebit=journalTresorerieRepository.sommeCompteByIdComptebancaire(c.getId(),Typemouvement.DEBIT);
+         BigDecimal sommeCredit=journalTresorerieRepository.sommeCompteByIdComptebancaire(c.getId(),Typemouvement.CREDIT);
+        BigDecimal montantD=sommeDebit!=null?sommeDebit:BigDecimal.ZERO;
+        BigDecimal montantC=sommeCredit!=null?sommeCredit:BigDecimal.ZERO;
+        BigDecimal total=montantD.subtract(montantC);
+        dto.setMontant(total);  
          return dto;
     }
 }
