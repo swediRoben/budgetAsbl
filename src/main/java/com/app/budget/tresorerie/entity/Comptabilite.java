@@ -52,7 +52,6 @@ public class Comptabilite {
     private TypeJournal type;
     private String reference;
 
-@OneToMany(mappedBy = "ecriture", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-@JsonIgnore
+@OneToMany(mappedBy = "ecriture", cascade = CascadeType.ALL, orphanRemoval = true)
 private List<LigneComptable> lignes = new ArrayList<>();
 }

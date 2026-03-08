@@ -284,7 +284,7 @@ public class JournalTresorerieService {
         c.setType(TypeJournal.BROUILLARD);
         c.setReference(l.getReference());
         
-       if (l.getTypemouvement()==Typemouvement.CREDIT) {
+       if (l.getTypemouvement()==Typemouvement.CREDIT) { 
            List<LigneComptable> list=new ArrayList<>();
         LigneComptable li=new LigneComptable();
         li.setCompte(l.getPlanComptable());
@@ -306,7 +306,8 @@ public class JournalTresorerieService {
         bv.setEcriture(c);
         list.add(bv);
         c.setLignes(list);
-       }else {
+       }else if (l.getTypemouvement()==Typemouvement.DEBIT) { 
+      
            List<LigneComptable> list=new ArrayList<>();
         LigneComptable li=new LigneComptable();
         li.setCompte(l.getPlanComptable());

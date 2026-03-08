@@ -28,7 +28,8 @@ public class ComptabiliteService {
     // 1️⃣ Journal : toutes les écritures
     // =====================
     public List<Comptabilite> getJournal() {
-        return comptabiliteRepository.findAll();
+          List<Comptabilite> ecritures = comptabiliteRepository.findAllWithLignes();
+          return ecritures;
     }
 
     // =====================

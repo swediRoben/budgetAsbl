@@ -3,6 +3,7 @@ package com.app.budget.tresorerie.entity;
 import java.math.BigDecimal;
 
 import com.app.budget.domain.PlanComptable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -28,6 +29,7 @@ public class LigneComptable {
 
     @ManyToOne
     @JoinColumn(name = "comptabilite_id")
+    @JsonIgnore
     private Comptabilite ecriture;
 
     @ManyToOne
