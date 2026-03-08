@@ -90,6 +90,68 @@ public class ComptabiliteService {
     }
 
     // =====================
+// 5️⃣ Bilan : Actif / Passif
+// =====================
+public Bilan getBilan() {
+
+    Map<PlanComptable, BalanceCompte> balance = getBalance();
+
+    BigDecimal totalActif = BigDecimal.ZERO;
+    BigDecimal totalPassif = BigDecimal.ZERO;
+
+    List<BalanceCompte> actifs = new ArrayList<>();
+    List<BalanceCompte> passifs = new ArrayList<>();
+
+    for (Map.Entry<PlanComptable, BalanceCompte> entry : balance.entrySet()) {
+
+        PlanComptable compte = entry.getKey();
+        BalanceCompte bal = entry.getValue();
+
+        BigDecimal solde = bal.getDebit().subtract(bal.getCredit());
+
+        if (compte.getSens() != null && compte.getSens().equals("ACTIF")) {
+
+            totalActif = totalActif.add(solde.abs());
+            actifs.add(bal);
+
+        } else {
+
+            totalPassif = totalPassif.add(solde.abs());
+            passifs.add(bal);
+
+        }
+    }
+
+    return new Bilan(actifs, passifs, totalActif, totalPassif);
+}
+
+public static class Bilan {
+
+    private List<BalanceCompte> actifs;
+    private List<BalanceCompte> passifs;
+
+    private BigDecimal totalActif;
+    private BigDecimal totalPassif;
+
+    public Bilan(List<BalanceCompte> actifs, List<BalanceCompte> passifs,
+                 BigDecimal totalActif, BigDecimal totalPassif) {
+
+        this.actifs = actifs;
+        this.passifs = passifs;
+        this.totalActif = totalActif;
+        this.totalPassif = totalPassif;
+    }
+
+    public List<BalanceCompte> getActifs() { return actifs; }
+
+    public List<BalanceCompte> getPassifs() { return passifs; }
+
+    public BigDecimal getTotalActif() { return totalActif; }
+
+    public BigDecimal getTotalPassif() { return totalPassif; }
+}
+
+    // =====================
     // Classes internes utiles
     // =====================
     public static class BalanceCompte {

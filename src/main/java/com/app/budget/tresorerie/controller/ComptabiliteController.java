@@ -17,6 +17,7 @@ import com.app.budget.tresorerie.entity.Comptabilite;
 import com.app.budget.tresorerie.entity.LigneComptable;
 import com.app.budget.tresorerie.service.ComptabiliteService;
 import com.app.budget.tresorerie.service.ComptabiliteService.BalanceCompte;
+import com.app.budget.tresorerie.service.ComptabiliteService.Bilan;
 import com.app.budget.tresorerie.service.ComptabiliteService.CompteResultat;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -76,6 +77,11 @@ public class ComptabiliteController {
         return comptabiliteService.getBalance();
     }
 
+        @GetMapping("/bilan")
+    public Bilan getBilan() {
+        return comptabiliteService.getBilan();
+  
+    }
     // =====================
     // 4️⃣ Compte de résultat : charges, produits et résultat net
     // =====================
