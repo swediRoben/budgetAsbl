@@ -21,7 +21,7 @@ public class PlanComptableService {
     }
 
     public List<PlanComptableDTO> findAll() {
-        final List<PlanComptable> planComptables = planComptableRepository.findAll(Sort.by("id"));
+        final List<PlanComptable> planComptables = planComptableRepository.findAll(Sort.by("numero"));
         return planComptables.stream()
                 .map(planComptable -> mapToDTO(planComptable, new PlanComptableDTO()))
                 .toList();
