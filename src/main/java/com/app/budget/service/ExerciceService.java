@@ -44,6 +44,16 @@ public class ExerciceService {
         final Exercice exercice = exerciceRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
             exerciceDTO.setId(id);
+        
+    if (exerciceDTO.getPreparation() &&  checkIfThereisNoExercicePrepareExist(id)) {
+       throw new IllegalStateException("Un autre exercice est déjà en préparation");
+      }
+    if (exerciceDTO.getExecution() &&  !checkIfExercicePrepareExist(id)) {
+       throw new IllegalStateException("Imposible, car cette exercice n'est pas en préparation");
+      }
+    if (exerciceDTO.getCloture() &&  !checkIfExerciceIsExecutedExist(id)) {
+       throw new IllegalStateException("Imposible, car cette exercice n'est pas en execution");
+      } 
        if (exerciceDTO.getCloture()) {
           exerciceDTO.setPreparation(false);
           exerciceDTO.setExecution(false);
@@ -77,6 +87,18 @@ public class ExerciceService {
 
     public boolean dateFinExists(final LocalDate dateFin) {
         return exerciceRepository.existsByDateFin(dateFin);
+    }
+
+      public boolean checkIfThereisNoExercicePrepareExist(Long id) {
+        return exerciceRepository.existsByPreparationTrueAndIdNot(id);
+    }
+ 
+      public boolean checkIfExercicePrepareExist(Long id) {
+        return exerciceRepository.existsByPreparationTrueAndId(id);
+    }
+
+      public boolean checkIfExerciceIsExecutedExist(Long id) {
+        return exerciceRepository.existsByExecutionTrueAndId(id);
     }
 
 }

@@ -1,6 +1,8 @@
 package com.app.budget.repos;
 
 import com.app.budget.domain.Exercice;
+
+
 import java.time.LocalDate;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -14,5 +16,10 @@ public interface ExerciceRepository extends JpaRepository<Exercice, Long> {
     boolean existsByDateDebut(LocalDate dateDebut);
 
     boolean existsByDateFin(LocalDate dateFin);
+
+    boolean existsByPreparationTrueAndIdNot(Long id); 
+    boolean existsByPreparationTrueAndId(Long id); 
+
+    boolean existsByExecutionTrueAndId(Long id);   
 
 }
