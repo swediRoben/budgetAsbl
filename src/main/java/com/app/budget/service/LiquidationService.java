@@ -274,8 +274,7 @@ public class LiquidationService {
                Liquidation.setId(LiquidationDTO.getId());
         Liquidation.setBonEngagment(LiquidationDTO.getBonEngagment());
         Liquidation.setPiece(LiquidationDTO.getPiece());
-        Liquidation.setIdExercice(LiquidationDTO.getIdExercice());
-        System.out.println("******** : "+LiquidationDTO.getIdExercice());
+        Liquidation.setIdExercice(LiquidationDTO.getIdExercice()); 
         Liquidation.setIdEngagement(LiquidationDTO.getIdEngagement());
         Liquidation.setIdCategorie(LiquidationDTO.getIdCategorie());
         Liquidation.setDataEnAttente(OffsetDateTime.now());
@@ -285,8 +284,8 @@ public class LiquidationService {
          Liquidation.setReception(false);
          Liquidation.setRejet(false);
         Liquidation.setMontant(LiquidationDTO.getMontant());
-        Liquidation.setIdDevise(LiquidationDTO.getIdDevise());
-        Liquidation.setTauxDevise(LiquidationDTO.getTauxDevise());
+        Liquidation.setIdDevise(LiquidationDTO.getIdDevise()); 
+        Liquidation.setTauxDevise(LiquidationDTO.getTauxDevise()); 
         Liquidation.setIdProjet(LiquidationDTO.getIdProjet());
         Liquidation.setIdResponsable(LiquidationDTO.getIdResponsable());
         Liquidation.setObjet(LiquidationDTO.getObjet());

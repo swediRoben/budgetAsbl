@@ -3,6 +3,7 @@ package com.app.budget.service;
 import com.app.budget.domain.Engagement;
 import com.app.budget.events.BeforeDeleteEngagement;
 import com.app.budget.model.EngagementDTO;
+import com.app.budget.model.LiquidationDTO;
 import com.app.budget.model.PlanActiviteDTO;
 import com.app.budget.model.RapportGlobalExecution;
 import com.app.budget.model.RapportGlobalExecutionInterface;
@@ -289,8 +290,8 @@ public class EngagementService {
                 engagement.setReception(false);
                 engagement.setRejet(false);
                 engagement.setMontant(engagementDTO.getMontant());
-                engagement.setIdDevise(engagementDTO.getIdDevise());
-                engagement.setTauxDevise(engagementDTO.getTauxDevise());
+                engagement.setIdDevise(engagementDTO.getIdDevise()); 
+                engagement.setTauxDevise(engagementDTO.getTauxDevise()); 
                 engagement.setIdProjet(engagementDTO.getIdProjet());
                 engagement.setIdResponsable(engagementDTO.getIdResponsable());
                 engagement.setObjet(engagementDTO.getObjet());
