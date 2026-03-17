@@ -29,10 +29,7 @@ public class PlanFondDTO {
     private CategorieDTO categorie;
     private ClasseDTO  classe;
     private Fonctionnaire responsable;
-
-    @Digits(integer = 10, fraction = 2)
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
-    @Schema(type = "string", example = "95.08")
+ 
     private BigDecimal montant;
 
 }

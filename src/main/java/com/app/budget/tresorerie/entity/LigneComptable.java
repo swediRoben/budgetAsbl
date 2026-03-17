@@ -39,5 +39,6 @@ public class LigneComptable {
     private BigDecimal debit;
     private BigDecimal credit;
 
-    private String libelle; // optionnel, pour préciser la ligne
+    private String libelle;   
+    private Long devise;  
 }

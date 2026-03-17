@@ -53,7 +53,6 @@ public class PlanfondProjet {
     @JoinColumn(name = "sourceFinacement_id")
     private SourceFinacement sourceFinacement;
 
-    @Column(precision = 10, scale = 2)
     private BigDecimal montant;
 
     @CreatedDate

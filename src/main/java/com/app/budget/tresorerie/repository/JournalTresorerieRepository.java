@@ -15,9 +15,8 @@ import com.app.budget.tresorerie.entity.JournalTresorerie;
 public interface JournalTresorerieRepository extends
         JpaRepository<JournalTresorerie, Long>,
         JpaSpecificationExecutor<JournalTresorerie> {
-   @Query("SELECT SUM(c.montant) FROM JournalTresorerie c WHERE c.compteBancaire.id=:idcompte AND  c.typemouvement=:type ")
+   @Query("SELECT SUM(c.montant*c.taux) FROM JournalTresorerie c WHERE c.compteBancaire.id=:idcompte AND  c.typemouvement=:type ")
     BigDecimal sommeCompteByIdComptebancaire(@Param("idcompte") Long idcompte,@Param("type") Typemouvement type);
-
     
 }
  

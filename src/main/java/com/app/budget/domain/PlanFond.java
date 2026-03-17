@@ -31,16 +31,7 @@ public class PlanFond {
             generator = "primary_sequence"
     )
     private Long id;
-
-//    @Column
-//    private Long idProjet;
-//
-//    @Column
-//    private Long categorie;
-//
-//    @Column
-//    private Long idExercice;
-
+ 
 @ManyToOne(fetch = FetchType.EAGER)
 @JoinColumn(name = "exercice_id")
 private Exercice exerciceId;
@@ -56,8 +47,7 @@ private Exercice exerciceId;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "classe_id")
     private Classe classeId; 
-
-    @Column(precision = 10, scale = 2)
+ 
     private BigDecimal montant;
 
     @CreatedDate

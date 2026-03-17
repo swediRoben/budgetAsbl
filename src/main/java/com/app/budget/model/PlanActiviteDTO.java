@@ -6,10 +6,7 @@ import com.app.budget.domain.Categorie;
 import com.app.budget.domain.Classe;
 import com.app.budget.domain.PlanComptable;
 import com.app.budget.domain.Projet;
-import com.app.budget.domain.SourceFinacement;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import io.swagger.v3.oas.annotations.media.Schema; 
-import jakarta.validation.constraints.Digits;
+import com.app.budget.domain.SourceFinacement; 
 import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -45,15 +42,9 @@ public class PlanActiviteDTO {
     private String uniteMesure;
 
     private Long quantite;
+ 
+    private BigDecimal prixUnitaire; 
 
-    @Digits(integer = 10, fraction = 2)
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
-    @Schema(type = "string", example = "96.08")
-    private BigDecimal prixUnitaire;
-
-    @Digits(integer = 10, fraction = 2)
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
-    @Schema(type = "string", example = "95.08")
     private BigDecimal montant;
 
     private Long idClasse;

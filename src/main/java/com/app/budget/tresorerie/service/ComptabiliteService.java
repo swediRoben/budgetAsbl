@@ -24,107 +24,6 @@ public class ComptabiliteService {
         this.comptabiliteRepository = comptabiliteRepository;
     }
 
-    // =====================
-    // 1️⃣ Journal : toutes les écritures
-    // =====================
-    public List<Comptabilite> getJournal() {
-          List<Comptabilite> ecritures = comptabiliteRepository.findAllWithLignes();
-          return ecritures;
-    }
-
-    // =====================
-    // 2️⃣ Grand Livre : regroupé par compte
-    // =====================
-    public Map<PlanComptable, List<LigneComptable>> getGrandLivre() {
-        List<Comptabilite> ecritures = comptabiliteRepository.findAll();
-        List<LigneComptable> allLignes = ecritures.stream()
-                .flatMap(e -> e.getLignes().stream())
-                .collect(Collectors.toList());
-
-        // regroupe par compte
-        return allLignes.stream()
-                .collect(Collectors.groupingBy(LigneComptable::getCompte));
-    }
-
-    // =====================
-    // 3️⃣ Balance : total débit/crédit par compte
-    // =====================
-    public Map<PlanComptable, BalanceCompte> getBalance() {
-        Map<PlanComptable, List<LigneComptable>> grandLivre = getGrandLivre();
-        Map<PlanComptable, BalanceCompte> balance = new HashMap<>();
-
-        grandLivre.forEach((compte, lignes) -> {
-            BigDecimal totalDebit = lignes.stream()
-                    .map(l -> l.getDebit() != null ? l.getDebit() : BigDecimal.ZERO)
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
-            BigDecimal totalCredit = lignes.stream()
-                    .map(l -> l.getCredit() != null ? l.getCredit() : BigDecimal.ZERO)
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-            balance.put(compte, new BalanceCompte(compte, totalDebit, totalCredit));
-        });
-
-        return balance;
-    }
-
-    // =====================
-    // 4️⃣ Compte de résultat : charges et produits
-    // =====================
-    public CompteResultat getCompteResultat() {
-        Map<PlanComptable, BalanceCompte> balance = getBalance();
-
-        BigDecimal totalCharges = BigDecimal.ZERO;
-        BigDecimal totalProduits = BigDecimal.ZERO;
-
-        for (Map.Entry<PlanComptable, BalanceCompte> entry : balance.entrySet()) { 
-            BalanceCompte bal = entry.getValue(); 
-            if (entry.getKey().getClasse()!=null && entry.getKey().getClasse().getType().equals("Dépense")) {
-                totalCharges = totalCharges.add(bal.getDebit().subtract(bal.getCredit()));
-            } else if (entry.getKey().getClasse()!=null && entry.getKey().getClasse().getType().equals("Recette")) {
-                totalProduits = totalProduits.add(bal.getCredit().subtract(bal.getDebit()));
-            }
-        }
-
-        BigDecimal resultat = totalProduits.subtract(totalCharges);
-        return new CompteResultat(totalCharges, totalProduits, resultat);
-    }
-
-    // =====================
-// 5️⃣ Bilan : Actif / Passif
-// =====================
-public Bilan getBilan() {
-
-    Map<PlanComptable, BalanceCompte> balance = getBalance();
-
-    BigDecimal totalActif = BigDecimal.ZERO;
-    BigDecimal totalPassif = BigDecimal.ZERO;
-
-    List<BalanceCompte> actifs = new ArrayList<>();
-    List<BalanceCompte> passifs = new ArrayList<>();
-
-    for (Map.Entry<PlanComptable, BalanceCompte> entry : balance.entrySet()) {
-
-        PlanComptable compte = entry.getKey();
-        BalanceCompte bal = entry.getValue();
-
-        BigDecimal solde = bal.getDebit().subtract(bal.getCredit());
-
-        if (compte.getSens() != null && compte.getSens().equals("ACTIF")) {
-
-            totalActif = totalActif.add(solde.abs());
-            actifs.add(bal);
-
-        } else {
-
-            totalPassif = totalPassif.add(solde.abs());
-            passifs.add(bal);
-
-        }
-    }
-
-    return new Bilan(actifs, passifs, totalActif, totalPassif);
-}
-
 public static class Bilan {
 
     private List<BalanceCompte> actifs;
@@ -208,10 +107,95 @@ public static class Bilan {
         return true;
     }
 
-     public List<Comptabilite> findAll(Long idExercice, TypeJournal type, String reference, OffsetDateTime debut,
+     public List<Comptabilite> getJournal(Long exercice, TypeJournal type, Long banque, OffsetDateTime debut,
             OffsetDateTime fin) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findAll'");
+          List<Comptabilite> ecritures = comptabiliteRepository.findComptabilite(exercice,type,banque,debut,fin);
+          return ecritures;
+     }  
+
+     public CompteResultat getCompteResultat(Long exercice, TypeJournal type, Long banque, OffsetDateTime debut,
+            OffsetDateTime fin) {
+         Map<PlanComptable, BalanceCompte> balance = getBalance(exercice,type,banque, debut, fin);
+
+        BigDecimal totalCharges = BigDecimal.ZERO;
+        BigDecimal totalProduits = BigDecimal.ZERO;
+
+        for (Map.Entry<PlanComptable, BalanceCompte> entry : balance.entrySet()) { 
+            BalanceCompte bal = entry.getValue(); 
+            if (entry.getKey().getClasse()!=null && entry.getKey().getClasse().getType().equals("Dépense")) {
+                totalCharges = totalCharges.add(bal.getDebit().subtract(bal.getCredit()));
+            } else if (entry.getKey().getClasse()!=null && entry.getKey().getClasse().getType().equals("Recette")) {
+                totalProduits = totalProduits.add(bal.getCredit().subtract(bal.getDebit()));
+            }
+        }
+
+        BigDecimal resultat = totalProduits.subtract(totalCharges);
+        return new CompteResultat(totalCharges, totalProduits, resultat);
      }
+
+     public Bilan getBilan(Long exercice, TypeJournal type, Long banque, OffsetDateTime debut, OffsetDateTime fin) {
+         Map<PlanComptable, BalanceCompte> balance = getBalance(exercice,type,banque, debut, fin);
+
+    BigDecimal totalActif = BigDecimal.ZERO;
+    BigDecimal totalPassif = BigDecimal.ZERO;
+
+    List<BalanceCompte> actifs = new ArrayList<>();
+    List<BalanceCompte> passifs = new ArrayList<>();
+
+    for (Map.Entry<PlanComptable, BalanceCompte> entry : balance.entrySet()) {
+
+        PlanComptable compte = entry.getKey();
+        BalanceCompte bal = entry.getValue();
+
+        BigDecimal solde = bal.getDebit().subtract(bal.getCredit());
+
+        if (compte.getSens() != null && compte.getSens().equals("ACTIF")) {
+
+            totalActif = totalActif.add(solde.abs());
+            actifs.add(bal);
+
+        } else {
+
+            totalPassif = totalPassif.add(solde.abs());
+            passifs.add(bal);
+
+        }
+    }
+
+    return new Bilan(actifs, passifs, totalActif, totalPassif);
+     }
+
+     public Map<PlanComptable, BalanceCompte> getBalance(Long exercice, TypeJournal type, Long banque,
+            OffsetDateTime debut, OffsetDateTime fin) {
+          Map<PlanComptable, List<LigneComptable>> grandLivre = getGrandLivre(exercice,type,banque,null, null, debut, fin);
+        Map<PlanComptable, BalanceCompte> balance = new HashMap<>();
+
+        grandLivre.forEach((compte, lignes) -> {
+            BigDecimal totalDebit = lignes.stream()
+                    .map(l -> l.getDebit() != null ? l.getDebit() : BigDecimal.ZERO)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+            BigDecimal totalCredit = lignes.stream()
+                    .map(l -> l.getCredit() != null ? l.getCredit() : BigDecimal.ZERO)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            balance.put(compte, new BalanceCompte(compte, totalDebit, totalCredit));
+        });
+
+        return balance;
+     }
+
+     public Map<PlanComptable, List<LigneComptable>> getGrandLivre(Long exercice, TypeJournal type, Long banque,
+            String compteDebut, String compteFin, OffsetDateTime debut, OffsetDateTime fin) {
+            List<Comptabilite> ecritures = comptabiliteRepository.findComptabiliteGrandLivre(exercice,type,banque,compteDebut,compteFin,debut,fin);
+          List<LigneComptable> allLignes = ecritures.stream()
+                .flatMap(e -> e.getLignes().stream())
+                .collect(Collectors.toList());
+
+        // regroupe par compte
+        return allLignes.stream()
+                .collect(Collectors.groupingBy(LigneComptable::getCompte));
+    }
+
+   
 
 }

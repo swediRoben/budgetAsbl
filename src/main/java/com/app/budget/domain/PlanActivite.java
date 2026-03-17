@@ -95,7 +95,7 @@ public class PlanActivite {
 
 
 @ManyToOne(fetch = FetchType.EAGER)
-@JoinColumn(name = "id_projet", referencedColumnName = "id", insertable = false, updatable = false)
+@JoinColumn(name = "id_projets", referencedColumnName = "id", insertable = false, updatable = false)
 private Projet projet; 
 
 @ManyToOne(fetch = FetchType.EAGER)

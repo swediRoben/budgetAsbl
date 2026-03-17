@@ -1,9 +1,6 @@
 package com.app.budget.model;
 
-import com.app.budget.domain.PlanfondProjet;
-import com.app.budget.service.ExerciceService;
-import com.app.budget.service.ProjetService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.app.budget.domain.PlanfondProjet; 
 import org.springframework.stereotype.Component;
 
 @Component

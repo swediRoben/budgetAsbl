@@ -70,7 +70,7 @@ public class PlanActiviteService {
         planActiviteDTO.setPrixUnitaire(planActivite.getPrixUnitaire());
         planActiviteDTO.setMontant(planActivite.getMontant());
         planActiviteDTO.setDebut(planActivite.getDebut());
-        planActiviteDTO.setFin(planActivite.getFin()); 
+        planActiviteDTO.setFin(planActivite.getFin());  
          planActiviteDTO.setProjet(planActivite.getProjet());
             planActiviteDTO.setCategorie(planActivite.getCategorie());
             planActiviteDTO.setActivite(planActivite.getActivite());

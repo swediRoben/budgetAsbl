@@ -21,8 +21,7 @@ import com.app.budget.repos.DeviseRepository;
 import com.app.budget.repos.LiquidationRepository;
 import com.app.budget.repos.PlanActiviteRepository;
 import com.app.budget.repos.PlanComptableRepository;
-import com.app.budget.repos.SourceFinacementRepository;
-import com.app.budget.rest.PlanComptableResource;
+import com.app.budget.repos.SourceFinacementRepository; 
 import com.app.budget.tresorerie.dto.JournalTresorerieDto;
 import com.app.budget.tresorerie.dto.JournalTresorerieFilter;
 import com.app.budget.tresorerie.entity.Comptabilite;
@@ -284,50 +283,60 @@ public class JournalTresorerieService {
         c.setType(TypeJournal.BROUILLARD);
         c.setReference(l.getReference());
         
-       if (l.getTypemouvement()==Typemouvement.CREDIT) { 
-           List<LigneComptable> list=new ArrayList<>();
-        LigneComptable li=new LigneComptable();
-        li.setCompte(l.getPlanComptable());
-        li.setCredit(BigDecimal.ZERO);
-        li.setDebit(l.getMontant());
-        li.setId(null);
-        li.setLibelle(l.getPlanComptable().getLibelle()); 
-        li.setEcriture(c);
-        list.add(li);
+       if (l.getTypemouvement()==Typemouvement.CREDIT) { // decaisse
+        List<LigneComptable> list=new ArrayList<>();
+        LigneComptable debuter=new LigneComptable();
+        debuter.setCompte(l.getPlanComptable());
+        debuter.setDebit(l.getMontant().multiply(l.getTaux()));
+        debuter.setCredit(BigDecimal.ZERO);
+        debuter.setId(null);
+        debuter.setLibelle(l.getObjet()); 
+        debuter.setDevise(l.getCompteBancaire().getIdDevise());
+        debuter.setEcriture(c);
+        list.add(debuter);
 
-        LigneComptable bv=new LigneComptable();
+        LigneComptable crediter=new LigneComptable();
         PlanComptable p=new PlanComptable();
         p.setId(l.getCompteBancaire().getIdComteComptable());
-        bv.setCompte(p);
-        bv.setCredit(l.getMontant());
-        bv.setDebit(BigDecimal.ZERO);
-        bv.setId(null);
-        bv.setLibelle(l.getPlanComptable().getLibelle()); 
-        bv.setEcriture(c);
-        list.add(bv);
+
+        crediter.setCompte(l.getPlanComptable());
+        crediter.setDebit(BigDecimal.ZERO);
+        crediter.setCredit(l.getMontant().multiply(l.getTaux()));
+        crediter.setId(null);
+        crediter.setDevise(l.getCompteBancaire().getIdDevise());
+        crediter.setLibelle(l.getCompteBancaire().getBanque().getLibelle()+" : "+l.getCompteBancaire().getNumero()); 
+        crediter.setEcriture(c);
+        list.add(crediter);
+
         c.setLignes(list);
-       }else if (l.getTypemouvement()==Typemouvement.DEBIT) { 
-      
-           List<LigneComptable> list=new ArrayList<>();
-        LigneComptable li=new LigneComptable();
-        li.setCompte(l.getPlanComptable());
-        li.setCredit(l.getMontant());
-        li.setDebit(BigDecimal.ZERO);
-        li.setId(null);
-        li.setLibelle(l.getPlanComptable().getLibelle()); 
-        li.setEcriture(c);
-        list.add(li);
 
-        LigneComptable bv=new LigneComptable();
+       }else if (l.getTypemouvement()==Typemouvement.DEBIT) {   //encaisse
+      
+        List<LigneComptable> list=new ArrayList<>();
+      
+         LigneComptable debuter=new LigneComptable();
         PlanComptable p=new PlanComptable();
         p.setId(l.getCompteBancaire().getIdComteComptable());
-        bv.setCompte(p);
-        bv.setCredit(BigDecimal.ZERO);
-        bv.setDebit(l.getMontant());
-        bv.setId(null);
-        bv.setLibelle(l.getPlanComptable().getLibelle()); 
-        bv.setEcriture(c);
-        list.add(bv);
+
+        debuter.setCompte(l.getPlanComptable());
+        debuter.setDebit(l.getMontant().multiply(l.getTaux()));
+        debuter.setCredit(BigDecimal.ZERO);
+        debuter.setId(null);
+        debuter.setDevise(l.getCompteBancaire().getIdDevise());
+        debuter.setLibelle(l.getCompteBancaire().getBanque().getLibelle()+" : "+l.getCompteBancaire().getNumero()); 
+        debuter.setEcriture(c);
+        list.add(debuter); 
+
+         LigneComptable crediter=new LigneComptable();
+        crediter.setCompte(l.getPlanComptable());
+        crediter.setDebit(l.getMontant().multiply(l.getTaux()));
+        crediter.setCredit(BigDecimal.ZERO);
+        crediter.setId(null);
+        crediter.setLibelle(l.getSourceFinacement().getCode() +" - "+l.getSourceFinacement().getLibelle()); 
+        crediter.setDevise(l.getCompteBancaire().getIdDevise());
+        crediter.setEcriture(c);
+        list.add(crediter);
+
         c.setLignes(list);
        }
 
