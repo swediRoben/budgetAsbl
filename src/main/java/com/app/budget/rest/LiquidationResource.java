@@ -1,6 +1,7 @@
 package com.app.budget.rest;
 
 import com.app.budget.model.LiquidationDTO;
+import com.app.budget.model.NombreExecution;
 import com.app.budget.model.ObservationDto;
 import com.app.budget.service.LiquidationService;
 
@@ -251,6 +252,12 @@ public class LiquidationResource {
            return  new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);  
         }
     }
+
+     @GetMapping("/nombre")
+    public NombreExecution getNombreEngagement() {
+        return liquidationService.getNombreEngagement();
+    }
+
 
     @DeleteMapping("/{id}")
     @ApiResponse(responseCode = "204")

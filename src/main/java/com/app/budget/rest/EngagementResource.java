@@ -1,6 +1,7 @@
 package com.app.budget.rest;
 
 import com.app.budget.model.EngagementDTO;
+import com.app.budget.model.NombreExecution;
 import com.app.budget.model.ObservationDto;
 import com.app.budget.model.RapportGlobalExecution;
 import com.app.budget.service.EngagementService;
@@ -278,6 +279,11 @@ public class EngagementResource {
         }
         engagementService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+   @GetMapping("/nombre")
+    public NombreExecution getNombreEngagement() {
+        return engagementService.getNombreEngagement();
     }
 
         @GetMapping("/rapportGeneral")

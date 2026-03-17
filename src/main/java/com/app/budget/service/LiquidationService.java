@@ -1,7 +1,8 @@
 package com.app.budget.service;
  
 import com.app.budget.domain.Liquidation; 
-import com.app.budget.model.LiquidationDTO; 
+import com.app.budget.model.LiquidationDTO;
+import com.app.budget.model.NombreExecution;
 import com.app.budget.repos.LiquidationRepository;
 import com.app.budget.util.NotFoundException;
 
@@ -377,5 +378,10 @@ public class LiquidationService {
 
         return dtos; 
   }
+
+    public NombreExecution getNombreEngagement() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getNombreEngagement'");
+    }
 
 }

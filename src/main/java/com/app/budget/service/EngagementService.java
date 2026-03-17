@@ -4,6 +4,7 @@ import com.app.budget.domain.Engagement;
 import com.app.budget.events.BeforeDeleteEngagement;
 import com.app.budget.model.EngagementDTO;
 import com.app.budget.model.LiquidationDTO;
+import com.app.budget.model.NombreExecution;
 import com.app.budget.model.PlanActiviteDTO;
 import com.app.budget.model.RapportGlobalExecution;
 import com.app.budget.model.RapportGlobalExecutionInterface;
@@ -406,5 +407,10 @@ public class EngagementService {
                         }
                 }
                 return rapports;
+        }
+
+        public NombreExecution getNombreEngagement() {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'getNombreEngagement'");
         }
 }
