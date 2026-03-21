@@ -1,5 +1,7 @@
 package com.app.budget.model;
 
+import com.app.budget.constate.TypeClasse;
+
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -17,7 +19,7 @@ public class ClasseDTO {
     @ClasseLibelleUnique
     private String libelle;
 
-    private String type;
+    private TypeClasse type;
 
     public ClasseDTO(Long id) {
         this.id = id;

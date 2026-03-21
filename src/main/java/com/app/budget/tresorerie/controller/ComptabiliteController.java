@@ -4,6 +4,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,85 +28,120 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 @CrossOrigin("*")
 public class ComptabiliteController {
 
-    private final ComptabiliteService comptabiliteService;
+    private final ComptabiliteService service;
 
-    public ComptabiliteController(ComptabiliteService comptabiliteService) {
-        this.comptabiliteService = comptabiliteService;
+    public ComptabiliteController(ComptabiliteService service) {
+        this.service = service;
     }
 
+    // =====================
+    // VALIDATION
+    // =====================
+
     @PostMapping("/valider")
-    public Boolean valider(@RequestBody List<Long> ids) {
-        return comptabiliteService.jounaliser(ids);
+    public ResponseEntity<Boolean> valider(@RequestBody List<Long> ids) {
+        return ResponseEntity.ok(service.jounaliser(ids));
     }
 
     @PostMapping("/annuler")
-    public Boolean annuler(@RequestBody List<Long> ids) {
-        return comptabiliteService.annuler(ids);
+    public ResponseEntity<Boolean> annuler(@RequestBody List<Long> ids) {
+        return ResponseEntity.ok(service.annuler(ids));
     }
 
+    @PostMapping("/valider-ecriture")
+public ResponseEntity<?> validerEcriture(@RequestBody List<LigneComptable> lignes) {
+
+    try {
+        Boolean result = service.validerEcriture(lignes);
+        return ResponseEntity.ok(result);
+
+    } catch (Exception e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+}
+
     // =====================
-    // 1️⃣ Journal : toutes les écritures
+    // 1️⃣ JOURNAL
     // =====================
+
     @GetMapping("/journal")
-    public List<Comptabilite> getJournal(
+    public ResponseEntity<List<Comptabilite>> getJournal(
             @RequestParam(required = false) Long exercice,
             @RequestParam(required = false) Long banque,
             @RequestParam(required = false) TypeJournal type,
             @RequestParam(required = false) OffsetDateTime debut,
             @RequestParam(required = false) OffsetDateTime fin) {
-        return comptabiliteService.getJournal(exercice, type, banque, debut, fin);
+
+        return ResponseEntity.ok(
+                service.getJournal(exercice, type, banque, debut, fin)
+        );
     }
 
     // =====================
-    // 2️⃣ Grand Livre : lignes regroupées par compte
+    // 2️⃣ GRAND LIVRE (CORRIGÉ)
     // =====================
+
     @GetMapping("/grand-livre")
-    public Map<PlanComptable, List<LigneComptable>> getGrandLivre(
+    public ResponseEntity<Map<String, List<LigneComptable>>> getGrandLivre(
             @RequestParam(required = false) Long exercice,
             @RequestParam(required = false) Long banque,
             @RequestParam(required = false) TypeJournal type,
-            @RequestParam(required = false) String compteDebut,
-            @RequestParam(required = false) String compteFin,
             @RequestParam(required = false) OffsetDateTime debut,
             @RequestParam(required = false) OffsetDateTime fin) {
-        return comptabiliteService.getGrandLivre(exercice, type, banque,compteDebut,compteFin, debut, fin);
+
+        return ResponseEntity.ok(
+                service.getGrandLivre(exercice, type, banque, debut, fin)
+        );
     }
 
     // =====================
-    // 3️⃣ Balance : total débit/crédit par compte
+    // 3️⃣ BALANCE (CORRIGÉ)
     // =====================
+
     @GetMapping("/balance")
-    public Map<PlanComptable, BalanceCompte> getBalance(
+    public ResponseEntity<Map<String, ComptabiliteService.BalanceCompte>> getBalance(
             @RequestParam(required = false) Long exercice,
             @RequestParam(required = false) Long banque,
             @RequestParam(required = false) TypeJournal type,
             @RequestParam(required = false) OffsetDateTime debut,
             @RequestParam(required = false) OffsetDateTime fin) {
-        return comptabiliteService.getBalance(exercice, type, banque, debut, fin);
+
+        return ResponseEntity.ok(
+                service.getBalance(exercice, type, banque, debut, fin)
+        );
     }
+
+    // =====================
+    // 4️⃣ BILAN
+    // =====================
 
     @GetMapping("/bilan")
-    public Bilan getBilan(
+    public ResponseEntity<ComptabiliteService.Bilan> getBilan(
             @RequestParam(required = false) Long exercice,
             @RequestParam(required = false) Long banque,
             @RequestParam(required = false) TypeJournal type,
             @RequestParam(required = false) OffsetDateTime debut,
             @RequestParam(required = false) OffsetDateTime fin) {
-        return comptabiliteService.getBilan(exercice, type, banque, debut, fin);
 
+        return ResponseEntity.ok(
+                service.getBilan(exercice, type, banque, debut, fin)
+        );
     }
 
     // =====================
-    // 4️⃣ Compte de résultat : charges, produits et résultat net
+    // 5️⃣ COMPTE DE RESULTAT
     // =====================
+
     @GetMapping("/compte-resultat")
-    public CompteResultat getCompteResultat(
+    public ResponseEntity<ComptabiliteService.CompteResultat> getCompteResultat(
             @RequestParam(required = false) Long exercice,
             @RequestParam(required = false) Long banque,
             @RequestParam(required = false) TypeJournal type,
             @RequestParam(required = false) OffsetDateTime debut,
             @RequestParam(required = false) OffsetDateTime fin) {
-        return comptabiliteService.getCompteResultat(exercice, type, banque, debut, fin);
-    }
 
+        return ResponseEntity.ok(
+                service.getCompteResultat(exercice, type, banque, debut, fin)
+        );
+    }
 }
