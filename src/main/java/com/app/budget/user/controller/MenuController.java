@@ -25,7 +25,7 @@ public class MenuController {
     private final MenuService menuService;
  
     @PostMapping
-    public ResponseEntity<MenuDTO> create(@RequestBody MenuDTO dto) {
+    public ResponseEntity<List<MenuDTO>> create(@RequestBody List<MenuDTO> dto) {
         return ResponseEntity.ok(menuService.save(dto));
     }
  

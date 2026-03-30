@@ -1,5 +1,6 @@
 package com.app.budget.user.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -23,9 +24,10 @@ public class MenuServiceImpl implements MenuService {
     private final RoleRepository roleRepository;
 
     @Override
-    public MenuDTO save(MenuDTO dto) {
-
-        Menu menu = new Menu();
+    public List<MenuDTO> save(List<MenuDTO> dtos) {
+        List<MenuDTO> data=new ArrayList<>();
+        for (MenuDTO dto : dtos) { 
+                Menu menu = new Menu();
         menu.setId(dto.getId());
         menu.setMenu(MenuType.valueOf(dto.getMenu()));
 
@@ -46,8 +48,10 @@ public class MenuServiceImpl implements MenuService {
                 }).toList();
 
         menu.setDetails(sousMenus);
-
-        return toDTO(menuRepository.save(menu));
+        Menu m= menuRepository.save(menu);
+         data.add(toDTO(m));
+       };
+        return data;
     }
 
     @Override

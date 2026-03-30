@@ -6,7 +6,7 @@ import com.app.budget.user.dto.MenuDTO;
 
 public interface MenuService {
 
-    MenuDTO save(MenuDTO dto);
+    List<MenuDTO> save(List<MenuDTO> dto);
 
     List<MenuDTO> getByRole(Long roleId);
 }

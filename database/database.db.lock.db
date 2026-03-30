@@ -1,6 +1,6 @@
 #FileLock
-#Sun Mar 29 16:11:16 EET 2026
+#Mon Mar 30 22:37:12 EET 2026
 hostName=DESKTOP-744IPJT
-id=19d39ef475da8ee4ddb3c64dc94ea9700d33e7bcd6b
+id=19d4076f6f3c413f2c0acb5b7fa7b8e7e13feea7a74
 method=file
-server=192.168.43.27\:53821
+server=10.31.56.27\:56671
