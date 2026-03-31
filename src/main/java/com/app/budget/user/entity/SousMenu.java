@@ -12,7 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
-
+import jakarta.persistence.Column;
 @Entity
 @Table(name = "sous_menu")
 @Data
@@ -25,4 +25,7 @@ public class SousMenu {
     @ManyToOne
     @JoinColumn(name = "menu_id")
     private Menu menu;
+
+@Column(nullable = false)
+private Boolean actif=true;
 }
