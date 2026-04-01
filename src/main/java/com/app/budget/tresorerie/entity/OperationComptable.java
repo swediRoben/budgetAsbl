@@ -1,11 +1,13 @@
 package com.app.budget.tresorerie.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.app.budget.constate.TypeClasse;
 import com.app.budget.domain.Classe;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -33,9 +35,12 @@ public class OperationComptable {
     private String libelle;
     @Enumerated(EnumType.STRING)
     private TypeClasse type;
+    
+    @Column(name = "classe_id")
+    private Long classeid;
     @ManyToOne
-    @JoinColumn(name = "classe_id")
+    @JoinColumn(name = "classe_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Classe classe;
     @OneToMany(mappedBy = "operationComptable", cascade = CascadeType.ALL,fetch = FetchType.EAGER, orphanRemoval = true)
-    private List<OperationComptableDetail> details;
+    private List<OperationComptableDetail> details=new ArrayList<>();
 }

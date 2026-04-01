@@ -13,9 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.app.budget.constate.TypeClasse;
-import com.app.budget.tresorerie.dto.BanqueDTO;
-import com.app.budget.tresorerie.entity.OperationComptable; 
+import com.app.budget.constate.TypeClasse; 
+import com.app.budget.tresorerie.dto.OperationComptableDto; 
 import com.app.budget.tresorerie.service.OperationComptableService;
 
 @RestController
@@ -30,23 +29,23 @@ public class OperationComptableController {
     }
 
     @PostMapping
-    public OperationComptable create(@RequestBody OperationComptable dto){
+    public OperationComptableDto create(@RequestBody OperationComptableDto dto){
         return service.create(dto);
     }
 
     @GetMapping
-    public List<OperationComptable> getAll(
+    public List<OperationComptableDto> getAll(
             @RequestParam(required = false) TypeClasse type) {
         return service.getAll(type);
     }
 
     @GetMapping("/{id}")
-    public OperationComptable getById(@PathVariable Long id){
+    public OperationComptableDto getById(@PathVariable Long id){
         return service.getById(id);
     }
 
     @PutMapping("/{id}")
-    public OperationComptable update(@PathVariable Long id, @RequestBody OperationComptable dto){
+    public OperationComptableDto update(@PathVariable Long id, @RequestBody OperationComptableDto dto){
         return service.update(id, dto);
     }
 

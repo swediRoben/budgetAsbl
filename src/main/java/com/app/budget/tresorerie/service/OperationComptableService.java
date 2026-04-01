@@ -7,7 +7,10 @@ import org.springframework.stereotype.Service;
 
 import com.app.budget.constate.TypeClasse;
 import com.app.budget.tresorerie.dto.BanqueDTO;
+import com.app.budget.tresorerie.dto.OperationComptableDetailDto;
+import com.app.budget.tresorerie.dto.OperationComptableDto;
 import com.app.budget.tresorerie.entity.OperationComptable;
+import com.app.budget.tresorerie.entity.OperationComptableDetail;
 import com.app.budget.tresorerie.repository.OperationComptableRepositories;
 
 @Service
@@ -27,36 +30,82 @@ public class OperationComptableService {
        }
     }
 
-    public OperationComptable update(Long id, OperationComptable dto) {
+    public OperationComptableDto update(Long id, OperationComptableDto dto) {
      if (repositories.existsById(id)) {
         dto.setId(id);
-         return  repositories.save(dto); 
+        OperationComptable d=repositories.save(toEntity(dto));
+         return  toDto(d); 
        }else{
          throw new UnsupportedOperationException("Unimplemented method 'delete'");
        }   
     }
 
-    public OperationComptable getById(Long id) {
-         return repositories.findById(id).get();      
+    public OperationComptableDto getById(Long id) {
+         return toDto(repositories.findById(id).get());      
     }
 
-    public List<OperationComptable> getAll(TypeClasse type) {
-       List<OperationComptable> data =new ArrayList<>();
+    public List<OperationComptableDto> getAll(TypeClasse type) {
+       List<OperationComptableDto> data =new ArrayList<>();
        if (type!=null) {
-        data.addAll(repositories.findAllByType(type));
+         List<OperationComptable> datas =repositories.findAllByType(type);
+         for (OperationComptable operationComptable : datas) {
+              data.add(toDto(operationComptable));
+         } 
        }else{
-        data.addAll(repositories.findAll()); 
+           List<OperationComptable> datas =repositories.findAll();
+         for (OperationComptable operationComptable : datas) {
+              data.add(toDto(operationComptable));
+         }  
        }
        return data;
     }
 
-    public OperationComptable create(OperationComptable dto) {
-       OperationComptable saved= repositories.save(dto); 
+    public OperationComptableDto create(OperationComptableDto dto) {
+       OperationComptable saved= repositories.save(toEntity(dto)); 
          if (saved!=null) {
-         return saved;
+         return toDto(saved);
        }
          throw new UnsupportedOperationException("Unimplemented method 'delete'");
     
+    }
+
+    public OperationComptableDto toDto(OperationComptable d){
+      OperationComptableDto data=new OperationComptableDto();
+      data.setId(d.getId());
+      data.setClasseid(d.getClasseid());
+      data.setType(d.getType());
+      data.setClasse(d.getClasse());
+      data.setLibelle(d.getLibelle());
+      if (!d.getDetails().isEmpty()) {
+       d.getDetails().forEach(v->{
+         OperationComptableDetailDto det=new OperationComptableDetailDto();
+         det.setId(v.getId());
+         det.setCreditid(v.getCreditid());
+         det.setCredit(v.getCredit());
+         det.setDebit(v.getDebit());
+         det.setDebitid(v.getDebitid());
+         data.getDetails().add(det);
+      });
+      }
+      return data;
+    }
+
+     public OperationComptable toEntity(OperationComptableDto d){
+      OperationComptable data=new OperationComptable();
+      data.setId(d.getId());
+      data.setClasseid(d.getClasseid());
+      data.setType(d.getType());
+      data.setLibelle(d.getLibelle());
+      d.getDetails().forEach(v->{
+         OperationComptableDetail det=new OperationComptableDetail();
+         det.setId(v.getId());
+         det.setCreditid(v.getCreditid());
+         det.setDebitid(v.getDebitid());
+         det.setOperationComptable(data);
+         data.getDetails().add(det);
+      });
+
+      return data;
     }
     
 }

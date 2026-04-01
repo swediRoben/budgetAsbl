@@ -2,6 +2,7 @@ package com.app.budget.tresorerie.entity;
 
 import com.app.budget.domain.PlanComptable;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,12 +23,15 @@ public class OperationComptableDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+     @Column(name = "compte_debut_id")
+    private Long debitid;
+     @Column(name = "compte_credit_id")
+    private Long creditid;
      @ManyToOne
-    @JoinColumn(name = "compte_debut_id")
+    @JoinColumn(name = "compte_debut_id", referencedColumnName = "id", insertable = false, updatable = false)
     private PlanComptable debit;
     @ManyToOne
-    @JoinColumn(name = "compte_credit_id")
+    @JoinColumn(name = "compte_credit_id", referencedColumnName = "id", insertable = false, updatable = false)
     private PlanComptable credit;
     @ManyToOne
     @JoinColumn(name = "operation_id")
