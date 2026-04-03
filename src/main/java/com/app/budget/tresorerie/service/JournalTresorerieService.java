@@ -3,7 +3,9 @@ package com.app.budget.tresorerie.service;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -11,19 +13,31 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.app.budget.constate.TypeClasse;
 import com.app.budget.constate.TypeJournal;
 import com.app.budget.constate.Typemouvement;
+import com.app.budget.domain.Classe;
 import com.app.budget.domain.Liquidation;
 import com.app.budget.domain.PlanComptable;
+import com.app.budget.domain.PlanfondProjet;
+import com.app.budget.domain.Projet;
 import com.app.budget.model.LiquidationDTO;
 import com.app.budget.repos.ClasseRepository;
 import com.app.budget.repos.DeviseRepository;
 import com.app.budget.repos.LiquidationRepository;
 import com.app.budget.repos.PlanActiviteRepository;
 import com.app.budget.repos.PlanComptableRepository;
+import com.app.budget.repos.PlanfondProjetRepository;
+import com.app.budget.repos.ProjetRepository;
 import com.app.budget.repos.SourceFinacementRepository; 
 import com.app.budget.tresorerie.dto.JournalTresorerieDto;
 import com.app.budget.tresorerie.dto.JournalTresorerieFilter;
+import com.app.budget.tresorerie.dto.etat.CompteResultat;
+import com.app.budget.tresorerie.dto.etat.Ressources;
+import com.app.budget.tresorerie.dto.etat.Ventilation;
+import com.app.budget.tresorerie.dto.etat.VentilationCharge;
+import com.app.budget.tresorerie.dto.etat.VentilationChargeDetails;
+import com.app.budget.tresorerie.dto.etat.VentilationDetailInterface;
 import com.app.budget.tresorerie.entity.Comptabilite;
 import com.app.budget.tresorerie.entity.JournalTresorerie;
 import com.app.budget.tresorerie.entity.LigneComptable;
@@ -50,6 +64,8 @@ public class JournalTresorerieService {
     private final PlanActiviteRepository planActiviteRepository;
     private final SourceFinacementRepository sourceFinacementRepository;
     private final ComptabiliteRepository comptabiliteRepository;
+    private final ProjetRepository projetRepository;
+    private final PlanfondProjetRepository planfondProjetRepository;
 
     // ================= CREATE =================
     public JournalTresorerieDto create(JournalTresorerieDto dto) {
@@ -217,6 +233,7 @@ public class JournalTresorerieService {
                 .objet(e.getObjet())
                 .date(e.getDate())
                 .projetId(e.getProjetId() == null ? null :e.getProjetId())
+                .projet(e.getProjetId()!=null?projetRepository.findById(e.getProjetId()).get():null)
                 .categorieId( e.getCategorieId() == null ? null :e.getCategorieId() )
                 .numroCheque(e.getNumroCheque())
                 .modepaiement(e.getModepaiement())
@@ -342,6 +359,112 @@ public class JournalTresorerieService {
 
         comptabiliteRepository.save(c);
         return true;
+    }
+
+    public List<JournalTresorerieDto> etat(Long exercice, OffsetDateTime debut, OffsetDateTime fin, Long projet) {
+        Specification<JournalTresorerie> spec =
+                JournalTresorerieSpecification.etat(
+                        exercice, debut, fin,projet);
+
+        return repository.findAll(spec)
+                .stream()
+                .map(this::toDto)
+                .toList();
+    }
+
+      public List<Ventilation> etatvantilation(Long exercice, OffsetDateTime debut, OffsetDateTime fin) {
+        List<Projet> data=projetRepository.findAll();
+        List<Ventilation> ventilations=new ArrayList<>();
+        for (Projet projet : data) {
+            Ventilation v=new Ventilation(); 
+            BigDecimal banqueCredit=repository.sommeBanque(exercice,projet.getId(),true,Typemouvement.CREDIT);
+            BigDecimal banqueDebit=repository.sommeBanque(exercice,projet.getId(),true,Typemouvement.DEBIT);
+            BigDecimal caisseDebit=repository.sommeBanque(exercice,projet.getId(),false,Typemouvement.DEBIT);
+            BigDecimal caisseCredit=repository.sommeBanque(exercice,projet.getId(),false,Typemouvement.CREDIT);
+             BigDecimal banqueC=banqueCredit==null?BigDecimal.ZERO:banqueCredit;
+             BigDecimal banqueD=banqueDebit==null?BigDecimal.ZERO:banqueDebit;
+             BigDecimal caisseC=caisseCredit==null?BigDecimal.ZERO:caisseCredit;
+             BigDecimal caisseD=caisseDebit==null?BigDecimal.ZERO:caisseDebit;
+            v.setBanque(banqueD.subtract(banqueC));
+            v.setCaisse(caisseD.subtract(caisseC));
+            v.setProjet(projet);
+            ventilations.add(v);
+        } 
+        return ventilations;
+    }
+
+
+     public  Map<String,Object> etatcompteresultat(Long exercice, OffsetDateTime debut, OffsetDateTime fin) {
+        List<Classe> data=classeRepository.findAll();
+        List<CompteResultat> dr=new ArrayList<>();
+        List<CompteResultat> cr=new ArrayList<>();
+        Map<String,Object> datas=new HashMap<>();
+        for (Classe dat : data) {
+            if (dat.getType()==TypeClasse.RECETTE) {
+           CompteResultat v=new CompteResultat(); 
+            BigDecimal vr=repository.sommeClasse(exercice,dat.getId(),Typemouvement.DEBIT);
+             BigDecimal val=vr==null?BigDecimal.ZERO:vr;
+             v.setClasse(dat);
+             v.setMontant(val);
+            dr.add(v); 
+            }else if (dat.getType()==TypeClasse.DEPENSE) {
+           CompteResultat v=new CompteResultat(); 
+            BigDecimal vr=repository.sommeClasse(exercice,dat.getId(),Typemouvement.CREDIT);
+             BigDecimal val=vr==null?BigDecimal.ZERO:vr;
+             v.setClasse(dat);
+             v.setMontant(val);
+            cr.add(v); 
+            }
+          
+        } 
+
+        datas.put("recette", dr);
+        datas.put("depense", cr);
+        return datas;
+    }
+
+         public List<VentilationCharge> etatventilationcharge(Long exercice, OffsetDateTime debut, OffsetDateTime fin) {
+        List<Classe> data=classeRepository.findAll();
+        List<VentilationCharge> d=new ArrayList<>();  
+        for (Classe dat : data) {
+
+            if (dat.getType()==TypeClasse.DEPENSE) {
+                
+           VentilationCharge v=new VentilationCharge(); 
+           v.setClasse(dat);
+           List<VentilationChargeDetails> details=new ArrayList<>();
+            List<VentilationDetailInterface> vr=repository.sommeAndProjetByClasse(exercice,dat.getId(),Typemouvement.CREDIT);
+             for (VentilationDetailInterface i : vr) {
+                VentilationChargeDetails detail=new VentilationChargeDetails();
+                BigDecimal val=i.getMontant()==null?BigDecimal.ZERO:i.getMontant();
+                Projet pro=projetRepository.findById(i.getProjetid()).get();
+                detail.setMontant(val);
+                detail.setProjet(pro);
+                details.add(detail);
+             } 
+             v.getDetails().addAll(details); 
+             d.add(v);
+            }
+          
+        }  
+        return d;
+    }
+
+      public List<Ressources> etatresource(Long exercice, OffsetDateTime debut, OffsetDateTime fin) {
+        List<PlanfondProjet> data=planfondProjetRepository.findByExerciceId_Id(exercice);
+        List<Ressources> ressources=new ArrayList<>();
+        for (PlanfondProjet projet : data) {
+            Ressources v=new Ressources(); 
+            BigDecimal recus=repository.sommeRessource(exercice,projet.getProjetId().getId(),Typemouvement.DEBIT);
+            BigDecimal depense=repository.sommeRessource(exercice,projet.getProjetId().getId(),Typemouvement.CREDIT);
+            BigDecimal rC=recus==null?BigDecimal.ZERO:recus;
+             BigDecimal dD=depense==null?BigDecimal.ZERO:depense;
+            v.setMontantRecus(rC);
+            v.setMontantDepense(dD);
+            v.setProjet(projet);
+            ressources.add(v);
+        } 
+        return ressources;
     }
 
 }

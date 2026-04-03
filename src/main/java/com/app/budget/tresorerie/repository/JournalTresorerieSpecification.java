@@ -132,4 +132,40 @@ public class JournalTresorerieSpecification {
         };
     } 
 
+
+    public static Specification<JournalTresorerie> etat(
+            Long exerciceId,  
+            OffsetDateTime debut,
+            OffsetDateTime fin,
+            Long projet
+        ) {
+
+        return (root, query, cb) -> {
+
+            Predicate predicate = cb.conjunction();
+
+            if (exerciceId != null) {
+                predicate = cb.and(predicate,
+                        cb.equal(root.get("idExercice"), exerciceId));
+            }
+
+            if (projet != null) { 
+                 predicate = cb.and(predicate,
+                        cb.equal(root.get("projetId"), projet));
+            }
+
+            if (debut != null) {
+                predicate = cb.and(predicate,
+                        cb.greaterThanOrEqualTo(root.get("date"), debut));
+            }
+
+            if (fin != null) {
+                predicate = cb.and(predicate,
+                        cb.lessThanOrEqualTo(root.get("date"), fin));
+            }
+
+            return predicate;
+        };
+    }
+
 }

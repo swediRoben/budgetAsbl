@@ -2,6 +2,7 @@ package com.app.budget.tresorerie.controller;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -11,6 +12,9 @@ import org.springframework.web.bind.annotation.*;
 
 import com.app.budget.tresorerie.dto.JournalTresorerieDto;
 import com.app.budget.tresorerie.dto.JournalTresorerieFilter;
+import com.app.budget.tresorerie.dto.etat.Ressources;
+import com.app.budget.tresorerie.dto.etat.Ventilation;
+import com.app.budget.tresorerie.dto.etat.VentilationCharge;
 import com.app.budget.tresorerie.entity.JournalTresorerie;
 import com.app.budget.tresorerie.service.JournalTresorerieService; 
 import lombok.RequiredArgsConstructor;
@@ -76,5 +80,47 @@ public class JournalTresorerieController {
                 numero,
                 debut,
                 fin);
+    }
+
+    @GetMapping("/etat")
+    public List<JournalTresorerieDto> etat(
+            @RequestParam(required = false) Long exercice,
+     @RequestParam(required = false)  OffsetDateTime debut,
+     @RequestParam(required = false)  OffsetDateTime fin,
+     @RequestParam(required = false)  Long projet) { 
+        return service.etat(exercice,debut,fin,projet);
+    }
+
+     @GetMapping("/vantilation")
+    public List<Ventilation> vantilation(
+            @RequestParam(required = false) Long exercice,
+     @RequestParam(required = false)  OffsetDateTime debut,
+     @RequestParam(required = false)  OffsetDateTime fin ) { 
+        return service.etatvantilation(exercice,debut,fin);
+    }
+
+
+     @GetMapping("/compteresultat")
+    public Map<String, Object>  compteresultat(
+            @RequestParam(required = false) Long exercice,
+     @RequestParam(required = false)  OffsetDateTime debut,
+     @RequestParam(required = false)  OffsetDateTime fin ) { 
+        return service.etatcompteresultat(exercice,debut,fin);
+    }
+
+     @GetMapping("/ventilationcharge")
+    public List<VentilationCharge> ventilationcharge(
+            @RequestParam(required = false) Long exercice,
+     @RequestParam(required = false)  OffsetDateTime debut,
+     @RequestParam(required = false)  OffsetDateTime fin ) { 
+        return service.etatventilationcharge(exercice,debut,fin);
+    }
+
+     @GetMapping("/ressource")
+    public List<Ressources> ressource(
+            @RequestParam(required = false) Long exercice,
+     @RequestParam(required = false)  OffsetDateTime debut,
+     @RequestParam(required = false)  OffsetDateTime fin ) { 
+        return service.etatresource(exercice,debut,fin);
     }
 }

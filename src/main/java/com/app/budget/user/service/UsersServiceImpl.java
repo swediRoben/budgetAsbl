@@ -14,7 +14,8 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class UsersServiceImpl implements UsersService {
+public class UsersServiceImpl implements UsersService { 
+    private final MenuService menuService;
 
     private final UsersRepository usersRepository;
     private final RoleRepository roleRepository;
@@ -75,16 +76,18 @@ public class UsersServiceImpl implements UsersService {
     }
 
     private UsersDTO toDTO(Users user) {
-        return new UsersDTO(
+        UsersDTO data= new UsersDTO(
                 user.getId(),
                 user.isActif(),
                 user.getUsername(), 
                 user.getIdRole(),
-                user.getPassword(), 
+                null, 
                  user.getRole(), 
                 user.getIdFonctionnaire(),
-                null  
+                user.getFonctionnaire().getNom()+"-"+user.getFonctionnaire().getPrenom()
         );
+        data.setPermission(menuService.getByRole(user.getIdRole()));
+        return data;
     }
 
     private Users toEntity(UsersDTO dto) {

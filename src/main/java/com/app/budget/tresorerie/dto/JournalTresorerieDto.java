@@ -9,6 +9,7 @@ import com.app.budget.domain.Classe;
 import com.app.budget.domain.Devise; 
 import com.app.budget.domain.PlanActivite;
 import com.app.budget.domain.PlanComptable;
+import com.app.budget.domain.Projet;
 import com.app.budget.domain.SourceFinacement;
 import com.app.budget.model.LiquidationDTO;
 import com.app.budget.tresorerie.entity.Banque;
@@ -50,6 +51,7 @@ public class JournalTresorerieDto {
     private PlanComptable planComptable;
     private Classe classe;
     private Devise devise; 
+    private Projet projet;
     private CompteBancaire compteBancaire; 
     private PlanActivite planActivite;
     private SourceFinacement sourceFinacement;

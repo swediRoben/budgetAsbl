@@ -7,5 +7,5 @@ import java.util.List;
 
 
 public interface PlanfondProjetRepository extends JpaRepository<PlanfondProjet, Long> {
-    List<PlanfondProjet> findByExerciceId_Id(Long id);
+    List<PlanfondProjet> findByExerciceId_Id(Long id); 
 }
