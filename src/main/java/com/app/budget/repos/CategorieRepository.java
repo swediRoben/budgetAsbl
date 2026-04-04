@@ -12,7 +12,7 @@ public interface CategorieRepository extends JpaRepository<Categorie, Long> {
     Categorie findFirstByProjetIdId(Long id);
 
     List<Categorie> findAllByProjetIdId(Long projetIdId);
-
+ 
     boolean existsByCodeIgnoreCase(String code);
 
     boolean existsByLibelleIgnoreCase(String libelle);
