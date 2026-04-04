@@ -5,8 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.app.budget.constate.TypeClasse;
-import com.app.budget.tresorerie.dto.BanqueDTO;
+import com.app.budget.constate.TypeClasse; 
 import com.app.budget.tresorerie.dto.OperationComptableDetailDto;
 import com.app.budget.tresorerie.dto.OperationComptableDto;
 import com.app.budget.tresorerie.entity.OperationComptable;
@@ -32,6 +31,7 @@ public class OperationComptableService {
 
     public OperationComptableDto update(Long id, OperationComptableDto dto) {
      if (repositories.existsById(id)) {
+      existByClasseIdNot(dto.getClasseid(), id);
         dto.setId(id);
         OperationComptable d=repositories.save(toEntity(dto));
          return  toDto(d); 
@@ -43,6 +43,18 @@ public class OperationComptableService {
     public OperationComptableDto getById(Long id) {
          return toDto(repositories.findById(id).get());      
     }
+
+    public void existByClasse(Long idClasse){
+      if (repositories.existsByClasseid(idClasse)) {
+        throw new UnsupportedOperationException("Classe exist déjà");
+      }
+    } 
+
+   public void existByClasseIdNot(Long idClasse,Long id){
+      if (repositories.existsByClasseidAndIdNot(idClasse,id)) {
+        throw new UnsupportedOperationException("Classe exist déjà");
+      }
+    } 
 
     public List<OperationComptableDto> getAll(TypeClasse type) {
        List<OperationComptableDto> data =new ArrayList<>();
@@ -61,6 +73,7 @@ public class OperationComptableService {
     }
 
     public OperationComptableDto create(OperationComptableDto dto) {
+      existByClasse(dto.getClasseid());
        OperationComptable saved= repositories.save(toEntity(dto)); 
          if (saved!=null) {
          return toDto(saved);
@@ -74,8 +87,7 @@ public class OperationComptableService {
       data.setId(d.getId());
       data.setClasseid(d.getClasseid());
       data.setType(d.getType());
-      data.setClasse(d.getClasse());
-      data.setLibelle(d.getLibelle());
+      data.setClasse(d.getClasse()); 
       if (!d.getDetails().isEmpty()) {
        d.getDetails().forEach(v->{
          OperationComptableDetailDto det=new OperationComptableDetailDto();
@@ -94,8 +106,7 @@ public class OperationComptableService {
       OperationComptable data=new OperationComptable();
       data.setId(d.getId());
       data.setClasseid(d.getClasseid());
-      data.setType(d.getType());
-      data.setLibelle(d.getLibelle());
+      data.setType(d.getType()); 
       d.getDetails().forEach(v->{
          OperationComptableDetail det=new OperationComptableDetail();
          det.setId(v.getId());

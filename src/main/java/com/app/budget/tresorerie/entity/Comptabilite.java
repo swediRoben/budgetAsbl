@@ -3,8 +3,7 @@ package com.app.budget.tresorerie.entity;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List; 
-import com.app.budget.constate.TypeJournal;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.app.budget.constate.TypeJournal; 
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;

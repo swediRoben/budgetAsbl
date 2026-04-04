@@ -31,11 +31,9 @@ import lombok.NoArgsConstructor;
 public class OperationComptable { 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String libelle;
+    private Long id; 
     @Enumerated(EnumType.STRING)
-    private TypeClasse type;
-    
+    private TypeClasse type; 
     @Column(name = "classe_id")
     private Long classeid;
     @ManyToOne

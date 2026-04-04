@@ -8,8 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne; 
-import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.ManyToOne;  
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -28,16 +27,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 public class PlanActivite {
 
     @Id
-    @Column(nullable = false, updatable = false,name = "id")
-    @SequenceGenerator(
-            name = "primary_sequence",
-            sequenceName = "primary_sequence",
-            allocationSize = 1,
-            initialValue = 10000
-    )
     @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "primary_sequence"
+            strategy = GenerationType.IDENTITY
     )
     private Long id;
 
@@ -52,13 +43,9 @@ public class PlanActivite {
  
     @Column(name = "id_activite")
     private Long idActivite;
-
  
     @Column(name = "id_source")
-    private Long idSource;
-
-    @Column(name = "id_plan_comptable")
-    private Long idPlanComptable;
+    private Long idSource; 
     
     @Column(name = "id_classe")
     private Long idClasse;
@@ -109,12 +96,7 @@ private Activite activite;
 
 @ManyToOne(fetch = FetchType.EAGER)
 @JoinColumn(name = "id_source", referencedColumnName = "id", insertable = false, updatable = false)
-private SourceFinacement source;
- 
-
-@ManyToOne(fetch = FetchType.EAGER)
-@JoinColumn(name = "id_plan_comptable", referencedColumnName = "id", insertable = false, updatable = false)
-private PlanComptable planComptable; 
+private SourceFinacement source; 
 
 @ManyToOne(fetch = FetchType.EAGER)
 @JoinColumn(name = "id_classe", referencedColumnName = "id", insertable = false, updatable = false)

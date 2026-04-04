@@ -20,14 +20,12 @@ import org.springframework.stereotype.Service;
 public class CategorieService {
 
     private final CategorieRepository categorieRepository;
-    private final ProjetRepository projetRepository;
-    private final ProjetService projetService;
+    private final ProjetRepository projetRepository; 
 
     public CategorieService(final CategorieRepository categorieRepository,
-                            final ProjetRepository projetRepository, ProjetService projetService) {
+                            final ProjetRepository projetRepository) {
         this.categorieRepository = categorieRepository;
-        this.projetRepository = projetRepository;
-        this.projetService = projetService;
+        this.projetRepository = projetRepository; 
     }
 
     public List<CategorieDTO> findAll(Long idProjet) {
@@ -49,13 +47,43 @@ public class CategorieService {
 
     public Long create(final CategorieDTO categorieDTO) {
         final Categorie categorie = new Categorie();
+          existByLibelleByProjet(categorieDTO.getLibelle(),categorieDTO.getProjetId());
+        existByCodeByProjet(categorieDTO.getCode(),categorieDTO.getProjetId());
         mapToEntity(categorieDTO, categorie);
         return categorieRepository.save(categorie).getId();
     }
 
+    
+    public void existByCodeByProjet(String code, Long idcate) {
+        if (categorieRepository.existsByCodeAndProjetId_Id(code,idcate)) {
+            throw new UnsupportedOperationException("Code exist déjà");
+        }
+    }
+
+    public void existByLibelleByProjet(String libelle, Long idcate) {
+        if (categorieRepository.existsByLibelleAndProjetId_Id(libelle,idcate)) {
+            throw new UnsupportedOperationException("libelle exist déjà");
+        }
+    }
+
+    public void existByCodeByProjetIdNot(String code, Long idprojet, Long id) {
+        if (categorieRepository.existsByCodeAndProjetId_IdAndIdNot(code,idprojet, id)) {
+            throw new UnsupportedOperationException("Code exist déjà");
+        }
+    }
+
+    public void existByLibelleByProjetIdNot(String libelle, Long idprojet, Long id) {
+        if (categorieRepository.existsByLibelleAndProjetId_IdAndIdNot(libelle,idprojet, id)) {
+            throw new UnsupportedOperationException("libelle exist déjà");
+        }
+    }
+
+
     public void update(final Long id, final CategorieDTO categorieDTO) {
         final Categorie categorie = categorieRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
+        existByLibelleByProjetIdNot(categorieDTO.getLibelle(),categorieDTO.getProjetId(), id);
+        existByCodeByProjetIdNot(categorieDTO.getCode(),categorieDTO.getProjetId(), id);
         mapToEntity(categorieDTO, categorie);
         categorieRepository.save(categorie);
     }

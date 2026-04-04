@@ -48,11 +48,7 @@ public class JournalTresorerie {
 
     @ManyToOne
     @JoinColumn(name = "id_banque")
-    private Banque banque;
-
-    @ManyToOne
-    @JoinColumn(name = "id_comte_comptable")
-    private PlanComptable planComptable;
+    private Banque banque; 
     
     @ManyToOne
     @JoinColumn(name = "id_classe")

@@ -36,8 +36,7 @@ public class JournalTresorerieDto {
 
     private Long projetId;
     private Long categorieId;
-    private Long banqueId;
-    private Long planComptableId;
+    private Long banqueId; 
     private Long classeId;
     private Long deviseId;
     private Long compteBancaireId;

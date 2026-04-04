@@ -10,5 +10,9 @@ import com.app.budget.tresorerie.entity.OperationComptable;
 public interface OperationComptableRepositories extends JpaRepository<OperationComptable, Long> {
 
     List<OperationComptable> findAllByType(TypeClasse type);
+    OperationComptable findByClasseid(Long id);
+    boolean existsByClasseid(Long idClasse);
+    boolean existsByClasseidAndIdNot(Long idClasse, Long id);
+    
     
 }

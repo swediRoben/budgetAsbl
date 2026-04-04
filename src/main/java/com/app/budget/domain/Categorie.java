@@ -26,24 +26,16 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Setter
 public class Categorie {
 
-    @Id
-    @Column(nullable = false, updatable = false)
-    @SequenceGenerator(
-            name = "primary_sequence",
-            sequenceName = "primary_sequence",
-            allocationSize = 1,
-            initialValue = 10000
-    )
+    @Id 
     @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "primary_sequence"
+            strategy = GenerationType.IDENTITY
     )
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String code;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String libelle;
 
     @ManyToOne(fetch = FetchType.EAGER)

@@ -9,8 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.app.budget.constate.Typemouvement;
-import com.app.budget.domain.Projet;
+import com.app.budget.constate.Typemouvement; 
 import com.app.budget.tresorerie.dto.etat.VentilationDetailInterface;
 import com.app.budget.tresorerie.entity.JournalTresorerie;
 

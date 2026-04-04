@@ -17,4 +17,12 @@ public interface CategorieRepository extends JpaRepository<Categorie, Long> {
 
     boolean existsByLibelleIgnoreCase(String libelle);
 
+    boolean existsByCodeAndProjetId_Id(String code, Long idcate);
+
+    boolean existsByLibelleAndProjetId_Id(String libelle, Long idcate);
+
+    boolean existsByCodeAndProjetId_IdAndIdNot(String code, Long idprojet, Long id);
+
+    boolean existsByLibelleAndProjetId_IdAndIdNot(String libelle, Long idprojet, Long id);
+
 }

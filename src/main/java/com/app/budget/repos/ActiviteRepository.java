@@ -17,4 +17,12 @@ public interface ActiviteRepository extends JpaRepository<Activite, Long> {
 
     boolean existsByLibelleIgnoreCase(String libelle);
 
+    boolean existsByCodeAndCategorieId_IdAndIdNot(String code,Long idcate, Long id);
+
+    boolean existsByLibelleAndCategorieId_IdAndIdNot(String libelle,Long idcate, Long id);
+
+    boolean existsByCodeAndCategorieId_Id(String code,Long idcate);
+
+    boolean existsByLibelleAndCategorieId_Id(String libelle,Long idcate);
+
 }

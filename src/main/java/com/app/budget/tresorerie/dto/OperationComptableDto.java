@@ -14,8 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OperationComptableDto {  
-    private Long id;
-    private String libelle; 
+    private Long id; 
     private TypeClasse type; 
     private Long classeid;
     private Classe classe;
