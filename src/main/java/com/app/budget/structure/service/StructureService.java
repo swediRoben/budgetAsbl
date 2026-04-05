@@ -17,18 +17,24 @@ import java.util.UUID;
 public class StructureService {
 
     @Autowired
-    private StructureRepository repository;
+    private StructureRepository repository;  
 
-    private final String uploadDir = "uploads/";
+    // ✔ dossier externe (PRO)
+    private final String uploadDir =
+            System.getProperty("user.dir") + "/uploads/";
 
-    // CREATE avec fichier
     public Structure save(Structure structure, MultipartFile file) throws IOException {
 
         if (file != null && !file.isEmpty()) {
-            String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-            File dest = new File(uploadDir + fileName);
 
-            dest.getParentFile().mkdirs(); 
+            String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+
+            File dir = new File(uploadDir);
+            if (!dir.exists()) {
+                dir.mkdirs(); // 🔥 crée dossier uploads
+            }
+
+            File dest = new File(dir, fileName);
             file.transferTo(dest);
 
             structure.setFileName(fileName);
@@ -37,6 +43,33 @@ public class StructureService {
         return repository.save(structure);
     }
 
+    public Structure update(Long id, Structure newData, MultipartFile file) throws IOException {
+
+        Structure old = repository.findById(id).orElseThrow();
+
+        old.setEmail(newData.getEmail());
+        old.setTelephone(newData.getTelephone());
+        old.setAdresse(newData.getAdresse());
+        old.setReseausocial(newData.getReseausocial());
+
+        if (file != null && !file.isEmpty()) {
+
+            String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+
+            File dir = new File(uploadDir);
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+
+            File dest = new File(dir, fileName);
+            file.transferTo(dest);
+
+            old.setFileName(fileName);
+        }
+
+        return repository.save(old);
+    }
+ 
     // READ ALL
     public List<Structure> findAll() {
         return repository.findAll();
@@ -46,28 +79,7 @@ public class StructureService {
     public Structure findById(Long id) {
         return repository.findById(id).orElseThrow();
     }
-
-    // UPDATE
-    public Structure update(Long id, Structure newData, MultipartFile file) throws IOException {
-        Structure old = repository.findById(id).orElseThrow();
-
-        old.setEmail(newData.getEmail());
-        old.setTelephone(newData.getTelephone());
-        old.setAdresse(newData.getAdresse());
-        old.setReseausocial(newData.getReseausocial());
-
-        if (file != null && !file.isEmpty()) {
-            String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-            File dest = new File(uploadDir + fileName);
-
-            dest.getParentFile().mkdirs();
-            file.transferTo(dest);
-
-            old.setFileName(fileName);
-        }
-
-        return repository.save(old);
-    }
+ 
 
     // DELETE
     public void delete(Long id) {

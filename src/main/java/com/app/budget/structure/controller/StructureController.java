@@ -37,6 +37,7 @@ public class StructureController {
         return ResponseEntity.ok(service.save(s, file));
     }
 
+    
     // GET ALL
     @GetMapping
     public List<Structure> getAll() {
