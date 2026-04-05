@@ -2,8 +2,7 @@ package com.app.budget.service;
 
 import com.app.budget.domain.Engagement;
 import com.app.budget.events.BeforeDeleteEngagement;
-import com.app.budget.model.EngagementDTO;
-import com.app.budget.model.LiquidationDTO;
+import com.app.budget.model.EngagementDTO; 
 import com.app.budget.model.NombreExecution;
 import com.app.budget.model.PlanActiviteDTO;
 import com.app.budget.model.RapportGlobalExecution;
@@ -409,8 +408,24 @@ public class EngagementService {
                 return rapports;
         }
 
-        public NombreExecution getNombreEngagement() {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'getNombreEngagement'");
-        }
+        public Integer countEngagement(
+            Long exercice,
+            Long projet,
+            Boolean enAttente,
+            Boolean reception,
+            Boolean valide,
+            Boolean rejet,
+            Boolean retourne
+    ) {
+        return engagementRepository.countEngagement(
+                exercice,
+                projet,
+                enAttente,
+                reception,
+                valide,
+                rejet,
+                retourne
+        );
+    }
+        
 }

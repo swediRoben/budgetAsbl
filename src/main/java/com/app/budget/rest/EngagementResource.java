@@ -281,9 +281,25 @@ public class EngagementResource {
         return ResponseEntity.noContent().build();
     }
 
-   @GetMapping("/nombre")
-    public NombreExecution getNombreEngagement() {
-        return engagementService.getNombreEngagement();
+   @GetMapping("/count")
+    public Integer countEngagement(
+            @RequestParam(required = false) Long exercice,
+            @RequestParam(required = false) Long projet,
+            @RequestParam(required = false) Boolean enAttente,
+            @RequestParam(required = false) Boolean reception,
+            @RequestParam(required = false) Boolean valide,
+            @RequestParam(required = false) Boolean rejet,
+            @RequestParam(required = false) Boolean retourne
+    ) {
+        return engagementService.countEngagement(
+                exercice,
+                projet,
+                enAttente,
+                reception,
+                valide,
+                rejet,
+                retourne
+        );
     }
 
         @GetMapping("/rapportGeneral")

@@ -253,9 +253,25 @@ public class LiquidationResource {
         }
     }
 
-     @GetMapping("/nombre")
-    public NombreExecution getNombreEngagement() {
-        return liquidationService.getNombreEngagement();
+    @GetMapping("/count")
+    public Integer countLiquidation(
+            @RequestParam(required = false) Long exercice,
+            @RequestParam(required = false) Long projet,
+            @RequestParam(required = false) Boolean enAttente,
+            @RequestParam(required = false) Boolean reception,
+            @RequestParam(required = false) Boolean valide,
+            @RequestParam(required = false) Boolean rejet,
+            @RequestParam(required = false) Boolean retourne
+    ) {
+        return liquidationService.countLiquidation(
+                exercice,
+                projet,
+                enAttente,
+                reception,
+                valide,
+                rejet,
+                retourne
+        );
     }
 
 

@@ -198,5 +198,24 @@ BigDecimal rapporGeneralLiquidation(
             @Param("exercice") Long exercice,
             @Param("activite") Long activite
     );
+
+
+ @Query("SELECT COUNT(e) FROM Liquidation e " +
+           "WHERE (:exercice IS NULL OR e.idExercice = :exercice) " +
+           "AND (:projet IS NULL OR e.planActivite.idProjet = :projet) "+
+           "AND (:valide IS NULL OR e.validation = :valide) "+
+           "AND (:rejet IS NULL OR e.rejet = :rejet) "+
+           "AND (:reception IS NULL OR e.reception = :reception) "+
+           "AND (:retourne IS NULL OR e.retourner = :retourne) "+
+           "AND (:entante IS NULL OR e.enAttente = :entante) " )
+  Integer countLiquidation(
+            @Param("exercice") Long exercice,
+            @Param("projet") Long projet,
+            @Param("entante") Boolean entante,
+            @Param("reception") Boolean reception,
+            @Param("valide") Boolean valide,
+            @Param("rejet") Boolean rejet, 
+            @Param("retourne") Boolean retourne
+    );  
 }
 

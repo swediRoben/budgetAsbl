@@ -9,8 +9,7 @@ import com.app.budget.util.NotFoundException;
 import jakarta.transaction.Transactional;
 
 import java.math.BigDecimal; 
-import java.time.OffsetDateTime;
-import java.util.ArrayList;
+import java.time.OffsetDateTime; 
 import java.util.List;
 import java.util.Optional;
 
@@ -377,11 +376,26 @@ public class LiquidationService {
                 .toList();
 
         return dtos; 
-  }
+  } 
 
-    public NombreExecution getNombreEngagement() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getNombreEngagement'");
+      public Integer countLiquidation(
+            Long exercice,
+            Long projet,
+            Boolean enAttente,
+            Boolean reception,
+            Boolean valide,
+            Boolean rejet,
+            Boolean retourne
+    ) {
+        return liquidationRepository.countLiquidation(
+                exercice,
+                projet,
+                enAttente,
+                reception,
+                valide,
+                rejet,
+                retourne
+        );
     }
 
 }
