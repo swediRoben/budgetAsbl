@@ -48,8 +48,8 @@ public class ExcelImportService {
                 if (classes.isPresent()) {
                   data.setClasse(classes.get());  
                 }else{
-                    throw new UnsupportedOperationException("Classe ( "+row.getCell(3).getStringCellValue()+" ) n'exist pas");
-                }
+                   data.setClasse(null);      
+                 }
                 repository.save(data); 
                 }else{
                  PlanComptable data = new PlanComptable();
@@ -61,7 +61,7 @@ public class ExcelImportService {
                 if (classes.isPresent()) {
                   data.setClasse(classes.get());  
                 }else{
-                    throw new UnsupportedOperationException("Classe ( "+row.getCell(3).getStringCellValue()+" ) n'exist pas");
+                   data.setClasse(null);  
                 }
                 repository.save(data);
                 }
