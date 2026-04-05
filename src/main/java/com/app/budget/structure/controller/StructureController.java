@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/structure")
-@CrossOrigin
+@CrossOrigin("*")
 public class StructureController {
 
     @Autowired
