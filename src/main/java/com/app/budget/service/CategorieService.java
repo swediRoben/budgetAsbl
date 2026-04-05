@@ -60,8 +60,8 @@ public class CategorieService {
         }
     }
 
-    public void existByLibelleByProjet(String libelle, Long idcate) {
-        if (categorieRepository.existsByLibelleAndProjetId_Id(libelle,idcate)) {
+    public void existByLibelleByProjet(String libelle, Long idprojet) {
+        if (categorieRepository.existsByLibelleAndProjetId(libelle,idprojet)) {
             throw new UnsupportedOperationException("libelle exist déjà");
         }
     }
@@ -73,7 +73,7 @@ public class CategorieService {
     }
 
     public void existByLibelleByProjetIdNot(String libelle, Long idprojet, Long id) {
-        if (categorieRepository.existsByLibelleAndProjetId_IdAndIdNot(libelle,idprojet, id)) {
+        if (categorieRepository.existsByLibelleAndProjetIdAndIdNot(libelle,idprojet, id)) {
             throw new UnsupportedOperationException("libelle exist déjà");
         }
     }
@@ -116,15 +116,7 @@ public class CategorieService {
 
         return categorie;
     }
-
-    public boolean codeExists(final String code) {
-        return categorieRepository.existsByCodeIgnoreCase(code);
-    }
-
-    public boolean libelleExists(final String libelle) {
-        return categorieRepository.existsByLibelleIgnoreCase(libelle);
-    }
-
+ 
     @EventListener(BeforeDeleteProjet.class)
     public void on(final BeforeDeleteProjet event) {
         final ReferencedException referencedException = new ReferencedException();

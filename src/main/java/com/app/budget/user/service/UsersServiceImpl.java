@@ -34,6 +34,9 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     public UsersDTO save(UsersDTO dto) {
+        if (dto.getUsername()==null || dto.getUsername()=="") {
+            throw new UnsupportedOperationException("username n'existe pas");
+        }
         Users user = toEntity(dto);
         return toDTO(usersRepository.save(user));
     }
@@ -84,7 +87,7 @@ public class UsersServiceImpl implements UsersService {
                 null, 
                  user.getRole(), 
                 user.getIdFonctionnaire(),
-                user.getFonctionnaire().getNom()+"-"+user.getFonctionnaire().getPrenom()
+                null
         );
         data.setPermission(menuService.getByRole(user.getIdRole()));
         return data;

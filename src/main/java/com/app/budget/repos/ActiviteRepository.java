@@ -8,14 +8,10 @@ import java.util.List;
 
 public interface ActiviteRepository extends JpaRepository<Activite, Long> {
 
-    boolean existsByCodeIgnoreCase(String code);
-
-//    List<Activite> findAllByCategorieIdProjetId_Id(Long categorieIdId);
-    List<Activite> findAllByCategorieIdProjetId_IdOrCategorieId_Id(Long idProjetId, Long idCategorieId);
+   List<Activite> findAllByCategorieIdProjetId_IdOrCategorieId_Id(Long idProjetId, Long idCategorieId);
 
     List<Activite> findAllByCategorieId_ProjetId_IdOrCategorieId_Id(Long idProjetId, Long idCategorieId);
-
-    boolean existsByLibelleIgnoreCase(String libelle);
+ 
 
     boolean existsByCodeAndCategorieId_IdAndIdNot(String code,Long idcate, Long id);
 

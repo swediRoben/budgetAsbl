@@ -122,13 +122,6 @@ public class ActiviteService {
                 : null);
         return activite;
     }
-
-    public boolean codeExists(final String code) {
-        return activiteRepository.existsByCodeIgnoreCase(code);
-    }
-
-    public boolean libelleExists(final String libelle) {
-        return activiteRepository.existsByLibelleIgnoreCase(libelle);
-    }
+ 
 
 }

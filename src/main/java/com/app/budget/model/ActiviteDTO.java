@@ -1,7 +1,5 @@
 package com.app.budget.model;
-
-import com.app.budget.domain.Activite;
-import com.app.budget.domain.Categorie;
+ 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -15,13 +13,11 @@ public class ActiviteDTO {
     private Long id;
 
     @NotNull
-    @Size(max = 255)
-    @ActiviteCodeUnique
+    @Size(max = 255) 
     private String code;
 
     @NotNull
-    @Size(max = 255)
-    @ActiviteLibelleUnique
+    @Size(max = 255) 
     private String libelle;
 
     private CategorieDTO categorie;

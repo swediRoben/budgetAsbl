@@ -13,13 +13,11 @@ public class CategorieDTO {
     private Long id;
 
     @NotNull
-    @Size(max = 255)
-    @CategorieCodeUnique
+    @Size(max = 255) 
     private String code;
 
     @NotNull
-    @Size(max = 255)
-    @CategorieLibelleUnique
+    @Size(max = 255) 
     private String libelle;
 
     private  ProjetDTO Projet;
