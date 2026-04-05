@@ -1,11 +1,13 @@
 package com.app.budget.structure.dto;
 
-public class structure {
+public class StructureDto {
     private Long id;
     private String email;
     private String reseausocial;
     private String telephone;
     private String adresse;
+    private String urlFile;
+
     public Long getId() {
         return id;
     }
@@ -35,6 +37,12 @@ public class structure {
     }
     public void setAdresse(String adresse) {
         this.adresse = adresse;
+    }
+    public String getUrlFile() {
+        return urlFile;
+    }
+    public void setUrlFile(String urlFile) {
+        this.urlFile = urlFile;
     }
 
     

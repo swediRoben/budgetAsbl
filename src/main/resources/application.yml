@@ -23,6 +23,11 @@ spring:
   docker:
     compose:
       lifecycle-management: start-only
+ 
+  web:
+    resources:
+      static-locations: file:./uploads/
+
 error:
   handling:
     http-status-in-json-response: true

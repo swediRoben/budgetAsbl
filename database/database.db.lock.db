@@ -1,6 +1,6 @@
 #FileLock
-#Sun Apr 05 00:39:10 EET 2026
-hostName=localhost
-id=19d5aa6685463cdfefd584d55476709e4bc341cd267
+#Sun Apr 05 10:33:04 EET 2026
+hostName=DESKTOP-744IPJT
+id=19d5cc6233a4611d61802f41723a62c81ec38dfd81f
 method=file
-server=localhost\:54877
+server=192.168.43.27\:58591

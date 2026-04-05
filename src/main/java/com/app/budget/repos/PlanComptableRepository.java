@@ -1,6 +1,9 @@
 package com.app.budget.repos;
 
 import com.app.budget.domain.PlanComptable;
+
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
@@ -9,5 +12,7 @@ public interface PlanComptableRepository extends JpaRepository<PlanComptable, Lo
     boolean existsByLibelleIgnoreCase(String libelle);
 
     boolean existsByNumeroIgnoreCase(String numero);
+
+    Optional<PlanComptable> findByNumero(String stringCellValue);
 
 }
