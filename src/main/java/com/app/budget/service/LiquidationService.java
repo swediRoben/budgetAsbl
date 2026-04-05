@@ -109,24 +109,29 @@ public class LiquidationService {
     }
 
     @Transactional
-    public boolean create(final LiquidationDTO LiquidationDTO) {
+    public boolean create(final LiquidationDTO liquidationDTO) {
         try {  
-         final Liquidation Liquidation = new Liquidation();
-        mapToEntity(LiquidationDTO, Liquidation); 
-        liquidationRepository.save(Liquidation);
+         final Liquidation liquidation = new Liquidation();
+        mapToEntity(liquidationDTO, liquidation); 
+        liquidationRepository.save(liquidation);
         return true;
         } catch (Exception e) {
         return false;
         }
     }
 
-    public boolean update(final Long id, final LiquidationDTO LiquidationDTO) {
+    public boolean update(final Long id, final LiquidationDTO liquidationDTO) {
       
         try {
-          final Liquidation Liquidation = liquidationRepository.findById(id)
+          final Liquidation liquidation = liquidationRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
-        mapToEntity(LiquidationDTO, Liquidation);
-        liquidationRepository.save(Liquidation);    
+        mapToEntity(liquidationDTO, liquidation);
+         liquidation.setRetourner(false);
+         liquidation.setValidation(false);
+         liquidation.setRejet(false);
+         liquidation.setReception(false);
+         liquidation.setEnAttente(true);
+        liquidationRepository.save(liquidation);    
        return true;
         } catch (Exception e) {
         return false;
@@ -270,29 +275,29 @@ public class LiquidationService {
         return LiquidationDTO;
     }
 
-    private Liquidation mapToEntity(final LiquidationDTO LiquidationDTO, final Liquidation Liquidation) {
-               Liquidation.setId(LiquidationDTO.getId());
-        Liquidation.setBonEngagment(LiquidationDTO.getBonEngagment());
-        Liquidation.setPiece(LiquidationDTO.getPiece());
-        Liquidation.setIdExercice(LiquidationDTO.getIdExercice()); 
-        Liquidation.setIdEngagement(LiquidationDTO.getIdEngagement());
-        Liquidation.setIdCategorie(LiquidationDTO.getIdCategorie());
-        Liquidation.setDataEnAttente(OffsetDateTime.now());
-        Liquidation.setEnAttente(true);
-         Liquidation.setValidation(false); 
-         Liquidation.setRetourner(false);
-         Liquidation.setReception(false);
-         Liquidation.setRejet(false);
-        Liquidation.setMontant(LiquidationDTO.getMontant());
-        Liquidation.setIdDevise(LiquidationDTO.getIdDevise()); 
-        Liquidation.setTauxDevise(LiquidationDTO.getTauxDevise()); 
-        Liquidation.setIdProjet(LiquidationDTO.getIdProjet());
-        Liquidation.setIdResponsable(LiquidationDTO.getIdResponsable());
-        Liquidation.setObjet(LiquidationDTO.getObjet());
-        Liquidation.setObservation(LiquidationDTO.getObservation());   
-        Liquidation.setIdCategorie(LiquidationDTO.getIdCategorie());
-        Liquidation.setIdPlanFondActivite(LiquidationDTO.getIdPlanFondActivite());
-        return Liquidation;
+    private Liquidation mapToEntity(final LiquidationDTO liquidationDTO, final Liquidation liquidation) {
+               liquidation.setId(liquidationDTO.getId());
+        liquidation.setBonEngagment(liquidationDTO.getBonEngagment());
+        liquidation.setPiece(liquidationDTO.getPiece());
+        liquidation.setIdExercice(liquidationDTO.getIdExercice()); 
+        liquidation.setIdEngagement(liquidationDTO.getIdEngagement());
+        liquidation.setIdCategorie(liquidationDTO.getIdCategorie());
+        liquidation.setDataEnAttente(OffsetDateTime.now());
+        liquidation.setEnAttente(true);
+         liquidation.setValidation(false); 
+         liquidation.setRetourner(false);
+         liquidation.setReception(false);
+         liquidation.setRejet(false);
+        liquidation.setMontant(liquidationDTO.getMontant());
+        liquidation.setIdDevise(liquidationDTO.getIdDevise()); 
+        liquidation.setTauxDevise(liquidationDTO.getTauxDevise()); 
+        liquidation.setIdProjet(liquidationDTO.getIdProjet());
+        liquidation.setIdResponsable(liquidationDTO.getIdResponsable());
+        liquidation.setObjet(liquidationDTO.getObjet());
+        liquidation.setObservation(liquidationDTO.getObservation());   
+        liquidation.setIdCategorie(liquidationDTO.getIdCategorie());
+        liquidation.setIdPlanFondActivite(liquidationDTO.getIdPlanFondActivite());
+        return liquidation;
     }
 
   

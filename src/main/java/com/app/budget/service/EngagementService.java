@@ -131,6 +131,11 @@ public class EngagementService {
                         final Engagement engagement = engagementRepository.findById(id)
                                         .orElseThrow(NotFoundException::new);
                         mapToEntity(engagementDTO, engagement);
+                        engagement.setRetourner(false);
+                        engagement.setValidation(false);
+                        engagement.setRejet(false);
+                        engagement.setReception(false);
+                        engagement.setEnAttente(true);
                         engagementRepository.save(engagement);
                         return true;
                 } catch (Exception e) {
@@ -290,8 +295,8 @@ public class EngagementService {
                 engagement.setReception(false);
                 engagement.setRejet(false);
                 engagement.setMontant(engagementDTO.getMontant());
-                engagement.setIdDevise(engagementDTO.getIdDevise()); 
-                engagement.setTauxDevise(engagementDTO.getTauxDevise()); 
+                engagement.setIdDevise(engagementDTO.getIdDevise());
+                engagement.setTauxDevise(engagementDTO.getTauxDevise());
                 engagement.setIdProjet(engagementDTO.getIdProjet());
                 engagement.setIdResponsable(engagementDTO.getIdResponsable());
                 engagement.setObjet(engagementDTO.getObjet());
@@ -409,32 +414,30 @@ public class EngagementService {
         }
 
         public Integer countEngagement(
-            Long exercice,
-            Long projet,
-            Boolean enAttente,
-            Boolean reception,
-            Boolean valide,
-            Boolean rejet,
-            Boolean retourne
-    ) {
-        return engagementRepository.countEngagement(
-                exercice,
-                projet,
-                enAttente,
-                reception,
-                valide,
-                rejet,
-                retourne
-        );
-    }
+                        Long exercice,
+                        Long projet,
+                        Boolean enAttente,
+                        Boolean reception,
+                        Boolean valide,
+                        Boolean rejet,
+                        Boolean retourne) {
+                return engagementRepository.countEngagement(
+                                exercice,
+                                projet,
+                                enAttente,
+                                reception,
+                                valide,
+                                rejet,
+                                retourne);
+        }
 
         public MontantDepenseEngagement getMontantdepense(Long ligne, BigDecimal montant) {
-            MontantDepenseEngagement mont=new MontantDepenseEngagement();
-            BigDecimal montantEngage=engagementRepository.sumMontant(ligne);
-            mont.setMontantVote(montant);
-            mont.setMontantEngage(montantEngage);
-            mont.setMontantRestant(montant.subtract(montantEngage));
-             return mont;
+                MontantDepenseEngagement mont = new MontantDepenseEngagement();
+                BigDecimal montantEngage = engagementRepository.sumMontant(ligne);
+                mont.setMontantVote(montant);
+                mont.setMontantEngage(montantEngage);
+                mont.setMontantRestant(montant.subtract(montantEngage));
+                return mont;
         }
-        
+
 }
