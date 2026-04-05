@@ -277,6 +277,7 @@ public class JournalTresorerieService {
 
     private boolean saveComptabilite(JournalTresorerie l) {
         Comptabilite c = new Comptabilite();
+        c.setId(null);
         c.setBanque(l.getBanque());
         c.setCompteBancaire(l.getCompteBancaire());
         c.setDate(l.getDate());
@@ -306,9 +307,9 @@ public class JournalTresorerieService {
                 data.setCredit(BigDecimal.ZERO);
             }
             data.setLibelle(l.getObjet());
-            data.setId(l.getDevise() != null ? l.getDevise().getId() : null);
-            data.setEcriture(c);
-            lignes.add(data);
+            data.setDevise(l.getDevise() != null ? l.getDevise().getId() : null);
+            data.setEcriture(c); 
+            c.getLignes().add(data);
         }
         comptabiliteRepository.save(c);
         return true;
