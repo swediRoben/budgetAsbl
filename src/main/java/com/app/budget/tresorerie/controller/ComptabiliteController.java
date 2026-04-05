@@ -12,14 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.app.budget.constate.TypeJournal;
-import com.app.budget.domain.PlanComptable;
+import com.app.budget.constate.TypeJournal; 
 import com.app.budget.tresorerie.entity.Comptabilite;
 import com.app.budget.tresorerie.entity.LigneComptable;
-import com.app.budget.tresorerie.service.ComptabiliteService;
-import com.app.budget.tresorerie.service.ComptabiliteService.BalanceCompte;
-import com.app.budget.tresorerie.service.ComptabiliteService.Bilan;
-import com.app.budget.tresorerie.service.ComptabiliteService.CompteResultat;
+import com.app.budget.tresorerie.service.ComptabiliteService; 
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
