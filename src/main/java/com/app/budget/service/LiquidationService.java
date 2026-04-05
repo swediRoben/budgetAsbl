@@ -1,8 +1,8 @@
 package com.app.budget.service;
  
 import com.app.budget.domain.Liquidation; 
-import com.app.budget.model.LiquidationDTO;
-import com.app.budget.model.NombreExecution;
+import com.app.budget.model.LiquidationDTO; 
+import com.app.budget.model.MontantDepenseLiquidation; 
 import com.app.budget.repos.LiquidationRepository;
 import com.app.budget.util.NotFoundException;
 
@@ -398,4 +398,12 @@ public class LiquidationService {
         );
     }
 
+      public MontantDepenseLiquidation getMontantdepense(Long engagement,BigDecimal montant) {
+            MontantDepenseLiquidation mont=new MontantDepenseLiquidation();
+            BigDecimal montantLiquider=liquidationRepository.sumMontant(engagement);
+            mont.setMontantEngage(montant);
+            mont.setMontantLiquider(montantLiquider);
+            mont.setMontantRestant(montant.subtract(montantLiquider));
+            return mont;
+        }
 }

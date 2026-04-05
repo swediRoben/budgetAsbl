@@ -216,6 +216,12 @@ BigDecimal rapporGeneralLiquidation(
             @Param("valide") Boolean valide,
             @Param("rejet") Boolean rejet, 
             @Param("retourne") Boolean retourne
-    );  
+    );
+
+        
+@Query("SELECT COALESCE(SUM(e.montant*e.tauxDevise), 0) FROM Liquidation e " +
+       "WHERE  (:engagement IS NULL OR e.idEngagement = :engagement) " +
+       "AND e.rejet = false ")
+        BigDecimal sumMontant(@Param("engagement") Long engagement);   
 }
 

@@ -2,8 +2,8 @@ package com.app.budget.service;
 
 import com.app.budget.domain.Engagement;
 import com.app.budget.events.BeforeDeleteEngagement;
-import com.app.budget.model.EngagementDTO; 
-import com.app.budget.model.NombreExecution;
+import com.app.budget.model.EngagementDTO;
+import com.app.budget.model.MontantDepenseEngagement;
 import com.app.budget.model.PlanActiviteDTO;
 import com.app.budget.model.RapportGlobalExecution;
 import com.app.budget.model.RapportGlobalExecutionInterface;
@@ -427,5 +427,14 @@ public class EngagementService {
                 retourne
         );
     }
+
+        public MontantDepenseEngagement getMontantdepense(Long ligne, BigDecimal montant) {
+            MontantDepenseEngagement mont=new MontantDepenseEngagement();
+            BigDecimal montantEngage=engagementRepository.sumMontant(ligne);
+            mont.setMontantVote(montant);
+            mont.setMontantEngage(montantEngage);
+            mont.setMontantRestant(montant.subtract(montantEngage));
+             return mont;
+        }
         
 }
