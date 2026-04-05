@@ -9,6 +9,12 @@ import com.app.budget.structure.entity.Structure;
 import com.app.budget.structure.service.StructureService;
 
 import java.util.List;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpHeaders;  
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @RestController
 @RequestMapping("/api/structure")
@@ -37,7 +43,16 @@ public class StructureController {
         return ResponseEntity.ok(service.save(s, file));
     }
 
-    
+    @GetMapping("/file/{filename}")
+public ResponseEntity<Resource> getFile(@PathVariable String filename) {
+    Path path = Paths.get("uploads/" + filename);
+    Resource resource = new FileSystemResource(path);
+
+    return ResponseEntity.ok()
+            .header(HttpHeaders.CONTENT_DISPOSITION,
+                    "inline; filename=\"" + filename + "\"")
+            .body(resource);
+}
     // GET ALL
     @GetMapping
     public List<Structure> getAll() {
