@@ -77,12 +77,12 @@ public class JournalTresorerieService {
         validateReferences(dto);
         mapToEntity(dto, entity);
         JournalTresorerie journal = repository.save(entity);
-        if (journal!=null) {
-          saveComptabilite(journal);  
-          return toDto(journal);
-        } 
-         throw new UnsupportedOperationException("Echec d'enregistrement");
-        
+        if (journal != null) {
+            saveComptabilite(journal);
+            return toDto(journal);
+        }
+        throw new UnsupportedOperationException("Echec d'enregistrement");
+
     }
 
     // ================= UPDATE =================
@@ -277,7 +277,6 @@ public class JournalTresorerieService {
 
     private boolean saveComptabilite(JournalTresorerie l) {
         Comptabilite c = new Comptabilite();
-        c.setId(null);
         c.setBanque(l.getBanque());
         c.setCompteBancaire(l.getCompteBancaire());
         c.setDate(l.getDate());
@@ -287,30 +286,50 @@ public class JournalTresorerieService {
         c.setType(TypeJournal.BROUILLARD);
         c.setReference(l.getReference());
 
-        List<LigneComptable> lignes = new ArrayList<>();
         OperationComptable operationComptables = operationComptableRepositories.findByClasseid(l.getClasse().getId());
 
+        List<LigneComptable> lignes = new ArrayList<>();
         for (OperationComptableDetail operation : operationComptables.getDetails()) {
-            LigneComptable data = new LigneComptable();
 
-            data.setId(null);
-            data.setIdClasse(l.getClasse().getId());
-            data.setIdProjet(l.getProjetId());
-            data.setIdSource(l.getSourceFinacement().getId());
             if (operation.getCreditid() != null) {
-                data.setIdCompte(operation.getCreditid());
-                data.setCredit(l.getMontant().multiply(l.getTaux()));
-                data.setDebit(BigDecimal.ZERO);
-            } else if (operation.getDebitid() != null) {
-                data.setIdCompte(operation.getDebitid());
-                data.setDebit(l.getMontant().multiply(l.getTaux()));
-                data.setCredit(BigDecimal.ZERO);
+
+                LigneComptable creditLine = new LigneComptable();  
+
+                creditLine.setId(null);
+                creditLine.setIdClasse(l.getClasse().getId());
+                creditLine.setIdProjet(l.getProjetId());
+                creditLine.setIdSource(l.getSourceFinacement().getId());
+
+                creditLine.setIdCompte(operation.getCreditid());
+                creditLine.setCredit(l.getMontant().multiply(l.getTaux()));
+                creditLine.setDebit(BigDecimal.ZERO);
+                creditLine.setLibelle(l.getObjet());
+                creditLine.setDevise(l.getDevise() != null ? l.getDevise().getId() : null);
+                creditLine.setEcriture(c);
+
+                lignes.add(creditLine);
             }
-            data.setLibelle(l.getObjet());
-            data.setDevise(l.getDevise() != null ? l.getDevise().getId() : null);
-            data.setEcriture(c); 
-            c.getLignes().add(data);
-        }
+
+            if (operation.getDebitid() != null) {
+
+                LigneComptable debitLine = new LigneComptable();  
+
+                debitLine.setId(null);
+                debitLine.setIdClasse(l.getClasse().getId());
+                debitLine.setIdProjet(l.getProjetId());
+                debitLine.setIdSource(l.getSourceFinacement().getId());
+
+                debitLine.setIdCompte(operation.getDebitid());
+                debitLine.setDebit(l.getMontant().multiply(l.getTaux()));
+                debitLine.setCredit(BigDecimal.ZERO);
+                debitLine.setLibelle(l.getObjet());
+                debitLine.setDevise(l.getDevise() != null ? l.getDevise().getId() : null);
+                debitLine.setEcriture(c);
+
+                lignes.add(debitLine);
+            }
+        } 
+        c.setLignes(lignes);
         comptabiliteRepository.save(c);
         return true;
     }
