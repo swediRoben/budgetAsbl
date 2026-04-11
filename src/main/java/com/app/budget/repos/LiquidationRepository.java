@@ -113,6 +113,7 @@ Optional<Liquidation> findByIdAndRetourner(Long id, boolean b);
            "AND (:projet IS NULL OR e.idProjet = :projet) " + 
            "AND (:categorie IS NULL OR e.planActivite.idCategorie = :categorie) " +  
            "AND (e.validation=true) " +  
+           "AND (e.payer IS NULL OR e.payer=false) " +  
            "AND (:debut IS NULL OR :fin IS NULL OR e.dataValidation BETWEEN :debut AND :fin)"
         )
 Page<Liquidation> getAllValider(
@@ -222,6 +223,12 @@ BigDecimal rapporGeneralLiquidation(
 @Query("SELECT COALESCE(SUM(e.montant*e.tauxDevise), 0) FROM Liquidation e " +
        "WHERE  (:engagement IS NULL OR e.idEngagement = :engagement) " +
        "AND e.rejet = false ")
-        BigDecimal sumMontant(@Param("engagement") Long engagement);   
+        BigDecimal sumMontant(@Param("engagement") Long engagement);
+
+  @Query("SELECT COALESCE(SUM(e.montant*e.tauxDevise), 0) FROM Liquidation e " +
+       "WHERE  e.planActivite.idPlancomptable = :plancompte AND " +
+       " e.idExercice = :exercice AND e.validation = true ")
+BigDecimal getMontantByCompte(@Param("exercice") Long exercice,@Param("plancompte") Long plancompte);   
 }
+
 

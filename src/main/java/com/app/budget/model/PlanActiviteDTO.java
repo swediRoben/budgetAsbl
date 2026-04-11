@@ -3,7 +3,8 @@ package com.app.budget.model;
 import com.app.budget.domain.Activite;
 import com.app.budget.domain.Beneficiaire;
 import com.app.budget.domain.Categorie;
-import com.app.budget.domain.Classe; 
+import com.app.budget.domain.Classe;
+import com.app.budget.domain.PlanComptable;
 import com.app.budget.domain.Projet;
 import com.app.budget.domain.SourceFinacement; 
 import jakarta.validation.constraints.Size;
@@ -44,6 +45,7 @@ public class PlanActiviteDTO {
 
     private BigDecimal montant;
 
+    private Long idPlancomptable;
     private Long idClasse;
 
     private Projet projet; 
@@ -55,6 +57,7 @@ public class PlanActiviteDTO {
     private SourceFinacement source; 
 
     private Classe classe;
+    private PlanComptable planComptable;
     
     private Beneficiaire beneficiaire; 
 

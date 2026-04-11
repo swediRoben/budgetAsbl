@@ -71,6 +71,7 @@ public class PlanActiviteService {
         planActiviteDTO.setDebut(planActivite.getDebut());
         planActiviteDTO.setFin(planActivite.getFin());  
          planActiviteDTO.setProjet(planActivite.getProjet());
+         planActiviteDTO.setPlanComptable(planActivite.getPlanComptable());
             planActiviteDTO.setCategorie(planActivite.getCategorie());
             planActiviteDTO.setActivite(planActivite.getActivite());
             planActiviteDTO.setIdSource(planActivite.getSource().getId());
@@ -90,6 +91,7 @@ public class PlanActiviteService {
         planActivite.setIdActivite(planActiviteDTO.getIdActivite());
         planActivite.setIdClasse(planActiviteDTO.getIdClasse());
         planActivite.setIdSource(planActiviteDTO.getIdSource()); 
+        planActivite.setIdPlancomptable(planActiviteDTO.getIdPlancomptable());
         planActivite.setIdBeneficiaire(planActiviteDTO.getIdBeneficiaire());
         planActivite.setLigneBudgetaire(planActiviteDTO.getLigneBudgetaire());
         planActivite.setUniteMesure(planActiviteDTO.getUniteMesure());

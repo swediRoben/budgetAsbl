@@ -16,4 +16,8 @@ public interface CompteBancaireRepository extends JpaRepository<CompteBancaire, 
     List<CompteBancaire> findByOptionalFilters(@Param("banqueId") Long banqueId,
                                                 @Param("numero") String numero,
                                                 @Param("idDevise") Long idDevise);
+
+@Query("SELECT c FROM CompteBancaire c " +
+           "WHERE c.banque.id = :banqueId")
+    List<CompteBancaire> findBybanque(@Param("banqueId") Long id);
 }

@@ -18,5 +18,6 @@ public class OperationComptableDto {
     private TypeClasse type; 
     private Long classeid;
     private Classe classe;
-    private List<OperationComptableDetailDto> details=new ArrayList<>();
+    private List<OperationComptableDetailActifDto> detailsActif=new ArrayList<>();
+    private List<OperationComptableDetailPassifDto> detailsPassif=new ArrayList<>();
 }

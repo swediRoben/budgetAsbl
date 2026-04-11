@@ -40,5 +40,8 @@ public class OperationComptable {
     @JoinColumn(name = "classe_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Classe classe;
     @OneToMany(mappedBy = "operationComptable", cascade = CascadeType.ALL,fetch = FetchType.EAGER, orphanRemoval = true)
-    private List<OperationComptableDetail> details=new ArrayList<>();
+    private List<OperationComptableDetailActif> detailsActif=new ArrayList<>();
+    
+    @OneToMany(mappedBy = "operationComptable", cascade = CascadeType.ALL,fetch = FetchType.EAGER, orphanRemoval = true)
+    private List<OperationComptableDetailPassif> detailsPassif=new ArrayList<>();
 }

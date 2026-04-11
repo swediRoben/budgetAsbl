@@ -6,10 +6,12 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.app.budget.constate.TypeClasse; 
-import com.app.budget.tresorerie.dto.OperationComptableDetailDto;
+import com.app.budget.tresorerie.dto.OperationComptableDetailActifDto;
+import com.app.budget.tresorerie.dto.OperationComptableDetailPassifDto;
 import com.app.budget.tresorerie.dto.OperationComptableDto;
 import com.app.budget.tresorerie.entity.OperationComptable;
-import com.app.budget.tresorerie.entity.OperationComptableDetail;
+import com.app.budget.tresorerie.entity.OperationComptableDetailActif;
+import com.app.budget.tresorerie.entity.OperationComptableDetailPassif;
 import com.app.budget.tresorerie.repository.OperationComptableRepositories;
 
 @Service
@@ -88,15 +90,28 @@ public class OperationComptableService {
       data.setClasseid(d.getClasseid());
       data.setType(d.getType());
       data.setClasse(d.getClasse()); 
-      if (!d.getDetails().isEmpty()) {
-       d.getDetails().forEach(v->{
-         OperationComptableDetailDto det=new OperationComptableDetailDto();
+      if (!d.getDetailsActif().isEmpty()) {
+       d.getDetailsActif().forEach(v->{
+         OperationComptableDetailActifDto det=new OperationComptableDetailActifDto();
          det.setId(v.getId());
          det.setCreditid(v.getCreditid());
          det.setCredit(v.getCredit());
          det.setDebit(v.getDebit());
          det.setDebitid(v.getDebitid());
-         data.getDetails().add(det);
+         data.getDetailsActif().add(det);
+      });
+      }
+
+      if (!d.getDetailsPassif().isEmpty()) {
+       d.getDetailsPassif().forEach(v->{
+         OperationComptableDetailPassifDto det=new OperationComptableDetailPassifDto();
+         det.setId(v.getId());
+         det.setCreditid(v.getCreditid());
+         det.setCredit(v.getCredit());
+         det.setDebit(v.getDebit());
+         det.setTypeOperation(v.getTypeOperation());
+         det.setDebitid(v.getDebitid());
+         data.getDetailsPassif().add(det);
       });
       }
       return data;
@@ -107,14 +122,27 @@ public class OperationComptableService {
       data.setId(d.getId());
       data.setClasseid(d.getClasseid());
       data.setType(d.getType()); 
-      d.getDetails().forEach(v->{
-         OperationComptableDetail det=new OperationComptableDetail();
+      d.getDetailsActif().forEach(v->{
+         OperationComptableDetailActif det=new OperationComptableDetailActif();
          det.setId(v.getId());
          det.setCreditid(v.getCreditid());
          det.setDebitid(v.getDebitid());
          det.setOperationComptable(data);
-         data.getDetails().add(det);
+         data.getDetailsActif().add(det);
       });
+
+      if (d.getDetailsPassif()!=null) {
+        
+      d.getDetailsPassif().forEach(v->{
+         OperationComptableDetailPassif det=new OperationComptableDetailPassif();
+         det.setId(v.getId());
+         det.setCreditid(v.getCreditid());
+         det.setTypeOperation(v.getTypeOperation());
+         det.setDebitid(v.getDebitid());
+         det.setOperationComptable(data);
+         data.getDetailsPassif().add(det);
+      });
+      }
 
       return data;
     }

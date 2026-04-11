@@ -41,4 +41,6 @@ public class LiquidationDTO {
     private Fonctionnaire responsable;
     private Devise devise;
     private PlanActivite planActivite; 
+    private OffsetDateTime dataPayer;
+    private Boolean payer; 
 }

@@ -236,5 +236,10 @@ List<RapportGlobalExecutionInterface> rapporGeneral(
 @Query("SELECT COALESCE(SUM(e.montant*e.tauxDevise), 0) FROM Engagement e " +
        "WHERE  (:ligne IS NULL OR e.planActivite.id = :ligne) " +
        "AND e.rejet = false ")
-        BigDecimal sumMontant(@Param("ligne") Long ligne);  
+        BigDecimal sumMontant(@Param("ligne") Long ligne);
+
+        @Query("SELECT COALESCE(SUM(e.montant*e.tauxDevise), 0) FROM Engagement e " +
+       "WHERE  e.planActivite.idPlancomptable = :plancompte AND " +
+       " e.idExercice = :exercice AND e.validation = true ")
+BigDecimal getMontantByCompte(@Param("exercice") Long exercice,@Param("plancompte") Long plancompte);  
 }

@@ -18,31 +18,39 @@ import com.app.budget.constate.TypeJournal;
 import com.app.budget.constate.Typemouvement;
 import com.app.budget.domain.Classe;
 import com.app.budget.domain.Liquidation;
-import com.app.budget.domain.PlanComptable;
 import com.app.budget.domain.PlanfondProjet;
 import com.app.budget.domain.Projet;
 import com.app.budget.model.LiquidationDTO;
 import com.app.budget.repos.ClasseRepository;
 import com.app.budget.repos.DeviseRepository;
+import com.app.budget.repos.EngagementRepository;
 import com.app.budget.repos.LiquidationRepository;
 import com.app.budget.repos.PlanActiviteRepository;
-import com.app.budget.repos.PlanComptableRepository;
 import com.app.budget.repos.PlanfondProjetRepository;
 import com.app.budget.repos.ProjetRepository;
 import com.app.budget.repos.SourceFinacementRepository;
+import com.app.budget.service.LiquidationService;
 import com.app.budget.tresorerie.dto.JournalTresorerieDto;
 import com.app.budget.tresorerie.dto.JournalTresorerieFilter;
+import com.app.budget.tresorerie.dto.etat.Bilan;
+import com.app.budget.tresorerie.dto.etat.BilanDetailsActif;
+import com.app.budget.tresorerie.dto.etat.BilanDetailsPassif;
 import com.app.budget.tresorerie.dto.etat.CompteResultat;
+import com.app.budget.tresorerie.dto.etat.CompteResultatDetail;
+import com.app.budget.tresorerie.dto.etat.CompteResultatInterface;
 import com.app.budget.tresorerie.dto.etat.Ressources;
 import com.app.budget.tresorerie.dto.etat.Ventilation;
 import com.app.budget.tresorerie.dto.etat.VentilationCharge;
 import com.app.budget.tresorerie.dto.etat.VentilationChargeDetails;
 import com.app.budget.tresorerie.dto.etat.VentilationDetailInterface;
+import com.app.budget.tresorerie.entity.Banque;
 import com.app.budget.tresorerie.entity.Comptabilite;
+import com.app.budget.tresorerie.entity.CompteBancaire;
 import com.app.budget.tresorerie.entity.JournalTresorerie;
 import com.app.budget.tresorerie.entity.LigneComptable;
 import com.app.budget.tresorerie.entity.OperationComptable;
-import com.app.budget.tresorerie.entity.OperationComptableDetail;
+import com.app.budget.tresorerie.entity.OperationComptableDetailActif;
+import com.app.budget.tresorerie.entity.OperationComptableDetailPassif;
 import com.app.budget.tresorerie.repository.BanqueRepository;
 import com.app.budget.tresorerie.repository.ComptabiliteRepository;
 import com.app.budget.tresorerie.repository.CompteBancaireRepository;
@@ -50,7 +58,6 @@ import com.app.budget.tresorerie.repository.JournalTresorerieRepository;
 import com.app.budget.tresorerie.repository.JournalTresorerieSpecification;
 import com.app.budget.tresorerie.repository.OperationComptableRepositories;
 
-import jakarta.persistence.Column;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
@@ -70,6 +77,8 @@ public class JournalTresorerieService {
     private final ProjetRepository projetRepository;
     private final PlanfondProjetRepository planfondProjetRepository;
     private final OperationComptableRepositories operationComptableRepositories;
+    private final LiquidationService liquidationService;
+    private final EngagementRepository engagementRepository;
 
     // ================= CREATE =================
     public JournalTresorerieDto create(JournalTresorerieDto dto) {
@@ -77,6 +86,7 @@ public class JournalTresorerieService {
         validateReferences(dto);
         mapToEntity(dto, entity);
         JournalTresorerie journal = repository.save(entity);
+        liquidationService.payer(journal.getLiquidation().getId());
         if (journal != null) {
             saveComptabilite(journal);
             return toDto(journal);
@@ -138,10 +148,14 @@ public class JournalTresorerieService {
     // ================= DELETE =================
     public void delete(Long id) {
         CheckIfComptabiliser(id);
-        if (!repository.existsById(id)) {
+        Optional<JournalTresorerie> journal=repository.findById(id);
+        if (!journal.isPresent()) {
             throw new RuntimeException("JournalTresorerie introuvable");
         }
+        
+        liquidationService.annulePayer(journal.get().getLiquidation().getId());
         repository.deleteById(id);
+        
     }
 
     // ================= FIND ALL AVEC FILTRE =================
@@ -289,7 +303,7 @@ public class JournalTresorerieService {
         OperationComptable operationComptables = operationComptableRepositories.findByClasseid(l.getClasse().getId());
 
         List<LigneComptable> lignes = new ArrayList<>();
-        for (OperationComptableDetail operation : operationComptables.getDetails()) {
+        for (OperationComptableDetailActif operation : operationComptables.getDetailsActif()) {
 
             if (operation.getCreditid() != null) {
 
@@ -334,6 +348,50 @@ public class JournalTresorerieService {
         return true;
     }
 
+       public Bilan etatBilan(Long exercice, OffsetDateTime debut, OffsetDateTime fin) {
+        List<Banque> data = banqueRepository.findAll(); 
+        List<OperationComptableDetailPassif> operationPassifs=operationComptableRepositories.findAllDetails();
+         Bilan bilan = new Bilan(); 
+        
+       if (!data.isEmpty()) {
+         for (Banque b : data) {
+            List<CompteBancaire> compteBancaires=compteBancaireRepository.findBybanque(b.getId()); 
+            if (!compteBancaires.isEmpty()) {
+              bilan.setBanque(b);
+              for (CompteBancaire compte : compteBancaires) {
+                BilanDetailsActif comp=new BilanDetailsActif();
+                comp.setCompteBancaire(compte);
+                BigDecimal banqueCredit = repository.sommeBanqueByCompte(exercice, compte.getId(), Typemouvement.CREDIT);
+                BigDecimal banqueDebit = repository.sommeBanqueByCompte(exercice, compte.getId(), Typemouvement.DEBIT);
+                BigDecimal banqueC = banqueCredit == null ? BigDecimal.ZERO : banqueCredit;
+                BigDecimal banqueD = banqueDebit == null ? BigDecimal.ZERO : banqueDebit;
+                comp.setMontant(banqueD.subtract(banqueC));
+                if (banqueCredit!=null) {
+                  bilan.getDetailsActif().add(comp);  
+                }
+              }
+                
+            }
+        }
+       }
+         
+       if (!operationPassifs.isEmpty()) {
+          for (OperationComptableDetailPassif passif : operationPassifs) {
+              BilanDetailsPassif p=new BilanDetailsPassif();
+              p.setPlanComptable(passif.getCredit());
+              BigDecimal montantEngage=engagementRepository.getMontantByCompte(exercice,passif.getDebitid());
+              if (montantEngage!=null) {
+                 BigDecimal montantLiquidation=liquidationRepository.getMontantByCompte(exercice,passif.getDebitid());
+               BigDecimal montantC = montantLiquidation == null ? BigDecimal.ZERO : montantLiquidation;
+              BigDecimal montantD = montantEngage == null ? BigDecimal.ZERO : montantEngage;
+                p.setMontant(montantD.subtract(montantC)); 
+                bilan.getDetailsPassif().add(p);
+              }
+            }
+       }
+       return bilan;
+    }
+
     public List<JournalTresorerieDto> etat(Long exercice, OffsetDateTime debut, OffsetDateTime fin, Long projet) {
         Specification<JournalTresorerie> spec = JournalTresorerieSpecification.etat(
                 exercice, debut, fin, projet);
@@ -370,13 +428,27 @@ public class JournalTresorerieService {
         List<CompteResultat> dr = new ArrayList<>();
         List<CompteResultat> cr = new ArrayList<>();
         Map<String, Object> datas = new HashMap<>();
-        for (Classe dat : data) {
+         
+        for (Classe dat : data) { 
+
             if (dat.getType() == TypeClasse.RECETTE) {
                 CompteResultat v = new CompteResultat();
-                BigDecimal vr = repository.sommeClasse(exercice, dat.getId(), Typemouvement.DEBIT);
-                BigDecimal val = vr == null ? BigDecimal.ZERO : vr;
+                BigDecimal sommeClasse=BigDecimal.ZERO;
+                List<CompteResultatInterface> compte=repository.findprojetByclasse(exercice, dat.getId(), Typemouvement.DEBIT);
+                for (CompteResultatInterface compteResultats : compte) {
+                    BigDecimal montant=repository.sommeProjets(exercice, compteResultats.getProjetid(),compteResultats.getSourcefinacement().getId(), Typemouvement.CREDIT);
+                    if (montant!=null) {
+                        CompteResultatDetail det=new CompteResultatDetail();
+                        Projet pro=projetRepository.findById(compteResultats.getProjetid()).get();
+                        det.setMontant(montant);
+                        det.setProjet(pro);
+                        det.setSourceFinacement(compteResultats.getSourcefinacement());
+                        v.getProjetDetails().add(det);
+                        sommeClasse.add(montant);
+                    }
+                }
                 v.setClasse(dat);
-                v.setMontant(val);
+                v.setMontant(sommeClasse);
                 dr.add(v);
             } else if (dat.getType() == TypeClasse.DEPENSE) {
                 CompteResultat v = new CompteResultat();

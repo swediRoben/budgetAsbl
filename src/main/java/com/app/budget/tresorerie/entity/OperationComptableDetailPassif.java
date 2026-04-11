@@ -1,9 +1,12 @@
 package com.app.budget.tresorerie.entity;
 
+import com.app.budget.constate.TypeOperation;
 import com.app.budget.domain.PlanComptable;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -19,7 +22,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class OperationComptableDetail {
+public class OperationComptableDetailPassif {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,6 +33,9 @@ public class OperationComptableDetail {
      @ManyToOne
     @JoinColumn(name = "compte_debut_id", referencedColumnName = "id", insertable = false, updatable = false)
     private PlanComptable debit;
+    
+    @Enumerated(EnumType.STRING)
+    private TypeOperation typeOperation;
     @ManyToOne
     @JoinColumn(name = "compte_credit_id", referencedColumnName = "id", insertable = false, updatable = false)
     private PlanComptable credit;

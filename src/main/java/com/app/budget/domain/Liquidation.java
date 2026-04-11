@@ -67,6 +67,8 @@ public class Liquidation {
     private OffsetDateTime dataRetourner;
     private Boolean rejet;
     private OffsetDateTime dataRejet;
+    private OffsetDateTime dataPayer;
+    private Boolean payer; 
     private String observation; 
     
   

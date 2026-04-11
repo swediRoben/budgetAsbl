@@ -59,6 +59,9 @@ public class PlanActivite {
     @Column(name = "unite_mesure")
     private String uniteMesure;
 
+    @Column(name = "id_plancomptable")
+    private Long idPlancomptable;
+
     @Column
     private Long quantite;
  
@@ -106,6 +109,9 @@ private Classe classe;
 @JoinColumn(name = "id_benefice", referencedColumnName = "id", insertable = false, updatable = false)
 private Beneficiaire beneficiaire;
 
-     
+ 
+@ManyToOne(fetch = FetchType.EAGER)
+@JoinColumn(name = "id_plancomptable", referencedColumnName = "id", insertable = false, updatable = false)
+private PlanComptable planComptable;
 
 }

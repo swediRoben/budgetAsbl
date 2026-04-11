@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.app.budget.tresorerie.dto.JournalTresorerieDto;
 import com.app.budget.tresorerie.dto.JournalTresorerieFilter;
+import com.app.budget.tresorerie.dto.etat.Bilan;
 import com.app.budget.tresorerie.dto.etat.Ressources;
 import com.app.budget.tresorerie.dto.etat.Ventilation;
 import com.app.budget.tresorerie.dto.etat.VentilationCharge;
@@ -97,6 +98,14 @@ public class JournalTresorerieController {
      @RequestParam(required = false)  OffsetDateTime debut,
      @RequestParam(required = false)  OffsetDateTime fin ) { 
         return service.etatvantilation(exercice,debut,fin);
+    }
+
+        @GetMapping("/bilan")
+    public Bilan  bilan(
+            @RequestParam(required = false) Long exercice,
+     @RequestParam(required = false)  OffsetDateTime debut,
+     @RequestParam(required = false)  OffsetDateTime fin ) { 
+        return service.etatBilan(exercice,debut,fin);
     }
 
 

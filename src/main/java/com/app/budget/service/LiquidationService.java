@@ -238,6 +238,31 @@ public class LiquidationService {
         }
     }
 
+
+    public Boolean payer(final Long id) {
+        final Liquidation Liquidation = liquidationRepository.findById(id).get();
+        try { 
+        Liquidation.setPayer(true); 
+        Liquidation.setDataPayer(OffsetDateTime.now()); 
+        liquidationRepository.save(Liquidation);
+        return true;
+        } catch (Exception e) {
+          return false;
+        }
+    }
+
+       public Boolean annulePayer(final Long id) {
+        final Liquidation Liquidation = liquidationRepository.findById(id).get();
+        try { 
+        Liquidation.setPayer(false); 
+        Liquidation.setDataPayer(OffsetDateTime.now()); 
+        liquidationRepository.save(Liquidation);
+        return true;
+        } catch (Exception e) {
+          return false;
+        }
+    }
+
     public void delete(final Long id) {
         final Liquidation Liquidation = liquidationRepository.findById(id)
                 .orElseThrow(NotFoundException::new); 
@@ -253,12 +278,14 @@ public class LiquidationService {
         LiquidationDTO.setDataEnAttente(Liquidation.getDataEnAttente());
         LiquidationDTO.setDataReception(Liquidation.getDataReception());
         LiquidationDTO.setDataValidation(Liquidation.getDataValidation()); 
+        LiquidationDTO.setDataPayer(Liquidation.getDataPayer()); 
         LiquidationDTO.setDataRetourner(Liquidation.getDataRetourner()); 
         LiquidationDTO.setDataRejet(Liquidation.getDataRejet());
         LiquidationDTO.setEnAttente(Liquidation.getEnAttente());
         LiquidationDTO.setValidation(Liquidation.getValidation());
         LiquidationDTO.setReception(Liquidation.getReception());
         LiquidationDTO.setRetourner(Liquidation.getRetourner());
+        LiquidationDTO.setPayer(Liquidation.getPayer());
         LiquidationDTO.setRejet(Liquidation.getRejet());
         LiquidationDTO.setMontant(Liquidation.getMontant());
         LiquidationDTO.setIdDevise(Liquidation.getIdDevise()); 

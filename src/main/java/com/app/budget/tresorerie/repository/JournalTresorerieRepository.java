@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.app.budget.constate.Typemouvement; 
+import com.app.budget.tresorerie.dto.etat.CompteResultatInterface;
 import com.app.budget.tresorerie.dto.etat.VentilationDetailInterface;
 import com.app.budget.tresorerie.entity.JournalTresorerie;
 
@@ -32,50 +33,15 @@ public interface JournalTresorerieRepository extends
    @Query("SELECT SUM(c.montant*c.taux) FROM JournalTresorerie c WHERE c.idExercice=:exercice AND c.projetId=:projetid AND c.typemouvement=:typemouv ")
    BigDecimal sommeRessource(@Param("exercice") Long exercice,@Param("projetid")  Long projetid,@Param("typemouv") Typemouvement typemouv);
 
+   @Query("SELECT c.projetId AS projetid,c.sourceFinacement AS sourcefinacement FROM JournalTresorerie c WHERE c.idExercice=:exercice AND c.classe.id=:classeid AND c.typemouvement=:typemouv GROUP BY c.projetId,c.sourceFinacement.id")
+   List<CompteResultatInterface> findprojetByclasse(@Param("exercice") Long exercice,@Param("classeid")  Long classeid,@Param("typemouv") Typemouvement typemouv);
+
+
+   @Query("SELECT SUM(c.montant*c.taux) FROM JournalTresorerie c WHERE c.idExercice=:exercice AND c.projetId=:projetid AND c.sourceFinacement.id=:sourceid AND  c.typemouvement=:typemouv ") 
+   BigDecimal sommeProjets(@Param("exercice") Long exercice,@Param("projetid")  Long projetid,@Param("sourceid")  Long sourceid,@Param("typemouv") Typemouvement typemouv);
+
+@Query("SELECT SUM(c.montant*c.taux) FROM JournalTresorerie c WHERE c.idExercice=:exercice AND c.compteBancaire.id=:idcompte AND  c.typemouvement=:typemouv ")
+   BigDecimal sommeBanqueByCompte(@Param("exercice") Long exercice,@Param("idcompte") Long idcompte,@Param("typemouv") Typemouvement typemouv);
+
 }
- 
- 
-    // @Id
-    // @GeneratedValue(strategy = GenerationType.IDENTITY)
-    // private Long id;
-
-    // private String reference;
-
-    // private Long idExercice;
-
-    // private Long projetId;
-    // private Long categorieId; 
-
-    // @Enumerated(EnumType.STRING)
-    // private Typemouvement typemouvement;
-    // private String numroCheque;
-
-    // @Enumerated(EnumType.STRING)
-    // private ModePaiement modepaiement;
-
-
-    // private BigDecimal taux;
-    // private BigDecimal montant;
-    // private String objet;
-    // private OffsetDateTime date; 
-
-    // @ManyToOne
-    // @JoinColumn(name = "id_banque")
-    // private Banque banque;
-
-    // @ManyToOne
-    // @JoinColumn(name = "id_comte_comptable")
-    // private PlanComptable planComptable;
-    
-    // @ManyToOne
-    // @JoinColumn(name = "id_classe")
-    // private Classe classe;
-    
-    // @ManyToOne
-    // @JoinColumn(name = "id_devise")
-    // private Devise devise; 
-
-    // @ManyToOne
-    // @JoinColumn(name = "id_compte_bancaire")
-    // private CompteBancaire compteBancaire;
-    
+  

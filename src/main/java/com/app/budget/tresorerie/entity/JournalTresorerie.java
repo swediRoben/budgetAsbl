@@ -8,8 +8,7 @@ import com.app.budget.constate.Typemouvement;
 import com.app.budget.domain.Classe;
 import com.app.budget.domain.Devise;
 import com.app.budget.domain.Liquidation;
-import com.app.budget.domain.PlanActivite;
-import com.app.budget.domain.PlanComptable;
+import com.app.budget.domain.PlanActivite; 
 import com.app.budget.domain.SourceFinacement;
 
 import jakarta.persistence.*;
